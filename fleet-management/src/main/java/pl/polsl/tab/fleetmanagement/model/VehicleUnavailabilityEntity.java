@@ -1,5 +1,6 @@
 package pl.polsl.tab.fleetmanagement.model;
 
+import pl.polsl.tab.fleetmanagement.people.PeopleEntity;
 import pl.polsl.tab.fleetmanagement.vehicle.VehiclesEntity;
 
 import javax.persistence.*;

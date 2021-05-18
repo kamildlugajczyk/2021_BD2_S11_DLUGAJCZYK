@@ -1,4 +1,6 @@
-package pl.polsl.tab.fleetmanagement.model;
+package pl.polsl.tab.fleetmanagement.people;
+
+import pl.polsl.tab.fleetmanagement.model.VehicleUnavailabilityEntity;
 
 import javax.persistence.*;
 import java.util.Collection;

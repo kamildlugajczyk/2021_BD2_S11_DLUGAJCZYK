@@ -1,6 +1,6 @@
 package pl.polsl.tab.fleetmanagement.vehicle;
 
-import pl.polsl.tab.fleetmanagement.model.KeepingEntity;
+import pl.polsl.tab.fleetmanagement.people.KeepingEntity;
 import pl.polsl.tab.fleetmanagement.model.OperationCostsEntity;
 import pl.polsl.tab.fleetmanagement.model.VehicleUnavailabilityEntity;
 

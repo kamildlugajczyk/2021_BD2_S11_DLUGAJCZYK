@@ -1,4 +1,4 @@
-package pl.polsl.tab.fleetmanagement.model;
+package pl.polsl.tab.fleetmanagement.people;
 
 import javax.persistence.*;
 import java.util.Collection;
