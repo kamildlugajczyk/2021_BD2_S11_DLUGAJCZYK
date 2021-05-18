@@ -1,7 +1,8 @@
-package pl.polsl.tab.fleetmanagement.models;
+package pl.polsl.tab.fleetmanagement.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -12,9 +13,12 @@ public class KeepingEntity {
     private Date enddate;
     private int peopleId;
     private int vehiclesId;
+    private PeopleEntity peopleByPeopleId;
+    private VehiclesEntity vehiclesByVehiclesId;
+    private Collection<OperationCostsEntity> operationCostsById;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     public long getId() {
         return id;
     }
@@ -24,7 +28,7 @@ public class KeepingEntity {
     }
 
     @Basic
-    @Column(name = "startdate")
+    @Column(name = "startdate", nullable = false)
     public Date getStartdate() {
         return startdate;
     }
@@ -34,7 +38,7 @@ public class KeepingEntity {
     }
 
     @Basic
-    @Column(name = "enddate")
+    @Column(name = "enddate", nullable = false)
     public Date getEnddate() {
         return enddate;
     }
@@ -44,7 +48,7 @@ public class KeepingEntity {
     }
 
     @Basic
-    @Column(name = "people_id")
+    @Column(name = "people_id", nullable = false)
     public int getPeopleId() {
         return peopleId;
     }
@@ -54,7 +58,7 @@ public class KeepingEntity {
     }
 
     @Basic
-    @Column(name = "vehicles_id")
+    @Column(name = "vehicles_id", nullable = false)
     public int getVehiclesId() {
         return vehiclesId;
     }
@@ -74,5 +78,34 @@ public class KeepingEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, startdate, enddate, peopleId, vehiclesId);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "people_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public PeopleEntity getPeopleByPeopleId() {
+        return peopleByPeopleId;
+    }
+
+    public void setPeopleByPeopleId(PeopleEntity peopleByPeopleId) {
+        this.peopleByPeopleId = peopleByPeopleId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "vehicles_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public VehiclesEntity getVehiclesByVehiclesId() {
+        return vehiclesByVehiclesId;
+    }
+
+    public void setVehiclesByVehiclesId(VehiclesEntity vehiclesByVehiclesId) {
+        this.vehiclesByVehiclesId = vehiclesByVehiclesId;
+    }
+
+    @OneToMany(mappedBy = "keepingByKeepingId")
+    public Collection<OperationCostsEntity> getOperationCostsById() {
+        return operationCostsById;
+    }
+
+    public void setOperationCostsById(Collection<OperationCostsEntity> operationCostsById) {
+        this.operationCostsById = operationCostsById;
     }
 }

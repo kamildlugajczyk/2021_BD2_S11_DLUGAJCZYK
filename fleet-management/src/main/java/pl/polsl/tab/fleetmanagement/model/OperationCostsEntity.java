@@ -1,4 +1,4 @@
-package pl.polsl.tab.fleetmanagement.models;
+package pl.polsl.tab.fleetmanagement.model;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -16,9 +16,13 @@ public class OperationCostsEntity {
     private int operationTypeId;
     private int vehicleRentingsId;
     private int keepingId;
+    private VehiclesEntity vehiclesByVehiclesId;
+    private OperationTypeEntity operationTypeByOperationTypeId;
+    private VehicleRentingsEntity vehicleRentingsByVehicleRentingsId;
+    private KeepingEntity keepingByKeepingId;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     public long getId() {
         return id;
     }
@@ -28,7 +32,7 @@ public class OperationCostsEntity {
     }
 
     @Basic
-    @Column(name = "date")
+    @Column(name = "date", nullable = false)
     public Date getDate() {
         return date;
     }
@@ -38,7 +42,7 @@ public class OperationCostsEntity {
     }
 
     @Basic
-    @Column(name = "price")
+    @Column(name = "price", nullable = false, precision = 2)
     public BigDecimal getPrice() {
         return price;
     }
@@ -48,7 +52,7 @@ public class OperationCostsEntity {
     }
 
     @Basic
-    @Column(name = "description")
+    @Column(name = "description", nullable = false, length = 100)
     public String getDescription() {
         return description;
     }
@@ -58,7 +62,7 @@ public class OperationCostsEntity {
     }
 
     @Basic
-    @Column(name = "vehicles_id")
+    @Column(name = "vehicles_id", nullable = false)
     public int getVehiclesId() {
         return vehiclesId;
     }
@@ -68,7 +72,7 @@ public class OperationCostsEntity {
     }
 
     @Basic
-    @Column(name = "operation_type_id")
+    @Column(name = "operation_type_id", nullable = false)
     public int getOperationTypeId() {
         return operationTypeId;
     }
@@ -78,7 +82,7 @@ public class OperationCostsEntity {
     }
 
     @Basic
-    @Column(name = "vehicle_rentings_id")
+    @Column(name = "vehicle_rentings_id", nullable = false)
     public int getVehicleRentingsId() {
         return vehicleRentingsId;
     }
@@ -88,7 +92,7 @@ public class OperationCostsEntity {
     }
 
     @Basic
-    @Column(name = "keeping_id")
+    @Column(name = "keeping_id", nullable = false)
     public int getKeepingId() {
         return keepingId;
     }
@@ -108,5 +112,45 @@ public class OperationCostsEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, date, price, description, vehiclesId, operationTypeId, vehicleRentingsId, keepingId);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "vehicles_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public VehiclesEntity getVehiclesByVehiclesId() {
+        return vehiclesByVehiclesId;
+    }
+
+    public void setVehiclesByVehiclesId(VehiclesEntity vehiclesByVehiclesId) {
+        this.vehiclesByVehiclesId = vehiclesByVehiclesId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "operation_type_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public OperationTypeEntity getOperationTypeByOperationTypeId() {
+        return operationTypeByOperationTypeId;
+    }
+
+    public void setOperationTypeByOperationTypeId(OperationTypeEntity operationTypeByOperationTypeId) {
+        this.operationTypeByOperationTypeId = operationTypeByOperationTypeId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "vehicle_rentings_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public VehicleRentingsEntity getVehicleRentingsByVehicleRentingsId() {
+        return vehicleRentingsByVehicleRentingsId;
+    }
+
+    public void setVehicleRentingsByVehicleRentingsId(VehicleRentingsEntity vehicleRentingsByVehicleRentingsId) {
+        this.vehicleRentingsByVehicleRentingsId = vehicleRentingsByVehicleRentingsId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "keeping_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public KeepingEntity getKeepingByKeepingId() {
+        return keepingByKeepingId;
+    }
+
+    public void setKeepingByKeepingId(KeepingEntity keepingByKeepingId) {
+        this.keepingByKeepingId = keepingByKeepingId;
     }
 }

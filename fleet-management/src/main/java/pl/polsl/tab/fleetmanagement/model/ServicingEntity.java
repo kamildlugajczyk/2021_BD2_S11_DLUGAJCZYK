@@ -1,4 +1,4 @@
-package pl.polsl.tab.fleetmanagement.models;
+package pl.polsl.tab.fleetmanagement.model;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -16,9 +16,11 @@ public class ServicingEntity {
     private String isfinished;
     private String description;
     private int serviceRequestId;
+    private SubcontractorsEntity subcontractorsBySubcontractorsId;
+    private ServiceRequestEntity serviceRequestByServiceRequestId;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     public long getId() {
         return id;
     }
@@ -28,7 +30,7 @@ public class ServicingEntity {
     }
 
     @Basic
-    @Column(name = "price")
+    @Column(name = "price", nullable = false, precision = 2)
     public BigDecimal getPrice() {
         return price;
     }
@@ -38,7 +40,7 @@ public class ServicingEntity {
     }
 
     @Basic
-    @Column(name = "subcontractors_id")
+    @Column(name = "subcontractors_id", nullable = false)
     public int getSubcontractorsId() {
         return subcontractorsId;
     }
@@ -48,7 +50,7 @@ public class ServicingEntity {
     }
 
     @Basic
-    @Column(name = "startdate")
+    @Column(name = "startdate", nullable = false)
     public Date getStartdate() {
         return startdate;
     }
@@ -58,7 +60,7 @@ public class ServicingEntity {
     }
 
     @Basic
-    @Column(name = "enddate")
+    @Column(name = "enddate", nullable = false)
     public Date getEnddate() {
         return enddate;
     }
@@ -68,7 +70,7 @@ public class ServicingEntity {
     }
 
     @Basic
-    @Column(name = "isfinished")
+    @Column(name = "isfinished", nullable = false, length = 1)
     public String getIsfinished() {
         return isfinished;
     }
@@ -78,7 +80,7 @@ public class ServicingEntity {
     }
 
     @Basic
-    @Column(name = "description")
+    @Column(name = "description", nullable = false, length = 100)
     public String getDescription() {
         return description;
     }
@@ -88,7 +90,7 @@ public class ServicingEntity {
     }
 
     @Basic
-    @Column(name = "service_request_id")
+    @Column(name = "service_request_id", nullable = false)
     public int getServiceRequestId() {
         return serviceRequestId;
     }
@@ -108,5 +110,25 @@ public class ServicingEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, price, subcontractorsId, startdate, enddate, isfinished, description, serviceRequestId);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "subcontractors_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public SubcontractorsEntity getSubcontractorsBySubcontractorsId() {
+        return subcontractorsBySubcontractorsId;
+    }
+
+    public void setSubcontractorsBySubcontractorsId(SubcontractorsEntity subcontractorsBySubcontractorsId) {
+        this.subcontractorsBySubcontractorsId = subcontractorsBySubcontractorsId;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "service_request_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public ServiceRequestEntity getServiceRequestByServiceRequestId() {
+        return serviceRequestByServiceRequestId;
+    }
+
+    public void setServiceRequestByServiceRequestId(ServiceRequestEntity serviceRequestByServiceRequestId) {
+        this.serviceRequestByServiceRequestId = serviceRequestByServiceRequestId;
     }
 }

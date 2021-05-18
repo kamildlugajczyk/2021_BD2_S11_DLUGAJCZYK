@@ -1,6 +1,7 @@
-package pl.polsl.tab.fleetmanagement.models;
+package pl.polsl.tab.fleetmanagement.model;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -10,9 +11,10 @@ public class BrandsModelsEntity {
     private String brand;
     private String model;
     private String modelYear;
+    private Collection<VehiclesEntity> vehiclesById;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     public long getId() {
         return id;
     }
@@ -22,7 +24,7 @@ public class BrandsModelsEntity {
     }
 
     @Basic
-    @Column(name = "brand")
+    @Column(name = "brand", nullable = false, length = 50)
     public String getBrand() {
         return brand;
     }
@@ -32,7 +34,7 @@ public class BrandsModelsEntity {
     }
 
     @Basic
-    @Column(name = "model")
+    @Column(name = "model", nullable = false, length = 50)
     public String getModel() {
         return model;
     }
@@ -42,7 +44,7 @@ public class BrandsModelsEntity {
     }
 
     @Basic
-    @Column(name = "model_year")
+    @Column(name = "model_year", length = 50)
     public String getModelYear() {
         return modelYear;
     }
@@ -62,5 +64,14 @@ public class BrandsModelsEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, brand, model, modelYear);
+    }
+
+    @OneToMany(mappedBy = "brandsModelsByBrandsModelsId")
+    public Collection<VehiclesEntity> getVehiclesById() {
+        return vehiclesById;
+    }
+
+    public void setVehiclesById(Collection<VehiclesEntity> vehiclesById) {
+        this.vehiclesById = vehiclesById;
     }
 }

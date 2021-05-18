@@ -1,6 +1,7 @@
-package pl.polsl.tab.fleetmanagement.models;
+package pl.polsl.tab.fleetmanagement.model;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -8,9 +9,10 @@ import java.util.Objects;
 public class ServiceTypesEntity {
     private long id;
     private String name;
+    private Collection<ServiceRequestEntity> serviceRequestsById;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     public long getId() {
         return id;
     }
@@ -20,7 +22,7 @@ public class ServiceTypesEntity {
     }
 
     @Basic
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 50)
     public String getName() {
         return name;
     }
@@ -40,5 +42,14 @@ public class ServiceTypesEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
+    }
+
+    @OneToMany(mappedBy = "serviceTypesByServiceTypesId")
+    public Collection<ServiceRequestEntity> getServiceRequestsById() {
+        return serviceRequestsById;
+    }
+
+    public void setServiceRequestsById(Collection<ServiceRequestEntity> serviceRequestsById) {
+        this.serviceRequestsById = serviceRequestsById;
     }
 }

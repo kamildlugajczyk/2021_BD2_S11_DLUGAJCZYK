@@ -1,6 +1,7 @@
-package pl.polsl.tab.fleetmanagement.models;
+package pl.polsl.tab.fleetmanagement.model;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -10,9 +11,10 @@ public class SubcontractorsEntity {
     private String name;
     private String address;
     private String phonenumber;
+    private Collection<ServicingEntity> servicingsById;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     public long getId() {
         return id;
     }
@@ -22,7 +24,7 @@ public class SubcontractorsEntity {
     }
 
     @Basic
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 50)
     public String getName() {
         return name;
     }
@@ -32,7 +34,7 @@ public class SubcontractorsEntity {
     }
 
     @Basic
-    @Column(name = "address")
+    @Column(name = "address", nullable = false, length = 50)
     public String getAddress() {
         return address;
     }
@@ -42,7 +44,7 @@ public class SubcontractorsEntity {
     }
 
     @Basic
-    @Column(name = "phonenumber")
+    @Column(name = "phonenumber", nullable = false, length = 50)
     public String getPhonenumber() {
         return phonenumber;
     }
@@ -62,5 +64,14 @@ public class SubcontractorsEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, address, phonenumber);
+    }
+
+    @OneToMany(mappedBy = "subcontractorsBySubcontractorsId")
+    public Collection<ServicingEntity> getServicingsById() {
+        return servicingsById;
+    }
+
+    public void setServicingsById(Collection<ServicingEntity> servicingsById) {
+        this.servicingsById = servicingsById;
     }
 }

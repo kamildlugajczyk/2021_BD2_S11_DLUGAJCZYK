@@ -1,7 +1,8 @@
-package pl.polsl.tab.fleetmanagement.models;
+package pl.polsl.tab.fleetmanagement.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -14,9 +15,11 @@ public class VehicleRentingsEntity {
     private Date enddate;
     private String isbusiness;
     private int vehicleUnavailabilityId;
+    private Collection<OperationCostsEntity> operationCostsById;
+    private VehicleUnavailabilityEntity vehicleUnavailabilityByVehicleUnavailabilityId;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     public long getId() {
         return id;
     }
@@ -26,7 +29,7 @@ public class VehicleRentingsEntity {
     }
 
     @Basic
-    @Column(name = "startmileage")
+    @Column(name = "startmileage", nullable = false)
     public int getStartmileage() {
         return startmileage;
     }
@@ -36,7 +39,7 @@ public class VehicleRentingsEntity {
     }
 
     @Basic
-    @Column(name = "endmileage")
+    @Column(name = "endmileage", nullable = false)
     public int getEndmileage() {
         return endmileage;
     }
@@ -46,7 +49,7 @@ public class VehicleRentingsEntity {
     }
 
     @Basic
-    @Column(name = "startdate")
+    @Column(name = "startdate", nullable = false)
     public Date getStartdate() {
         return startdate;
     }
@@ -56,7 +59,7 @@ public class VehicleRentingsEntity {
     }
 
     @Basic
-    @Column(name = "enddate")
+    @Column(name = "enddate", nullable = false)
     public Date getEnddate() {
         return enddate;
     }
@@ -66,7 +69,7 @@ public class VehicleRentingsEntity {
     }
 
     @Basic
-    @Column(name = "isbusiness")
+    @Column(name = "isbusiness", nullable = false, length = 1)
     public String getIsbusiness() {
         return isbusiness;
     }
@@ -76,7 +79,7 @@ public class VehicleRentingsEntity {
     }
 
     @Basic
-    @Column(name = "vehicle_unavailability_id")
+    @Column(name = "vehicle_unavailability_id", nullable = false)
     public int getVehicleUnavailabilityId() {
         return vehicleUnavailabilityId;
     }
@@ -96,5 +99,24 @@ public class VehicleRentingsEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, startmileage, endmileage, startdate, enddate, isbusiness, vehicleUnavailabilityId);
+    }
+
+    @OneToMany(mappedBy = "vehicleRentingsByVehicleRentingsId")
+    public Collection<OperationCostsEntity> getOperationCostsById() {
+        return operationCostsById;
+    }
+
+    public void setOperationCostsById(Collection<OperationCostsEntity> operationCostsById) {
+        this.operationCostsById = operationCostsById;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "vehicle_unavailability_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public VehicleUnavailabilityEntity getVehicleUnavailabilityByVehicleUnavailabilityId() {
+        return vehicleUnavailabilityByVehicleUnavailabilityId;
+    }
+
+    public void setVehicleUnavailabilityByVehicleUnavailabilityId(VehicleUnavailabilityEntity vehicleUnavailabilityByVehicleUnavailabilityId) {
+        this.vehicleUnavailabilityByVehicleUnavailabilityId = vehicleUnavailabilityByVehicleUnavailabilityId;
     }
 }

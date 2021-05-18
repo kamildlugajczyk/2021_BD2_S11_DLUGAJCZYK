@@ -1,6 +1,7 @@
-package pl.polsl.tab.fleetmanagement.models;
+package pl.polsl.tab.fleetmanagement.model;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -11,9 +12,12 @@ public class PeopleEntity {
     private String lastname;
     private String phonenumber;
     private int functionsId;
+    private Collection<KeepingEntity> keepingsById;
+    private FunctionsEntity functionsByFunctionsId;
+    private Collection<VehicleUnavailabilityEntity> vehicleUnavailabilitiesById;
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     public long getId() {
         return id;
     }
@@ -23,7 +27,7 @@ public class PeopleEntity {
     }
 
     @Basic
-    @Column(name = "firstname")
+    @Column(name = "firstname", nullable = false, length = 50)
     public String getFirstname() {
         return firstname;
     }
@@ -33,7 +37,7 @@ public class PeopleEntity {
     }
 
     @Basic
-    @Column(name = "lastname")
+    @Column(name = "lastname", nullable = false, length = 50)
     public String getLastname() {
         return lastname;
     }
@@ -43,7 +47,7 @@ public class PeopleEntity {
     }
 
     @Basic
-    @Column(name = "phonenumber")
+    @Column(name = "phonenumber", nullable = false, length = 50)
     public String getPhonenumber() {
         return phonenumber;
     }
@@ -53,7 +57,7 @@ public class PeopleEntity {
     }
 
     @Basic
-    @Column(name = "functions_id")
+    @Column(name = "functions_id", nullable = false)
     public int getFunctionsId() {
         return functionsId;
     }
@@ -73,5 +77,33 @@ public class PeopleEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, firstname, lastname, phonenumber, functionsId);
+    }
+
+    @OneToMany(mappedBy = "peopleByPeopleId")
+    public Collection<KeepingEntity> getKeepingsById() {
+        return keepingsById;
+    }
+
+    public void setKeepingsById(Collection<KeepingEntity> keepingsById) {
+        this.keepingsById = keepingsById;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "functions_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    public FunctionsEntity getFunctionsByFunctionsId() {
+        return functionsByFunctionsId;
+    }
+
+    public void setFunctionsByFunctionsId(FunctionsEntity functionsByFunctionsId) {
+        this.functionsByFunctionsId = functionsByFunctionsId;
+    }
+
+    @OneToMany(mappedBy = "peopleByPeopleId")
+    public Collection<VehicleUnavailabilityEntity> getVehicleUnavailabilitiesById() {
+        return vehicleUnavailabilitiesById;
+    }
+
+    public void setVehicleUnavailabilitiesById(Collection<VehicleUnavailabilityEntity> vehicleUnavailabilitiesById) {
+        this.vehicleUnavailabilitiesById = vehicleUnavailabilitiesById;
     }
 }
