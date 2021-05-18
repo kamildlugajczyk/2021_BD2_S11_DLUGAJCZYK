@@ -1,4 +1,8 @@
-package pl.polsl.tab.fleetmanagement.model;
+package pl.polsl.tab.fleetmanagement.vehicle;
+
+import pl.polsl.tab.fleetmanagement.model.KeepingEntity;
+import pl.polsl.tab.fleetmanagement.model.OperationCostsEntity;
+import pl.polsl.tab.fleetmanagement.model.VehicleUnavailabilityEntity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -19,9 +23,9 @@ public class VehiclesEntity {
     private Collection<KeepingEntity> keepingsById;
     private Collection<OperationCostsEntity> operationCostsById;
     private Collection<VehicleUnavailabilityEntity> vehicleUnavailabilitiesById;
-    private BrandsModelsEntity brandsModelsByBrandsModelsId;
     private TypesEntity typesByTypesId;
     private PurposesEntity purposesByPurposesId;
+    private BrandsModelsEntity brandsModelsByBrandsModelsId;
 
     @Id
     @Column(name = "id", nullable = false)

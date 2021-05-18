@@ -1,5 +1,7 @@
 package pl.polsl.tab.fleetmanagement.model;
 
+import pl.polsl.tab.fleetmanagement.vehicle.VehiclesEntity;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;

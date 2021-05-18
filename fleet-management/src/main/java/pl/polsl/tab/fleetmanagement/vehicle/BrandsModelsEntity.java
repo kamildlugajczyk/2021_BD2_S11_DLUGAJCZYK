@@ -1,4 +1,6 @@
-package pl.polsl.tab.fleetmanagement.model;
+package pl.polsl.tab.fleetmanagement.vehicle;
+
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.util.Collection;
