@@ -1,4 +1,4 @@
-package pl.polsl.tab.fleetmanagement.model;
+package pl.polsl.tab.fleetmanagement.models;
 
 import javax.persistence.*;
 import java.sql.Date;

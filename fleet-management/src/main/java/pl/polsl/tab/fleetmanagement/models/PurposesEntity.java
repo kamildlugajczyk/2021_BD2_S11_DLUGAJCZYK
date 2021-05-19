@@ -1,12 +1,12 @@
-package pl.polsl.tab.fleetmanagement.model;
+package pl.polsl.tab.fleetmanagement.models;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-@Table(name = "types", schema = "public", catalog = "testdb")
-public class TypesEntity {
+@Table(name = "purposes", schema = "public", catalog = "testdb")
+public class PurposesEntity {
     private long id;
     private String name;
     private Collection<VehiclesEntity> vehiclesById;
@@ -35,7 +35,7 @@ public class TypesEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TypesEntity that = (TypesEntity) o;
+        PurposesEntity that = (PurposesEntity) o;
         return id == that.id && Objects.equals(name, that.name);
     }
 
@@ -44,7 +44,7 @@ public class TypesEntity {
         return Objects.hash(id, name);
     }
 
-    @OneToMany(mappedBy = "typesByTypesId")
+    @OneToMany(mappedBy = "purposesByPurposesId")
     public Collection<VehiclesEntity> getVehiclesById() {
         return vehiclesById;
     }

@@ -1,15 +1,15 @@
-package pl.polsl.tab.fleetmanagement.model;
+package pl.polsl.tab.fleetmanagement.models;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-@Table(name = "operation_type", schema = "public", catalog = "testdb")
-public class OperationTypeEntity {
+@Table(name = "types", schema = "public", catalog = "testdb")
+public class TypesEntity {
     private long id;
     private String name;
-    private Collection<OperationCostsEntity> operationCostsById;
+    private Collection<VehiclesEntity> vehiclesById;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -35,7 +35,7 @@ public class OperationTypeEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OperationTypeEntity that = (OperationTypeEntity) o;
+        TypesEntity that = (TypesEntity) o;
         return id == that.id && Objects.equals(name, that.name);
     }
 
@@ -44,12 +44,12 @@ public class OperationTypeEntity {
         return Objects.hash(id, name);
     }
 
-    @OneToMany(mappedBy = "operationTypeByOperationTypeId")
-    public Collection<OperationCostsEntity> getOperationCostsById() {
-        return operationCostsById;
+    @OneToMany(mappedBy = "typesByTypesId")
+    public Collection<VehiclesEntity> getVehiclesById() {
+        return vehiclesById;
     }
 
-    public void setOperationCostsById(Collection<OperationCostsEntity> operationCostsById) {
-        this.operationCostsById = operationCostsById;
+    public void setVehiclesById(Collection<VehiclesEntity> vehiclesById) {
+        this.vehiclesById = vehiclesById;
     }
 }
