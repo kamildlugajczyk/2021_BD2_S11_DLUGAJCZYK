@@ -15,14 +15,14 @@ public class VehicleRentingsDTO {
     private String isbusiness;
     private int vehicleUnavailability;
 
-    public VehicleRentingsDTO(long id, int startmileage, int endmileage, Date startdate, Date enddate, String isbusiness, VehicleUnavailabilityEntity vehicleUnavailabilityId) {
+    public VehicleRentingsDTO(long id, int startmileage, int endmileage, Date startdate, Date enddate, String isbusiness, int vehicleUnavailabilityId) {
         this.id = id;
         this.startmileage = startmileage;
         this.endmileage = endmileage;
         this.startdate = startdate;
         this.enddate = enddate;
         this.isbusiness = isbusiness;
-        this.vehicleUnavailability = (int) vehicleUnavailabilityId.getId();
+        this.vehicleUnavailability = vehicleUnavailabilityId;
     }
 
 

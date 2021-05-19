@@ -20,6 +20,19 @@ public class VehicleRentingsEntity {
     private Collection<OperationCostsEntity> operationCostsById;
     private VehicleUnavailabilityEntity vehicleUnavailabilityByVehicleUnavailabilityId;
 
+    public VehicleRentingsEntity(int startmileage, int endmileage, Date startdate, Date enddate, String isbusiness, int vehicleUnavailabilityId) {
+        this.startmileage = startmileage;
+        this.endmileage = endmileage;
+        this.startdate = startdate;
+        this.enddate = enddate;
+        this.isbusiness = isbusiness;
+        this.vehicleUnavailabilityId = vehicleUnavailabilityId;
+    }
+
+    public VehicleRentingsEntity() {
+
+    }
+
     @Id
     @Column(name = "id", nullable = false)
     public long getId() {
