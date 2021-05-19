@@ -1,5 +1,7 @@
 package pl.polsl.tab.fleetmanagement.model;
 
+import pl.polsl.tab.fleetmanagement.rentings.VehicleUnavailabilityEntity;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Collection;
