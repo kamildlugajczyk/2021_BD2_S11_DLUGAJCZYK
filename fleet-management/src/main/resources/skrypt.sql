@@ -55,14 +55,14 @@ create table Keeping (
 
 create table Subcontractors (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-	name VARCHAR(50) NOT NULL,
+	name VARCHAR(50) NOT NULL UNIQUE,
 	address VARCHAR(50) NOT NULL,
 	phoneNumber VARCHAR(50) NOT NULL
 );
 
 create table Service_types (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-	name VARCHAR(50) NOT NULL
+	name VARCHAR(50) NOT NULL UNIQUE
 );
 
 create table Vehicle_unavailability (

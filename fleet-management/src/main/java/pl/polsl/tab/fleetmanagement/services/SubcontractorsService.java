@@ -8,10 +8,9 @@ import pl.polsl.tab.fleetmanagement.repositories.SubcontractorsRepository;
 import java.util.Optional;
 
 @Component
-@NoArgsConstructor
 public class SubcontractorsService {
 
-    private SubcontractorsRepository subcontractorsRepository = null;
+    private final SubcontractorsRepository subcontractorsRepository;
 
     @Autowired
     public SubcontractorsService(SubcontractorsRepository subcontractorsRepository) {
@@ -27,7 +26,11 @@ public class SubcontractorsService {
     }
 
     public SubcontractorsEntity addSubcontractor(SubcontractorsEntity subcontractor) {
-        return subcontractorsRepository.save(subcontractor);
+        return subcontractorsRepository.save(new SubcontractorsEntity(
+                subcontractor.getName(),
+                subcontractor.getAddress(),
+                subcontractor.getPhoneNumber()
+        ));
     }
 
     public void deleteSubcontractorById(Long id) {

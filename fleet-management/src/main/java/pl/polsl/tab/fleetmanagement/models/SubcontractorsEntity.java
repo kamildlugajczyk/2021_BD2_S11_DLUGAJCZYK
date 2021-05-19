@@ -1,25 +1,27 @@
 package pl.polsl.tab.fleetmanagement.models;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@NoArgsConstructor
 @Table(name = "subcontractors", schema = "public", catalog = "testdb")
 public class SubcontractorsEntity {
 
     @Id
     @Getter
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
     @Basic
     @Getter
     @Setter
-    @Column(name = "name", nullable = false, length = 50)
+    @Column(name = "name", nullable = false, length = 50, unique = true)
     private String name;
 
     @Basic
@@ -33,6 +35,12 @@ public class SubcontractorsEntity {
     @Setter
     @Column(name = "phonenumber", nullable = false, length = 50)
     private String phoneNumber;
+
+    public SubcontractorsEntity(String name, String address, String phoneNumber) {
+        this.name = name;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+    }
 
     @Override
     public boolean equals(Object o) {

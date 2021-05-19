@@ -1,33 +1,30 @@
 package pl.polsl.tab.fleetmanagement.models;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.Objects;
 
 @Entity
+@NoArgsConstructor
 @Table(name = "service_types", schema = "public", catalog = "testdb")
 public class ServiceTypesEntity {
-    private long id;
-    private String name;
-    private Collection<ServiceRequestEntity> serviceRequestsById;
 
     @Id
+    @Getter
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+    private Long id;
 
     @Basic
-    @Column(name = "name", nullable = false, length = 50)
-    public String getName() {
-        return name;
-    }
+    @Getter
+    @Setter
+    @Column(name = "name", nullable = false, length = 50, unique = true)
+    private String name;
 
-    public void setName(String name) {
+    public ServiceTypesEntity(String name) {
         this.name = name;
     }
 
@@ -36,7 +33,7 @@ public class ServiceTypesEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ServiceTypesEntity that = (ServiceTypesEntity) o;
-        return id == that.id && Objects.equals(name, that.name);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name);
     }
 
     @Override
@@ -44,12 +41,11 @@ public class ServiceTypesEntity {
         return Objects.hash(id, name);
     }
 
-    @OneToMany(mappedBy = "serviceTypesByServiceTypesId")
-    public Collection<ServiceRequestEntity> getServiceRequestsById() {
-        return serviceRequestsById;
-    }
-
-    public void setServiceRequestsById(Collection<ServiceRequestEntity> serviceRequestsById) {
-        this.serviceRequestsById = serviceRequestsById;
+    @Override
+    public String toString() {
+        return "ServiceTypesEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }
