@@ -3,6 +3,7 @@ package pl.polsl.tab.fleetmanagement.rentings;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +66,7 @@ public class VehicleRentingsService {
         vehicleRentingsRepository.save(vehicleRentingsEntity);
     }
 
+    @Transactional
     public void updateVehicleRenting(Long vehicleRentingId, int startmileage, int endmileage,
                                      Date startdate, Date enddate, String isbusiness, int vehicleUnavailabilityId) {
 

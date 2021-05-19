@@ -18,22 +18,22 @@ public class VehicleRentingsController {
         return vehicleRentingsService.getAllVehicleRentings();
     }
 
-    @GetMapping(path = "/get/{vehicleRentingId}")
+    @GetMapping(path = "/{vehicleRentingId}")
     public VehicleRentingsDTO getVehicleRentingById(Long vehicleRentingId) {
         return vehicleRentingsService.getVehicleRentingById(vehicleRentingId);
     }
 
-    @DeleteMapping(path = "/del/{vehicleRentingId}")
+    @DeleteMapping(path = "/{vehicleRentingId}")
     public void deleteVehicleRenting(@PathVariable("vehicleRentingId") Long vehicleRentingId) {
         vehicleRentingsService.deleteVehicleRenting(vehicleRentingId);
     }
 
-    @PostMapping(path = "/add")
+    @PostMapping
     public void addNewVehicleRenting(@RequestBody VehicleRentingsDTO vehicleRentingsEntity) {
         vehicleRentingsService.addNewVehicleRenting(vehicleRentingsEntity);
     }
 
-    @PutMapping(path = "/update/{vehicleRentingId}")
+    @PutMapping(path = "/{vehicleRentingId}")
     public void updateVehicleRenting(
             @PathVariable("vehicleRentingId") Long vehicleRentingId,
             @RequestParam(required = false) int startmileage,
@@ -49,4 +49,4 @@ public class VehicleRentingsController {
     }
 
 
-    }
+}

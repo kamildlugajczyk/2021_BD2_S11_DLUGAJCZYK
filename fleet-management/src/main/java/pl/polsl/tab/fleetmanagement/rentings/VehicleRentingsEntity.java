@@ -34,6 +34,15 @@ public class VehicleRentingsEntity {
     }
 
     @Id
+    @SequenceGenerator(
+            name = "vehicle_rentings_id_seq",
+            sequenceName = "vehicle_rentings_id_seq",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "vehicle_rentings_id_seq"
+    )
     @Column(name = "id", nullable = false)
     public long getId() {
         return id;
