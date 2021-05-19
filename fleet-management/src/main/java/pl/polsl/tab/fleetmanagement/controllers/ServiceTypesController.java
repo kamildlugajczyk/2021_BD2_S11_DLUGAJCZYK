@@ -2,13 +2,12 @@ package pl.polsl.tab.fleetmanagement.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
+import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
 import pl.polsl.tab.fleetmanagement.models.ServiceTypesEntity;
 import pl.polsl.tab.fleetmanagement.services.ServiceTypesService;
-
-import java.sql.SQLException;
-import java.util.Optional;
 
 @RestController
 public class ServiceTypesController {
@@ -26,38 +25,44 @@ public class ServiceTypesController {
     }
 
     @GetMapping("service/types/{id}")
-    public ResponseEntity<ServiceTypesEntity> getServiceTypesById(@PathVariable Long id) {
-        Optional<ServiceTypesEntity> response = this.serviceTypesService.getServiceTypesById(id);
-        return response
-                .map(serviceTypesEntity -> ResponseEntity.status(HttpStatus.OK).body(response.get()))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+    public ServiceTypesEntity getServiceTypesById(@PathVariable Long id) {
+        try {
+            return this.serviceTypesService.getServiceTypesById(id);
+        } catch (IdNotFoundInDatabaseException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
     }
 
     @PostMapping("service/types")
-    public ResponseEntity<ServiceTypesEntity> addServiceTypes(@RequestBody ServiceTypesEntity serviceTypesEntity) {
+    public ServiceTypesEntity addServiceTypes(@RequestBody ServiceTypesEntity serviceTypesEntity) {
         try {
-            ServiceTypesEntity response = this.serviceTypesService.addServiceTypes(serviceTypesEntity);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            return this.serviceTypesService.addServiceTypes(serviceTypesEntity);
+        } catch (ItemExistsInDatabaseException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
         } catch (RuntimeException  e) {
-            Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
 
-            if (rootCause instanceof SQLException) {
-                if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-                }
-            }
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    @PutMapping("service/types/{id}")
+    public ServiceTypesEntity updateServiceType(@RequestBody String name, @PathVariable Long id) {
+        try {
+            return this.serviceTypesService.updateServiceType(name, id);
+        } catch (IdNotFoundInDatabaseException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (ItemExistsInDatabaseException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
 
     @DeleteMapping("service/types/{id}")
-    public ResponseEntity<String> deleteServiceTypesById(@PathVariable Long id) {
+    public void deleteServiceTypesById(@PathVariable Long id) {
         try {
             this.serviceTypesService.deleteServiceTypeById(id);
-            return ResponseEntity.status(HttpStatus.OK).body(null);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (IdNotFoundInDatabaseException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
 

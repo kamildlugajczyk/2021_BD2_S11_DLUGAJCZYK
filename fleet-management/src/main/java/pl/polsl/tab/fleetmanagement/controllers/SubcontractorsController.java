@@ -2,13 +2,12 @@ package pl.polsl.tab.fleetmanagement.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
+import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
 import pl.polsl.tab.fleetmanagement.models.SubcontractorsEntity;
 import pl.polsl.tab.fleetmanagement.services.SubcontractorsService;
-
-import java.sql.SQLException;
-import java.util.Optional;
 
 @RestController
 public class SubcontractorsController {
@@ -26,39 +25,48 @@ public class SubcontractorsController {
     }
 
     @GetMapping("service/subcontractors/{id}")
-    public ResponseEntity<SubcontractorsEntity> getSubcontractorById(@PathVariable Long id) {
-        Optional<SubcontractorsEntity> response = this.subcontractorsService.getSubcontractorById(id);
-        return response
-                .map(subcontractorsEntity -> ResponseEntity.status(HttpStatus.OK).body(subcontractorsEntity))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+    public SubcontractorsEntity getSubcontractorById(@PathVariable Long id) {
+        try {
+            return this.subcontractorsService.getSubcontractorById(id);
+        } catch (IdNotFoundInDatabaseException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
     }
 
     @PostMapping("service/subcontractors/")
-    public ResponseEntity<SubcontractorsEntity> addSubcontractor(@RequestBody SubcontractorsEntity subcontractor) {
+    public SubcontractorsEntity addSubcontractor(@RequestBody SubcontractorsEntity subcontractor) {
         try {
-            SubcontractorsEntity response = this.subcontractorsService.addSubcontractor(subcontractor);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            return this.subcontractorsService.addSubcontractor(subcontractor);
+        } catch (ItemExistsInDatabaseException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         } catch (RuntimeException  e) {
-            Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
-
-            if (rootCause instanceof SQLException) {
-                if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-                }
-            }
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
+    }
 
+    @PutMapping("service/subcontractors/{id}")
+    public SubcontractorsEntity updateSubcontractorById(@RequestBody SubcontractorsEntity subcontractor, @PathVariable Long id) {
+        try {
+            return this.subcontractorsService.updateSubcontractorById(subcontractor, id);
+        } catch (IdNotFoundInDatabaseException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        } catch (ItemExistsInDatabaseException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
     }
 
     @DeleteMapping("service/subcontractors/{id}")
-    public ResponseEntity<String> deleteSubcontractorById(@PathVariable Long id) {
+    public void deleteSubcontractorById(@PathVariable Long id) {
        try {
            this.subcontractorsService.deleteSubcontractorById(id);
-           return ResponseEntity.status(HttpStatus.OK).body(null);
-       } catch (RuntimeException e) {
-           return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+       } catch (IdNotFoundInDatabaseException e) {
+           throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
        }
     }
 }
