@@ -31,6 +31,15 @@ public class PurposesEntity {
         this.name = name;
     }
 
+    @OneToMany(mappedBy = "purposesByPurposesId")
+    public Collection<VehiclesEntity> getVehiclesById() {
+        return vehiclesById;
+    }
+
+    public void setVehiclesById(Collection<VehiclesEntity> vehiclesById) {
+        this.vehiclesById = vehiclesById;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -42,14 +51,5 @@ public class PurposesEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
-    }
-
-    @OneToMany(mappedBy = "purposesByPurposesId")
-    public Collection<VehiclesEntity> getVehiclesById() {
-        return vehiclesById;
-    }
-
-    public void setVehiclesById(Collection<VehiclesEntity> vehiclesById) {
-        this.vehiclesById = vehiclesById;
     }
 }

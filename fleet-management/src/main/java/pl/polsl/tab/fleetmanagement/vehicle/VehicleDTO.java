@@ -2,6 +2,7 @@ package pl.polsl.tab.fleetmanagement.vehicle;
 
 
 import lombok.Getter;
+import pl.polsl.tab.fleetmanagement.vehicletype.TypesEntity;
 
 import java.math.BigDecimal;
 

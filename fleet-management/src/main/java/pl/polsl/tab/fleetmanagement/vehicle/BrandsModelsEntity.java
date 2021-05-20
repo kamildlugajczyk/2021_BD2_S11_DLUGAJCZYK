@@ -55,6 +55,15 @@ public class BrandsModelsEntity {
         this.modelYear = modelYear;
     }
 
+    @OneToMany(mappedBy = "brandsModelsByBrandsModelsId")
+    public Collection<VehiclesEntity> getVehiclesById() {
+        return vehiclesById;
+    }
+
+    public void setVehiclesById(Collection<VehiclesEntity> vehiclesById) {
+        this.vehiclesById = vehiclesById;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -66,14 +75,5 @@ public class BrandsModelsEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, brand, model, modelYear);
-    }
-
-    @OneToMany(mappedBy = "brandsModelsByBrandsModelsId")
-    public Collection<VehiclesEntity> getVehiclesById() {
-        return vehiclesById;
-    }
-
-    public void setVehiclesById(Collection<VehiclesEntity> vehiclesById) {
-        this.vehiclesById = vehiclesById;
     }
 }

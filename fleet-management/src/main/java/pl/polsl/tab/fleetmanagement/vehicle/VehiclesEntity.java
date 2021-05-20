@@ -3,6 +3,7 @@ package pl.polsl.tab.fleetmanagement.vehicle;
 import pl.polsl.tab.fleetmanagement.people.KeepingEntity;
 import pl.polsl.tab.fleetmanagement.model.OperationCostsEntity;
 import pl.polsl.tab.fleetmanagement.model.VehicleUnavailabilityEntity;
+import pl.polsl.tab.fleetmanagement.vehicletype.TypesEntity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -107,19 +108,6 @@ public class VehiclesEntity {
         this.purposesId = purposesId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        VehiclesEntity that = (VehiclesEntity) o;
-        return id == that.id && mileage == that.mileage && brandsModelsId == that.brandsModelsId && typesId == that.typesId && purposesId == that.purposesId && Objects.equals(vin, that.vin) && Objects.equals(equipmentlevel, that.equipmentlevel) && Objects.equals(avgfuelconsumption, that.avgfuelconsumption);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, vin, equipmentlevel, mileage, avgfuelconsumption, brandsModelsId, typesId, purposesId);
-    }
-
     @OneToMany(mappedBy = "vehiclesByVehiclesId")
     public Collection<KeepingEntity> getKeepingsById() {
         return keepingsById;
@@ -175,5 +163,18 @@ public class VehiclesEntity {
 
     public void setPurposesByPurposesId(PurposesEntity purposesByPurposesId) {
         this.purposesByPurposesId = purposesByPurposesId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VehiclesEntity that = (VehiclesEntity) o;
+        return id == that.id && mileage == that.mileage && brandsModelsId == that.brandsModelsId && typesId == that.typesId && purposesId == that.purposesId && Objects.equals(vin, that.vin) && Objects.equals(equipmentlevel, that.equipmentlevel) && Objects.equals(avgfuelconsumption, that.avgfuelconsumption);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, vin, equipmentlevel, mileage, avgfuelconsumption, brandsModelsId, typesId, purposesId);
     }
 }

@@ -68,19 +68,6 @@ public class PeopleEntity {
         this.functionsId = functionsId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PeopleEntity that = (PeopleEntity) o;
-        return id == that.id && functionsId == that.functionsId && Objects.equals(firstname, that.firstname) && Objects.equals(lastname, that.lastname) && Objects.equals(phonenumber, that.phonenumber);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, firstname, lastname, phonenumber, functionsId);
-    }
-
     @OneToMany(mappedBy = "peopleByPeopleId")
     public Collection<KeepingEntity> getKeepingsById() {
         return keepingsById;
@@ -107,5 +94,18 @@ public class PeopleEntity {
 
     public void setVehicleUnavailabilitiesById(Collection<VehicleUnavailabilityEntity> vehicleUnavailabilitiesById) {
         this.vehicleUnavailabilitiesById = vehicleUnavailabilitiesById;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PeopleEntity that = (PeopleEntity) o;
+        return id == that.id && functionsId == that.functionsId && Objects.equals(firstname, that.firstname) && Objects.equals(lastname, that.lastname) && Objects.equals(phonenumber, that.phonenumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstname, lastname, phonenumber, functionsId);
     }
 }
