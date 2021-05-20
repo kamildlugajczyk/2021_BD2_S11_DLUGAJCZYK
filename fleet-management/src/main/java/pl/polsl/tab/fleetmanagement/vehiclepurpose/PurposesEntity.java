@@ -1,4 +1,6 @@
-package pl.polsl.tab.fleetmanagement.vehicle;
+package pl.polsl.tab.fleetmanagement.vehiclepurpose;
+
+import pl.polsl.tab.fleetmanagement.vehicle.VehiclesEntity;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -11,8 +13,21 @@ public class PurposesEntity {
     private String name;
     private Collection<VehiclesEntity> vehiclesById;
 
+    public PurposesEntity() {
+    }
+
+    public PurposesEntity(String name) {
+        this.name = name;
+    }
+
+    public PurposesEntity(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long getId() {
         return id;
     }
@@ -31,7 +46,7 @@ public class PurposesEntity {
         this.name = name;
     }
 
-    @OneToMany(mappedBy = "purposesByPurposesId")
+    @OneToMany(mappedBy = "purposesByPurposesId", fetch = FetchType.LAZY)
     public Collection<VehiclesEntity> getVehiclesById() {
         return vehiclesById;
     }

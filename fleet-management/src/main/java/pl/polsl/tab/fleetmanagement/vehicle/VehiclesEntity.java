@@ -3,6 +3,7 @@ package pl.polsl.tab.fleetmanagement.vehicle;
 import pl.polsl.tab.fleetmanagement.people.KeepingEntity;
 import pl.polsl.tab.fleetmanagement.model.OperationCostsEntity;
 import pl.polsl.tab.fleetmanagement.model.VehicleUnavailabilityEntity;
+import pl.polsl.tab.fleetmanagement.vehiclepurpose.PurposesEntity;
 import pl.polsl.tab.fleetmanagement.vehicletype.TypesEntity;
 
 import javax.persistence.*;
