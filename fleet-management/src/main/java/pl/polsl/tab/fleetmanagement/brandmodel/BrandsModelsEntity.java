@@ -1,6 +1,7 @@
-package pl.polsl.tab.fleetmanagement.vehicle;
+package pl.polsl.tab.fleetmanagement.brandmodel;
 
-import lombok.Getter;
+import net.bytebuddy.dynamic.loading.InjectionClassLoader;
+import pl.polsl.tab.fleetmanagement.vehicle.VehiclesEntity;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -15,8 +16,25 @@ public class BrandsModelsEntity {
     private String modelYear;
     private Collection<VehiclesEntity> vehiclesById;
 
+    public BrandsModelsEntity() {
+    }
+
+    public BrandsModelsEntity(String brand, String model, String modelYear) {
+        this.brand = brand;
+        this.model = model;
+        this.modelYear = modelYear;
+    }
+
+    public BrandsModelsEntity(long id, String brand, String model, String modelYear) {
+        this.id = id;
+        this.brand = brand;
+        this.model = model;
+        this.modelYear = modelYear;
+    }
+
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long getId() {
         return id;
     }
@@ -55,7 +73,7 @@ public class BrandsModelsEntity {
         this.modelYear = modelYear;
     }
 
-    @OneToMany(mappedBy = "brandsModelsByBrandsModelsId")
+    @OneToMany(mappedBy = "brandsModelsByBrandsModelsId", fetch = FetchType.LAZY)
     public Collection<VehiclesEntity> getVehiclesById() {
         return vehiclesById;
     }

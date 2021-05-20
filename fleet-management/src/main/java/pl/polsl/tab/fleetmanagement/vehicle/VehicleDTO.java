@@ -2,6 +2,7 @@ package pl.polsl.tab.fleetmanagement.vehicle;
 
 
 import lombok.Getter;
+import pl.polsl.tab.fleetmanagement.brandmodel.BrandsModelsEntity;
 import pl.polsl.tab.fleetmanagement.vehiclepurpose.PurposesEntity;
 import pl.polsl.tab.fleetmanagement.vehicletype.TypesEntity;
 
