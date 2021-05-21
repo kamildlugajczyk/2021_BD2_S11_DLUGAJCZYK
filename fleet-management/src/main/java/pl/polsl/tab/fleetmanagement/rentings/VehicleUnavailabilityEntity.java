@@ -1,6 +1,6 @@
 package pl.polsl.tab.fleetmanagement.rentings;
 
-import pl.polsl.tab.fleetmanagement.model.ServiceRequestEntity;
+import pl.polsl.tab.fleetmanagement.carservice.ServiceRequestEntity;
 import pl.polsl.tab.fleetmanagement.people.PeopleEntity;
 import pl.polsl.tab.fleetmanagement.vehicle.VehiclesEntity;
 

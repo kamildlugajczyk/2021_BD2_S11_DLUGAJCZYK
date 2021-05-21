@@ -1,4 +1,4 @@
-package pl.polsl.tab.fleetmanagement.model;
+package pl.polsl.tab.fleetmanagement.carservice;
 
 import javax.persistence.*;
 import java.util.Collection;

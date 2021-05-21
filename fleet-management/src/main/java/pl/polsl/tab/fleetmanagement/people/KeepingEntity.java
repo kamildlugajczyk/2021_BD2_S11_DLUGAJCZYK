@@ -1,6 +1,6 @@
 package pl.polsl.tab.fleetmanagement.people;
 
-import pl.polsl.tab.fleetmanagement.model.OperationCostsEntity;
+import pl.polsl.tab.fleetmanagement.exploitation.OperationCostsEntity;
 import pl.polsl.tab.fleetmanagement.vehicle.VehiclesEntity;
 
 import javax.persistence.*;

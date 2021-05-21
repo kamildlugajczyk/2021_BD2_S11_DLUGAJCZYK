@@ -1,6 +1,6 @@
 package pl.polsl.tab.fleetmanagement.rentings;
 
-import pl.polsl.tab.fleetmanagement.model.OperationCostsEntity;
+import pl.polsl.tab.fleetmanagement.exploitation.OperationCostsEntity;
 
 import javax.persistence.*;
 import java.sql.Date;

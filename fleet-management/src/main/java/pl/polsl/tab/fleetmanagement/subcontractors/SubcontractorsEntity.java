@@ -1,4 +1,6 @@
-package pl.polsl.tab.fleetmanagement.model;
+package pl.polsl.tab.fleetmanagement.subcontractors;
+
+import pl.polsl.tab.fleetmanagement.carservice.ServicingEntity;
 
 import javax.persistence.*;
 import java.util.Collection;
