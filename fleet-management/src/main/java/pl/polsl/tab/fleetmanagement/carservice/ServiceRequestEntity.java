@@ -1,4 +1,4 @@
-package pl.polsl.tab.fleetmanagement.model;
+package pl.polsl.tab.fleetmanagement.carservice;
 
 import pl.polsl.tab.fleetmanagement.rentings.VehicleUnavailabilityEntity;
 

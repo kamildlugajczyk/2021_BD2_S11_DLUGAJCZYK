@@ -1,4 +1,6 @@
-package pl.polsl.tab.fleetmanagement.model;
+package pl.polsl.tab.fleetmanagement.carservice;
+
+import pl.polsl.tab.fleetmanagement.subcontractors.SubcontractorsEntity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
