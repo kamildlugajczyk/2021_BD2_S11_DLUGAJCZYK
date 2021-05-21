@@ -1,5 +1,6 @@
 package pl.polsl.tab.fleetmanagement.people;
 
+import pl.polsl.tab.fleetmanagement.function.FunctionsEntity;
 import pl.polsl.tab.fleetmanagement.model.VehicleUnavailabilityEntity;
 
 import javax.persistence.*;

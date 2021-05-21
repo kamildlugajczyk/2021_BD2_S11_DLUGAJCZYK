@@ -2,6 +2,7 @@ package pl.polsl.tab.fleetmanagement.people;
 
 
 import lombok.Getter;
+import pl.polsl.tab.fleetmanagement.function.FunctionsEntity;
 
 import java.util.Collection;
 
