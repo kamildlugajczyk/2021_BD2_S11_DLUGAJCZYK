@@ -31,6 +31,15 @@ public class FunctionsEntity {
         this.name = name;
     }
 
+    @OneToMany(mappedBy = "functionsByFunctionsId")
+    public Collection<PeopleEntity> getPeopleById() {
+        return peopleById;
+    }
+
+    public void setPeopleById(Collection<PeopleEntity> peopleById) {
+        this.peopleById = peopleById;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -42,14 +51,5 @@ public class FunctionsEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
-    }
-
-    @OneToMany(mappedBy = "functionsByFunctionsId")
-    public Collection<PeopleEntity> getPeopleById() {
-        return peopleById;
-    }
-
-    public void setPeopleById(Collection<PeopleEntity> peopleById) {
-        this.peopleById = peopleById;
     }
 }

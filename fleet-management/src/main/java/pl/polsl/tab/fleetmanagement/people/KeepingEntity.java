@@ -70,20 +70,7 @@ public class KeepingEntity {
         this.vehiclesId = vehiclesId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        KeepingEntity that = (KeepingEntity) o;
-        return id == that.id && peopleId == that.peopleId && vehiclesId == that.vehiclesId && Objects.equals(startdate, that.startdate) && Objects.equals(enddate, that.enddate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, startdate, enddate, peopleId, vehiclesId);
-    }
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) //EDITEED
     @JoinColumn(name = "people_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     public PeopleEntity getPeopleByPeopleId() {
         return peopleByPeopleId;
@@ -93,7 +80,7 @@ public class KeepingEntity {
         this.peopleByPeopleId = peopleByPeopleId;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) //EDITED
     @JoinColumn(name = "vehicles_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     public VehiclesEntity getVehiclesByVehiclesId() {
         return vehiclesByVehiclesId;
@@ -110,5 +97,18 @@ public class KeepingEntity {
 
     public void setOperationCostsById(Collection<OperationCostsEntity> operationCostsById) {
         this.operationCostsById = operationCostsById;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        KeepingEntity that = (KeepingEntity) o;
+        return id == that.id && peopleId == that.peopleId && vehiclesId == that.vehiclesId && Objects.equals(startdate, that.startdate) && Objects.equals(enddate, that.enddate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, startdate, enddate, peopleId, vehiclesId);
     }
 }

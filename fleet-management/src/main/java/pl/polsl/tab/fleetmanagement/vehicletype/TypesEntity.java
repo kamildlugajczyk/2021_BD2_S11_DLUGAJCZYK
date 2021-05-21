@@ -1,4 +1,6 @@
-package pl.polsl.tab.fleetmanagement.vehicle;
+package pl.polsl.tab.fleetmanagement.vehicletype;
+
+import pl.polsl.tab.fleetmanagement.vehicle.VehiclesEntity;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -11,8 +13,21 @@ public class TypesEntity {
     private String name;
     private Collection<VehiclesEntity> vehiclesById;
 
+    public TypesEntity() {
+    }
+
+    public TypesEntity(String name) {
+        this.name = name;
+    }
+
+    public TypesEntity(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long getId() {
         return id;
     }
@@ -31,6 +46,15 @@ public class TypesEntity {
         this.name = name;
     }
 
+    @OneToMany(mappedBy = "typesByTypesId", fetch = FetchType.LAZY)
+    public Collection<VehiclesEntity> getVehiclesById() {
+        return vehiclesById;
+    }
+
+    public void setVehiclesById(Collection<VehiclesEntity> vehiclesById) {
+        this.vehiclesById = vehiclesById;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -42,14 +66,5 @@ public class TypesEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
-    }
-
-    @OneToMany(mappedBy = "typesByTypesId")
-    public Collection<VehiclesEntity> getVehiclesById() {
-        return vehiclesById;
-    }
-
-    public void setVehiclesById(Collection<VehiclesEntity> vehiclesById) {
-        this.vehiclesById = vehiclesById;
     }
 }
