@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -16,7 +15,7 @@ public class VehicleRentingsService {
 
     private final VehicleRentingsRepository vehicleRentingsRepository;
 
-    public List<VehicleRentingsDTO> getAllVehicleRentings() {
+    public List<VehicleRentingsDTO> getVehicleRentings() {
 
         List<VehicleRentingsDTO> vehicleRentingsDTOs = new ArrayList<>();
 
@@ -32,71 +31,99 @@ public class VehicleRentingsService {
         return vehicleRentingsDTOs;
     }
 
-    public VehicleRentingsDTO getVehicleRentingById(Long vehicleRentingId) {
+    public Optional<VehicleRentingsDTO> getVehicleRenting(Long id) {
 
-        Optional<VehicleRentingsEntity> vehicleRentingsEntityOptional = vehicleRentingsRepository.findById(vehicleRentingId);
+        Optional<VehicleRentingsEntity> vehicleRentingsEntity = vehicleRentingsRepository.findById(id);
 
-        if (vehicleRentingsEntityOptional.isEmpty()) {
-            throw new IllegalStateException("vehicle renting with id " + vehicleRentingId + " does not exists");
+        if (vehicleRentingsEntity.isPresent()) {
+            VehicleRentingsDTO vehicleRentingsDTO = new VehicleRentingsDTO(vehicleRentingsEntity.get().getId(),
+                    vehicleRentingsEntity.get().getStartmileage(), vehicleRentingsEntity.get().getEndmileage(),
+                    vehicleRentingsEntity.get().getStartdate(), vehicleRentingsEntity.get().getEnddate(),
+                    vehicleRentingsEntity.get().getIsbusiness(), vehicleRentingsEntity.get().getVehicleUnavailabilityId());
+
+            return Optional.of(vehicleRentingsDTO);
+
         }
 
-        return new VehicleRentingsDTO(vehicleRentingsEntityOptional.get().getId(),
-                vehicleRentingsEntityOptional.get().getStartmileage(), vehicleRentingsEntityOptional.get().getEndmileage(),
-                vehicleRentingsEntityOptional.get().getStartdate(), vehicleRentingsEntityOptional.get().getEnddate(),
-                vehicleRentingsEntityOptional.get().getIsbusiness(), vehicleRentingsEntityOptional.get().getVehicleUnavailabilityId());
-    }
-
-    public void deleteVehicleRenting(Long vehicleRentingId) {
-
-        boolean exists = vehicleRentingsRepository.existsById(vehicleRentingId);
-
-        if (!exists) {
-            throw new IllegalStateException("vehicle renting with id " + vehicleRentingId + " does not exists");
-        }
-        vehicleRentingsRepository.deleteById(vehicleRentingId);
+        return Optional.empty();
     }
 
     // TODO: 19.05.2021 nie wiem jak to robić z tym VehicleUnavailability
-    public void addNewVehicleRenting(VehicleRentingsDTO vehicleRentingsDTO) {
+    public VehicleRentingsEntity addVehicleRenting(VehicleRentingsDTO vehicleRentingsDTO) {
 
         VehicleRentingsEntity vehicleRentingsEntity = new VehicleRentingsEntity(vehicleRentingsDTO.getStartmileage(),
                 vehicleRentingsDTO.getEndmileage(), vehicleRentingsDTO.getStartdate(), vehicleRentingsDTO.getEnddate(),
                 vehicleRentingsDTO.getIsbusiness(), vehicleRentingsDTO.getVehicleUnavailability());
 
-        vehicleRentingsRepository.save(vehicleRentingsEntity);
+        return vehicleRentingsRepository.save(vehicleRentingsEntity);
     }
 
     @Transactional
-    public void updateVehicleRenting(Long vehicleRentingId, int startmileage, int endmileage,
-                                     Date startdate, Date enddate, String isbusiness, int vehicleUnavailabilityId) {
+    public Optional<VehicleRentingsDTO> updateVehicleRenting(Long id, VehicleRentingsDTO vehicleRentingsDTO) {
 
-        VehicleRentingsEntity vehicleRentingsEntity = vehicleRentingsRepository.findById(vehicleRentingId)
-                .orElseThrow(() -> new IllegalStateException("vehicle renting with id " + vehicleRentingId + " does not exists"));
+        Optional<VehicleRentingsEntity> vehicleRentingsEntity = vehicleRentingsRepository.findById(id);
 
-        if (startmileage != vehicleRentingsEntity.getStartmileage()) {
-            vehicleRentingsEntity.setStartmileage(startmileage);
+        if (vehicleRentingsEntity.isPresent()) {
+
+            if (vehicleRentingsDTO.getStartmileage() != vehicleRentingsEntity.get().getStartmileage()) {
+                vehicleRentingsEntity.get().setStartmileage(vehicleRentingsDTO.getStartmileage());
+            }
+
+            if (vehicleRentingsDTO.getEndmileage() != vehicleRentingsEntity.get().getEndmileage()) {
+                vehicleRentingsEntity.get().setEndmileage(vehicleRentingsDTO.getEndmileage());
+            }
+
+            if (vehicleRentingsDTO.getStartdate() != null &&
+                    !Objects.equals(vehicleRentingsEntity.get().getStartdate(),
+                            vehicleRentingsDTO.getStartdate())) {
+                vehicleRentingsEntity.get().setStartdate(vehicleRentingsDTO.getStartdate());
+            }
+
+            if (vehicleRentingsDTO.getEnddate() != null &&
+                    !Objects.equals(vehicleRentingsEntity.get().getEnddate(),
+                            vehicleRentingsDTO.getEnddate())) {
+                vehicleRentingsEntity.get().setStartdate(vehicleRentingsDTO.getEnddate());
+            }
+
+            if (vehicleRentingsDTO.getIsbusiness() != null && vehicleRentingsDTO.getIsbusiness().length() > 0 &&
+                    !Objects.equals(vehicleRentingsEntity.get().getIsbusiness(), vehicleRentingsDTO.getIsbusiness())) {
+                vehicleRentingsEntity.get().setIsbusiness((vehicleRentingsDTO.getIsbusiness()));
+            }
+
+            //// TODO: 19.05.2021 nie wiem jak to będzie sprawdzane itede
+            if (vehicleRentingsDTO.getVehicleUnavailability() != vehicleRentingsEntity.get().getVehicleUnavailabilityId()) {
+                vehicleRentingsEntity.get().setVehicleUnavailabilityId(vehicleRentingsDTO.getVehicleUnavailability());
+            }
+
+            vehicleRentingsRepository.save(vehicleRentingsEntity.get());
+            return Optional.of(new VehicleRentingsDTO(
+                    vehicleRentingsEntity.get().getStartmileage(),
+                    vehicleRentingsEntity.get().getEndmileage(),
+                    vehicleRentingsEntity.get().getStartdate(),
+                    vehicleRentingsEntity.get().getEnddate(),
+                    vehicleRentingsEntity.get().getIsbusiness(),
+                    vehicleRentingsEntity.get().getVehicleUnavailabilityId()));
         }
 
-        if (endmileage != vehicleRentingsEntity.getEndmileage()) {
-            vehicleRentingsEntity.setEndmileage(endmileage);
-        }
+        return Optional.empty();
+    }
 
-        if (startdate != null && !Objects.equals(vehicleRentingsEntity.getStartdate(), startdate)) {
-            vehicleRentingsEntity.setStartdate(startdate);
-        }
+    public Optional<VehicleRentingsDTO> deleteVehicleRenting(Long id) {
 
-        if (enddate != null && !Objects.equals(vehicleRentingsEntity.getEnddate(), enddate)) {
-            vehicleRentingsEntity.setStartdate(enddate);
-        }
+        Optional<VehicleRentingsEntity> vehicleRentingsEntity = vehicleRentingsRepository.findById(id);
 
-        if (isbusiness != null && isbusiness.length() > 0 && !Objects.equals(vehicleRentingsEntity.getIsbusiness(), isbusiness)) {
-            vehicleRentingsEntity.setIsbusiness((isbusiness));
+        if (vehicleRentingsEntity.isPresent()) {
+            vehicleRentingsRepository.deleteById(id);
+            return Optional.of(new VehicleRentingsDTO(
+                    vehicleRentingsEntity.get().getStartmileage(),
+                    vehicleRentingsEntity.get().getEndmileage(),
+                    vehicleRentingsEntity.get().getStartdate(),
+                    vehicleRentingsEntity.get().getEnddate(),
+                    vehicleRentingsEntity.get().getIsbusiness(),
+                    vehicleRentingsEntity.get().getVehicleUnavailabilityId()));
         }
+        return Optional.empty();
 
-        //// TODO: 19.05.2021 nie wiem jak to będzie sprawdzane itede
-        if (vehicleUnavailabilityId != vehicleRentingsEntity.getVehicleUnavailabilityId()) {
-            vehicleRentingsEntity.setVehicleUnavailabilityId(vehicleUnavailabilityId);
-        }
     }
 
 }
