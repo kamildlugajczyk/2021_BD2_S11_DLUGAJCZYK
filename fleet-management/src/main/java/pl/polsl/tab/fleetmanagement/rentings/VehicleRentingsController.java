@@ -1,10 +1,13 @@
 package pl.polsl.tab.fleetmanagement.rentings;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -14,37 +17,54 @@ public class VehicleRentingsController {
     private final VehicleRentingsService vehicleRentingsService;
 
     @GetMapping
-    public List<VehicleRentingsDTO> getAllVehicleRentings() {
-        return vehicleRentingsService.getAllVehicleRentings();
+    public List<VehicleRentingsDTO> getVehicleRantings() {
+        return vehicleRentingsService.getVehicleRentings();
     }
 
-    @GetMapping(path = "/{vehicleRentingId}")
-    public VehicleRentingsDTO getVehicleRentingById(Long vehicleRentingId) {
-        return vehicleRentingsService.getVehicleRentingById(vehicleRentingId);
-    }
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<VehicleRentingsDTO> getVehicleRenting(@PathVariable Long id) {
 
-    @DeleteMapping(path = "/{vehicleRentingId}")
-    public void deleteVehicleRenting(@PathVariable("vehicleRentingId") Long vehicleRentingId) {
-        vehicleRentingsService.deleteVehicleRenting(vehicleRentingId);
+        Optional<VehicleRentingsDTO> response = vehicleRentingsService.getVehicleRenting(id);
+
+        return response
+                .map(operationTypeEntity -> ResponseEntity.status(HttpStatus.OK).body(response.get()))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     @PostMapping
-    public void addNewVehicleRenting(@RequestBody VehicleRentingsDTO vehicleRentingsEntity) {
-        vehicleRentingsService.addNewVehicleRenting(vehicleRentingsEntity);
+    public ResponseEntity<VehicleRentingsDTO> addVehicleRenting(@RequestBody VehicleRentingsDTO vehicleRentingsDTO) {
+        try {
+            VehicleRentingsEntity response = vehicleRentingsService.addVehicleRenting(vehicleRentingsDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(vehicleRentingsDTO);
+        } catch (RuntimeException e) {
+            Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
+
+            if (rootCause instanceof SQLException) {
+                if ("23505".equals(((SQLException) rootCause).getSQLState())) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+                }
+            }
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
-    @PutMapping(path = "/{vehicleRentingId}")
-    public void updateVehicleRenting(
-            @PathVariable("vehicleRentingId") Long vehicleRentingId,
-            @RequestParam(required = false) int startmileage,
-            @RequestParam(required = false) int endmileage,
-            @RequestParam(required = false) Date startdate,
-            @RequestParam(required = false) Date enddate,
-            @RequestParam(required = false) String isbusiness,
-            @RequestParam(required = false) int vehicleUnavailability) {
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<VehicleRentingsDTO> deleteVehicleRenting(@PathVariable Long id) {
+        Optional<VehicleRentingsDTO> response = vehicleRentingsService.deleteVehicleRenting(id);
 
-        vehicleRentingsService.updateVehicleRenting(vehicleRentingId, startmileage, endmileage,
-                startdate, enddate, isbusiness, vehicleUnavailability);
+        return response
+                .map(purposesEntity -> ResponseEntity.status(HttpStatus.OK).body(response.get()))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+    }
+
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<VehicleRentingsDTO> updateVehicleRenting(@PathVariable Long id, @RequestBody VehicleRentingsDTO vehicleRentingsDTO) {
+        Optional<VehicleRentingsDTO> response = vehicleRentingsService.updateVehicleRenting(id, vehicleRentingsDTO);
+
+        return response
+                .map(purposesEntity -> ResponseEntity.status(HttpStatus.OK).body(response.get()))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
 
     }
 

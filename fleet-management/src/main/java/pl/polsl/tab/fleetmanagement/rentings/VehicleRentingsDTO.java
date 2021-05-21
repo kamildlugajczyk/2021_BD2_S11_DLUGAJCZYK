@@ -1,10 +1,12 @@
 package pl.polsl.tab.fleetmanagement.rentings;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.sql.Date;
 
 @Getter
+@AllArgsConstructor
 public class VehicleRentingsDTO {
 
     private long id;
@@ -15,15 +17,17 @@ public class VehicleRentingsDTO {
     private String isbusiness;
     private int vehicleUnavailability;
 
-    public VehicleRentingsDTO(long id, int startmileage, int endmileage, Date startdate, Date enddate, String isbusiness, int vehicleUnavailabilityId) {
-        this.id = id;
+    public VehicleRentingsDTO(int startmileage, int endmileage, Date startdate, Date enddate,
+                              String isbusiness, int vehicleUnavailability) {
+
         this.startmileage = startmileage;
         this.endmileage = endmileage;
         this.startdate = startdate;
         this.enddate = enddate;
         this.isbusiness = isbusiness;
-        this.vehicleUnavailability = vehicleUnavailabilityId;
+        this.vehicleUnavailability = vehicleUnavailability;
     }
 
-
+    public VehicleRentingsDTO() {
+    }
 }
