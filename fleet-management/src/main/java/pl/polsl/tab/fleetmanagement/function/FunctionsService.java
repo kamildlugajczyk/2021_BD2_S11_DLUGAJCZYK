@@ -23,7 +23,7 @@ public class FunctionsService {
         functionsRepository.findAll().forEach(functionsEntities::add);
 
         for (FunctionsEntity functionsEntity : functionsEntities) {
-            functionDTOs.add(new FunctionDTO(functionsEntity.getId(), functionsEntity.getName()));
+            functionDTOs.add(new FunctionDTO(functionsEntity));
         }
 
         return functionDTOs;
@@ -33,7 +33,7 @@ public class FunctionsService {
         Optional<FunctionsEntity> functionsEntity = functionsRepository.findById(id);
 
         if (functionsEntity.isPresent()) {
-            FunctionDTO functionDTO = new FunctionDTO(functionsEntity.get().getId(), functionsEntity.get().getName());
+            FunctionDTO functionDTO = new FunctionDTO(functionsEntity.get());
             return Optional.of(functionDTO);
         }
         return Optional.empty();
@@ -49,7 +49,7 @@ public class FunctionsService {
         if (functionsEntity.isPresent()) {
             functionsEntity.get().setName(functionDTO.getName());
             functionsRepository.save(functionsEntity.get());
-            return Optional.of(new FunctionDTO(functionsEntity.get().getId(), functionsEntity.get().getName()));
+            return Optional.of(new FunctionDTO(functionsEntity.get()));
         }
         return Optional.empty();
     }
@@ -59,7 +59,7 @@ public class FunctionsService {
 
         if (functionsEntity.isPresent()) {
             functionsRepository.deleteById(id);
-            return Optional.of(new FunctionDTO(functionsEntity.get().getId(), functionsEntity.get().getName()));
+            return Optional.of(new FunctionDTO(functionsEntity.get()));
         }
         return Optional.empty();
     }

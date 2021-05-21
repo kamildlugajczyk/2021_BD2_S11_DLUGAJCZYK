@@ -24,8 +24,7 @@ public class BrandsModelsService {
         brandsModelsRepository.findAll().forEach(brandsModelsEntities::add);
 
         for (BrandsModelsEntity brandsModelsEntity : brandsModelsEntities) {
-            brandModelDTOs.add(new BrandModelDTO(brandsModelsEntity.getId(), brandsModelsEntity.getBrand(),
-                    brandsModelsEntity.getModel(), brandsModelsEntity.getModelYear()));
+            brandModelDTOs.add(new BrandModelDTO(brandsModelsEntity));
         }
 
         return brandModelDTOs;
@@ -35,8 +34,7 @@ public class BrandsModelsService {
         Optional<BrandsModelsEntity> brandsModelsEntity = brandsModelsRepository.findById(id);
 
         if (brandsModelsEntity.isPresent()) {
-            BrandModelDTO brandModelDTO = new BrandModelDTO(brandsModelsEntity.get().getId(), brandsModelsEntity.get().getBrand(),
-                    brandsModelsEntity.get().getModel(), brandsModelsEntity.get().getModelYear());
+            BrandModelDTO brandModelDTO = new BrandModelDTO(brandsModelsEntity.get());
             return Optional.of(brandModelDTO);
         }
         return Optional.empty();
@@ -55,8 +53,7 @@ public class BrandsModelsService {
             brandsModelsEntity.get().setModel(brandModelDTO.getModel());
             brandsModelsEntity.get().setModelYear(brandModelDTO.getModelYear());
             brandsModelsRepository.save(brandsModelsEntity.get());
-            return Optional.of(new BrandModelDTO(brandsModelsEntity.get().getId(), brandsModelsEntity.get().getBrand(),
-                    brandsModelsEntity.get().getModel(), brandsModelsEntity.get().getModelYear()));
+            return Optional.of(new BrandModelDTO(brandsModelsEntity.get()));
         }
         return Optional.empty();
     }
@@ -66,8 +63,7 @@ public class BrandsModelsService {
 
         if (brandsModelsEntity.isPresent()) {
             brandsModelsRepository.deleteById(id);
-            return Optional.of(new BrandModelDTO(brandsModelsEntity.get().getId(), brandsModelsEntity.get().getBrand(),
-                    brandsModelsEntity.get().getModel(), brandsModelsEntity.get().getModelYear()));
+            return Optional.of(new BrandModelDTO(brandsModelsEntity.get()));
         }
         return Optional.empty();
     }

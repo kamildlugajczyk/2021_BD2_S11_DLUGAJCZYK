@@ -18,6 +18,11 @@ public class TypeDTO {
         this.name = name;
     }
 
+    public TypeDTO(TypesEntity typesEntity) {
+        this.id = typesEntity.getId();
+        this.name = typesEntity.getName();
+    }
+
     public long getId() {
         return id;
     }

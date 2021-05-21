@@ -24,7 +24,7 @@ public class PeopleService {
 
         for (PeopleEntity peopleEntity : peopleEntities) {
             peopleDTOs.add(new PeopleDTO(peopleEntity.getId(), peopleEntity.getFirstname(), peopleEntity.getLastname(),
-                    peopleEntity.getPhonenumber(), peopleEntity.getFunctionsByFunctionsId(), peopleEntity.getKeepingsById()));
+                    peopleEntity.getPhonenumber(), peopleEntity.getFunctionsByFunctionsId()));
         }
 
         return peopleDTOs;

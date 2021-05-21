@@ -23,7 +23,7 @@ public class PurposesService {
         purposesRepository.findAll().forEach(purposesEntities::add);
 
         for (PurposesEntity purposesEntity : purposesEntities) {
-            purposeDTOs.add(new PurposeDTO(purposesEntity.getId(), purposesEntity.getName()));
+            purposeDTOs.add(new PurposeDTO(purposesEntity));
         }
 
         return purposeDTOs;
@@ -33,7 +33,7 @@ public class PurposesService {
         Optional<PurposesEntity> purposesEntity = purposesRepository.findById(id);
 
         if (purposesEntity.isPresent()) {
-            PurposeDTO purposeDTO = new PurposeDTO(purposesEntity.get().getId(), purposesEntity.get().getName());
+            PurposeDTO purposeDTO = new PurposeDTO(purposesEntity.get());
             return Optional.of(purposeDTO);
         }
         return Optional.empty();
@@ -49,7 +49,7 @@ public class PurposesService {
         if (purposesEntity.isPresent()) {
             purposesEntity.get().setName(purposeDTO.getName());
             purposesRepository.save(purposesEntity.get());
-            return Optional.of(new PurposeDTO(purposesEntity.get().getId(), purposesEntity.get().getName()));
+            return Optional.of(new PurposeDTO(purposesEntity.get()));
         }
         return Optional.empty();
     }
@@ -59,7 +59,7 @@ public class PurposesService {
 
         if (purposesEntity.isPresent()) {
             purposesRepository.deleteById(id);
-            return Optional.of(new PurposeDTO(purposesEntity.get().getId(), purposesEntity.get().getName()));
+            return Optional.of(new PurposeDTO(purposesEntity.get()));
         }
         return Optional.empty();
     }

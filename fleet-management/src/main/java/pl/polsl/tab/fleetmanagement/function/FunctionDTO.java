@@ -6,13 +6,21 @@ public class FunctionDTO {
     private long id;
     private String name;
 
+    public FunctionDTO() {
+    }
+
+    public FunctionDTO(String name) {
+        this.name = name;
+    }
+
     public FunctionDTO(long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public FunctionDTO(String name) {
-        this.name = name;
+    public FunctionDTO(FunctionsEntity functionsEntity) {
+        this.id = functionsEntity.getId();
+        this.name = functionsEntity.getName();
     }
 
     public long getId() {

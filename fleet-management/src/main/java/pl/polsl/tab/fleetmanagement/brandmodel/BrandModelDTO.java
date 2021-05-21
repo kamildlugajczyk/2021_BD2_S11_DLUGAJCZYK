@@ -24,6 +24,13 @@ public class BrandModelDTO {
         this.modelYear = modelYear;
     }
 
+    public BrandModelDTO(BrandsModelsEntity brandsModelsEntity) {
+        this.id = brandsModelsEntity.getId();
+        this.brand = brandsModelsEntity.getBrand();
+        this.model = brandsModelsEntity.getModel();
+        this.modelYear = brandsModelsEntity.getModelYear();
+    }
+
     public long getId() {
         return id;
     }

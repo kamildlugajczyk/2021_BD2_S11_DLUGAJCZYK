@@ -2,9 +2,9 @@ package pl.polsl.tab.fleetmanagement.people;
 
 
 import lombok.Getter;
+import pl.polsl.tab.fleetmanagement.function.FunctionDTO;
 import pl.polsl.tab.fleetmanagement.function.FunctionsEntity;
 
-import java.util.Collection;
 
 @Getter
 public class PeopleDTO {
@@ -13,21 +13,17 @@ public class PeopleDTO {
     private String firstname;
     private String lastname;
     private String phonenumber;
-    private String function;
-    private Collection<KeepingEntity> keepingsById;
+    private FunctionDTO function;
+    //private Collection<KeepingEntity> keepingsById;
     //private Collection<KeepingEntityDTO> keepingsById;
-    //private FunctionsEntity functionsByFunctionsId;
     //private Collection<VehicleUnavailabilityEntity> vehicleUnavailabilitiesById;
 
 
-
-    public PeopleDTO(long id, String firstname, String lastname, String phonenumber, FunctionsEntity functionsEntity,
-                     Collection<KeepingEntity> keepingsById) {
+    public PeopleDTO(long id, String firstname, String lastname, String phonenumber, FunctionsEntity functionsEntity) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.phonenumber = phonenumber;
-        this.function = functionsEntity.getName();
-        this.keepingsById = keepingsById;
+        this.function = new FunctionDTO(functionsEntity);
     }
 }

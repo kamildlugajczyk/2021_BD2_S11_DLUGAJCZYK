@@ -23,7 +23,7 @@ public class TypesService {
         typesRepository.findAll().forEach(typesEntities::add);
 
         for (TypesEntity typesEntity : typesEntities) {
-            typesDTOs.add(new TypeDTO(typesEntity.getId(), typesEntity.getName()));
+            typesDTOs.add(new TypeDTO(typesEntity));
         }
 
         return typesDTOs;
@@ -33,7 +33,7 @@ public class TypesService {
         Optional<TypesEntity> typesEntity = typesRepository.findById(id);
 
         if (typesEntity.isPresent()) {
-            TypeDTO typeDTO = new TypeDTO(typesEntity.get().getId(), typesEntity.get().getName());
+            TypeDTO typeDTO = new TypeDTO(typesEntity.get());
             return Optional.of(typeDTO);
         }
         return Optional.empty();
@@ -49,7 +49,7 @@ public class TypesService {
         if (typesEntity.isPresent()) {
             typesEntity.get().setName(typeDTO.getName());
             typesRepository.save(typesEntity.get());
-            return Optional.of(new TypeDTO(typesEntity.get().getId(), typesEntity.get().getName()));
+            return Optional.of(new TypeDTO(typesEntity.get()));
         }
         return Optional.empty();
     }
@@ -59,7 +59,7 @@ public class TypesService {
 
         if (typesEntity.isPresent()) {
             typesRepository.deleteById(id);
-            return Optional.of(new TypeDTO(typesEntity.get().getId(), typesEntity.get().getName()));
+            return Optional.of(new TypeDTO(typesEntity.get()));
         }
         return Optional.empty();
     }

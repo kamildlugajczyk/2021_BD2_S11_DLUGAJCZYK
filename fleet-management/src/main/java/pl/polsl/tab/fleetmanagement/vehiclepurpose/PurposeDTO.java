@@ -6,6 +6,9 @@ public class PurposeDTO {
     private long id;
     private String name;
 
+    public PurposeDTO() {
+    }
+
     public PurposeDTO(long id, String name) {
         this.id = id;
         this.name = name;
@@ -13,6 +16,11 @@ public class PurposeDTO {
 
     public PurposeDTO(String name) {
         this.name = name;
+    }
+
+    public PurposeDTO(PurposesEntity purposesEntity) {
+        this.id = purposesEntity.getId();
+        this.name = purposesEntity.getName();
     }
 
     public long getId() {
