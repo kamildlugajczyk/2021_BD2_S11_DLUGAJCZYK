@@ -1,5 +1,6 @@
 package pl.polsl.tab.fleetmanagement.models;
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +24,7 @@ public class ServicingEntity {
 
     @Basic
     @Column(name = "subcontractors_id", nullable = false)
+    @JsonIgnore
     @Getter @Setter private Long subcontractorsId;
 
     @Basic
@@ -43,38 +45,45 @@ public class ServicingEntity {
 
     @Basic
     @Column(name = "service_request_id")
+    @JsonIgnore
     @Getter @Setter private Long serviceRequestId = null;
 
     @Basic
     @Column(name = "vehicle_unavailability_id", nullable = false)
+    @JsonIgnore
     @Getter @Setter private Long vehicleUnavailabilityId;
 
     @Basic
     @Column(name = "service_types_id", nullable = false)
+    @JsonIgnore
     @Getter @Setter private Long serviceTypesId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vehicle_unavailability_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    @Getter @Setter private VehicleUnavailabilityEntity vehicleUnavailabilityByVehicleUnavailabilityId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "service_types_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    @Getter @Setter private ServiceTypesEntity serviceTypesByServiceTypesId;
+    @JsonIgnoreProperties("servicingEntity")
+    @Getter @Setter private ServiceTypesEntity serviceTypes;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "subcontractors_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    @Getter @Setter private SubcontractorsEntity subcontractorsBySubcontractorsId;
+    @JsonIgnoreProperties("servicingEntities")
+    @Getter @Setter private SubcontractorsEntity subcontractors;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn(name = "vehicle_unavailability_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @JsonIgnoreProperties("servicings")
+    @Getter @Setter private VehicleUnavailabilityEntity vehicleUnavailability;
+
+    @ManyToOne
     @JoinColumn(name = "service_request_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    @Getter @Setter private ServiceRequestEntity serviceRequestByServiceRequestId;
+    @JsonIgnoreProperties("servicings")
+    @Getter @Setter private ServiceRequestEntity serviceRequest;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ServicingEntity that = (ServicingEntity) o;
-        return id.equals(that.id) && price.equals(that.price) && subcontractorsId.equals(that.subcontractorsId) && startDate.equals(that.startDate) && endDate.equals(that.endDate) && finished.equals(that.finished) && description.equals(that.description) && Objects.equals(serviceRequestId, that.serviceRequestId) && vehicleUnavailabilityId.equals(that.vehicleUnavailabilityId) && serviceTypesId.equals(that.serviceTypesId) && vehicleUnavailabilityByVehicleUnavailabilityId.equals(that.vehicleUnavailabilityByVehicleUnavailabilityId) && serviceTypesByServiceTypesId.equals(that.serviceTypesByServiceTypesId) && subcontractorsBySubcontractorsId.equals(that.subcontractorsBySubcontractorsId) && serviceRequestByServiceRequestId.equals(that.serviceRequestByServiceRequestId);
+        return id.equals(that.id) && price.equals(that.price) && subcontractorsId.equals(that.subcontractorsId) && startDate.equals(that.startDate) && endDate.equals(that.endDate) && finished.equals(that.finished) && description.equals(that.description) && Objects.equals(serviceRequestId, that.serviceRequestId) && vehicleUnavailabilityId.equals(that.vehicleUnavailabilityId) && serviceTypesId.equals(that.serviceTypesId) && vehicleUnavailability.equals(that.vehicleUnavailability) && serviceTypes.equals(that.serviceTypes) && subcontractors.equals(that.subcontractors) && serviceRequest.equals(that.serviceRequest);
     }
 
     @Override

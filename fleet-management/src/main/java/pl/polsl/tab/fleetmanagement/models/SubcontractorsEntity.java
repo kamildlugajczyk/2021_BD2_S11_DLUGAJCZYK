@@ -1,11 +1,13 @@
 package pl.polsl.tab.fleetmanagement.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -13,28 +15,25 @@ import java.util.Objects;
 public class SubcontractorsEntity {
 
     @Id
-    @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Long id;
+    @Getter private Long id;
 
     @Basic
-    @Getter
-    @Setter
     @Column(name = "name", nullable = false, length = 50, unique = true)
-    private String name;
+    @Getter @Setter private String name;
 
     @Basic
-    @Getter
-    @Setter
     @Column(name = "address", nullable = false, length = 50)
-    private String address;
+    @Getter @Setter private String address;
 
     @Basic
-    @Getter
-    @Setter
     @Column(name = "phonenumber", nullable = false, length = 50)
-    private String phoneNumber;
+    @Getter @Setter private String phoneNumber;
+
+    @OneToMany(mappedBy = "subcontractors")
+    @JsonIgnoreProperties("subcontractors")
+    @Getter @Setter public Set<ServicingEntity> servicingEntities;
 
     public SubcontractorsEntity(String name, String address, String phoneNumber) {
         this.name = name;
@@ -47,7 +46,7 @@ public class SubcontractorsEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SubcontractorsEntity that = (SubcontractorsEntity) o;
-        return id == that.id && Objects.equals(name, that.name) && Objects.equals(address, that.address) && Objects.equals(phoneNumber, that.phoneNumber);
+        return id.equals(that.id) && Objects.equals(name, that.name) && Objects.equals(address, that.address) && Objects.equals(phoneNumber, that.phoneNumber);
     }
 
     @Override
@@ -62,6 +61,7 @@ public class SubcontractorsEntity {
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", servicingEntities=" + servicingEntities +
                 '}';
     }
 }

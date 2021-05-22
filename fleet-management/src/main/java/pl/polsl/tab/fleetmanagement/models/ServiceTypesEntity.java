@@ -1,11 +1,13 @@
 package pl.polsl.tab.fleetmanagement.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -13,20 +15,21 @@ import java.util.Objects;
 public class ServiceTypesEntity {
 
     @Id
-    @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Long id;
+    @Getter private Long id;
 
     @Basic
-    @Getter
-    @Setter
     @Column(name = "name", nullable = false, length = 50, unique = true)
-    private String name;
+    @Getter @Setter private String name;
 
     public ServiceTypesEntity(String name) {
         this.name = name;
     }
+
+    @OneToMany(mappedBy = "serviceTypes")
+    @JsonIgnoreProperties("serviceTypes")
+    @Getter @Setter private Set<ServicingEntity> servicingEntity;
 
     @Override
     public boolean equals(Object o) {

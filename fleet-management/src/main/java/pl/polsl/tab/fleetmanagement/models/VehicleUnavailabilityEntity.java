@@ -1,5 +1,7 @@
 package pl.polsl.tab.fleetmanagement.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,24 +33,30 @@ public class VehicleUnavailabilityEntity {
 
     @Basic
     @Column(name = "vehicles_id", nullable = false)
+    @JsonIgnore
     @Getter @Setter private Long vehiclesId;
 
     @Basic
     @Column(name = "people_id", nullable = false)
+    @JsonIgnore
     @Getter @Setter private Long peopleId;
 
-    @OneToMany(mappedBy = "vehicleUnavailabilityByVehicleUnavailabilityId")
-    @Getter @Setter private Set<ServicingEntity> servicingById;
+    @OneToMany(mappedBy = "vehicleUnavailability")
+    @JsonIgnoreProperties("vehicleUnavailability")
+    @Getter @Setter private Set<ServicingEntity> servicings;
 
     @OneToMany(mappedBy = "vehicleUnavailabilityByVehicleUnavailabilityId")
+    @JsonIgnore
     @Getter @Setter private Set<VehicleRentingsEntity> vehicleRentingsById;
 
     @ManyToOne
     @JoinColumn(name = "vehicles_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @JsonIgnore
     @Getter @Setter private VehiclesEntity vehiclesByVehiclesId;
 
     @ManyToOne
     @JoinColumn(name = "people_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @JsonIgnore
     @Getter @Setter private PeopleEntity peopleByPeopleId;
 
     @Override

@@ -1,5 +1,7 @@
 package pl.polsl.tab.fleetmanagement.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,6 +31,7 @@ public class ServiceRequestEntity {
 
     @Basic
     @Column(name = "service_types_id", nullable = false)
+    @JsonIgnore
     @Getter @Setter private Long serviceTypesId;
 
     @Basic
@@ -43,15 +46,18 @@ public class ServiceRequestEntity {
     @Column(name = "processed", nullable = false)
     @Getter @Setter private Boolean processed = false;
 
-    @OneToMany(mappedBy = "serviceRequestByServiceRequestId", fetch = FetchType.LAZY)
-    @Getter @Setter private Set<ServicingEntity> servicingById;
+    @OneToMany(mappedBy = "serviceRequest")
+    @JsonIgnoreProperties("serviceRequest")
+    @Getter @Setter private Set<ServicingEntity> servicings;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne()
     @JoinColumn(name = "vehicles_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @JsonIgnore
     @Getter @Setter private VehiclesEntity vehiclesByVehiclesId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne()
     @JoinColumn(name = "people_Id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @JsonIgnore
     @Getter @Setter private PeopleEntity peopleByPeopleId;
 
     @Override
@@ -77,7 +83,7 @@ public class ServiceRequestEntity {
                 ", vehiclesId=" + vehiclesId +
                 ", peopleId=" + peopleId +
                 ", processed=" + processed +
-                ", servicingById=" + servicingById +
+                ", servicingById=" + servicings +
                 '}';
     }
 }
