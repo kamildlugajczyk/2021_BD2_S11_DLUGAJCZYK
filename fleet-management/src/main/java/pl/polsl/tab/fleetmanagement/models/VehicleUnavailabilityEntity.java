@@ -33,12 +33,12 @@ public class VehicleUnavailabilityEntity {
 
     @Basic
     @Column(name = "vehicles_id", nullable = false)
-    @JsonIgnore
+    // TODO @JsonIgnore
     @Getter @Setter private Long vehiclesId;
 
     @Basic
     @Column(name = "people_id", nullable = false)
-    @JsonIgnore
+    // TODO @JsonIgnore
     @Getter @Setter private Long peopleId;
 
     @OneToMany(mappedBy = "vehicleUnavailability")

@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pl.polsl.tab.fleetmanagement.dto.ServicingDto;
 import pl.polsl.tab.fleetmanagement.dto.VehicleUnavailabilityDto;
@@ -75,6 +74,7 @@ public class ServicingService {
                 vehiclesId,
                 personId
             );
+            
             Long unavailabilityId = this.vehicleUnavailabilityService.addVehicleUnavailability(vud);
 
             ServicingEntity servicing = this.modelMapper.map(servicingDto, ServicingEntity.class);

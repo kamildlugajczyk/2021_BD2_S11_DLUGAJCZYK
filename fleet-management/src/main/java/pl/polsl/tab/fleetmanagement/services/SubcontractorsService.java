@@ -1,7 +1,9 @@
 package pl.polsl.tab.fleetmanagement.services;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pl.polsl.tab.fleetmanagement.dto.SubcontractorsDto;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
 import pl.polsl.tab.fleetmanagement.models.SubcontractorsEntity;
@@ -15,10 +17,12 @@ import java.util.regex.Pattern;
 public class SubcontractorsService {
 
     private final SubcontractorsRepository subcontractorsRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public SubcontractorsService(SubcontractorsRepository subcontractorsRepository) {
+    public SubcontractorsService(SubcontractorsRepository subcontractorsRepository, ModelMapper modelMapper) {
         this.subcontractorsRepository = subcontractorsRepository;
+        this.modelMapper = modelMapper;
     }
 
     public Iterable<SubcontractorsEntity> getSubcontractors() {
@@ -31,49 +35,44 @@ public class SubcontractorsService {
                 .orElseThrow(() -> new IdNotFoundInDatabaseException("Subcontractor " + id + " not found"));
     }
 
-    public SubcontractorsEntity addSubcontractor(SubcontractorsEntity subcontractor) {
+    public SubcontractorsEntity addSubcontractor(SubcontractorsDto dto) {
 
-        if(!this.validatePhoneNumber(subcontractor.getPhoneNumber()))
+        if(!this.validatePhoneNumber(dto.getPhoneNumber()))
             throw new IllegalArgumentException("Invalid phone number format");
 
         try {
-            return subcontractorsRepository.save(
-                new SubcontractorsEntity(
-                    subcontractor.getName(),
-                    subcontractor.getAddress(),
-                    subcontractor.getPhoneNumber()
-                )
-            );
+            SubcontractorsEntity se = this.modelMapper.map(dto, SubcontractorsEntity.class);
+            return subcontractorsRepository.save(se);
         } catch (RuntimeException e) {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    throw new ItemExistsInDatabaseException("Subcontractor ( " + subcontractor.getName() + ") exists in DB");
+                    throw new ItemExistsInDatabaseException("Subcontractor ( " + dto.getName() + ") exists in DB");
                 }
             }
             throw new RuntimeException(e);
         }
     }
 
-    public SubcontractorsEntity updateSubcontractorById(SubcontractorsEntity subcontractor, Long id) {
+    public SubcontractorsEntity updateSubcontractorById(Long id, SubcontractorsDto dto) {
 
-        Optional<SubcontractorsEntity> ObjById = this.subcontractorsRepository.findById(id);
+        Optional<SubcontractorsEntity> se = this.subcontractorsRepository.findById(id);
 
-        if(ObjById.isEmpty()) throw new IdNotFoundInDatabaseException("Subcontractor " + id + " not found");
+        if(se.isEmpty()) throw new IdNotFoundInDatabaseException("Subcontractor " + id + " not found");
 
-        if(!this.validatePhoneNumber(subcontractor.getPhoneNumber()))
+        if(!this.validatePhoneNumber(dto.getPhoneNumber()))
             throw new IllegalArgumentException("Invalid phone number format");
 
         try {
-            ObjById.get().setName(subcontractor.getName());
-            ObjById.get().setAddress(subcontractor.getAddress());
-            ObjById.get().setPhoneNumber(subcontractor.getPhoneNumber());
-            return this.subcontractorsRepository.save(ObjById.get());
+            se.get().setName(dto.getName());
+            se.get().setAddress(dto.getAddress());
+            se.get().setPhoneNumber(dto.getPhoneNumber());
+            return this.subcontractorsRepository.save(se.get());
         } catch (RuntimeException e) {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    throw new ItemExistsInDatabaseException("Subcontractor ( " + subcontractor.getName() + ") exists in DB");
+                    throw new ItemExistsInDatabaseException("Subcontractor ( " + dto.getName() + ") exists in DB");
                 }
             }
             throw new RuntimeException(e);

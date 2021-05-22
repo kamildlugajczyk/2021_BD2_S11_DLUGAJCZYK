@@ -30,21 +30,21 @@ public class ServiceTypesService {
                 .orElseThrow(() -> new IdNotFoundInDatabaseException("Service " + id + " not found"));
     }
 
-    public ServiceTypesEntity addServiceTypes(ServiceTypesEntity serviceTypes) {
+    public ServiceTypesEntity addServiceTypes(String name) {
         try {
-            return this.serviceTypesRepository.save(new ServiceTypesEntity(serviceTypes.getName()));
+            return this.serviceTypesRepository.save(new ServiceTypesEntity(name));
         } catch (RuntimeException e) {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    throw new ItemExistsInDatabaseException("Service (" + serviceTypes.getName() + ") exists in DB");
+                    throw new ItemExistsInDatabaseException("Service (" + name + ") exists in DB");
                 }
             }
             throw new RuntimeException(e);
         }
     }
 
-    public ServiceTypesEntity updateServiceType(String name, Long id) {
+    public ServiceTypesEntity updateServiceType(Long id, String name) {
         Optional<ServiceTypesEntity> ObjById = this.serviceTypesRepository.findById(id);
 
         if(ObjById.isEmpty()) throw new IdNotFoundInDatabaseException("Subcontractor " + id + " not found");

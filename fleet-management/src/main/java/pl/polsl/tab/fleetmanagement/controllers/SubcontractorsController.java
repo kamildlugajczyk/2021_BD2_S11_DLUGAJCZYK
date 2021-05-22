@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import pl.polsl.tab.fleetmanagement.dto.SubcontractorsDto;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
 import pl.polsl.tab.fleetmanagement.models.SubcontractorsEntity;
@@ -35,7 +36,7 @@ public class SubcontractorsController {
     }
 
     @PostMapping("service/subcontractors/")
-    public SubcontractorsEntity addSubcontractor(@RequestBody SubcontractorsEntity subcontractor) {
+    public SubcontractorsEntity addSubcontractor(@RequestBody SubcontractorsDto subcontractor) {
         try {
             return this.subcontractorsService.addSubcontractor(subcontractor);
         } catch (ItemExistsInDatabaseException e) {
@@ -51,9 +52,9 @@ public class SubcontractorsController {
     }
 
     @PutMapping("service/subcontractors/{id}")
-    public SubcontractorsEntity updateSubcontractorById(@RequestBody SubcontractorsEntity subcontractor, @PathVariable Long id) {
+    public SubcontractorsEntity updateSubcontractorById(@PathVariable Long id, @RequestBody SubcontractorsDto subcontractor) {
         try {
-            return this.subcontractorsService.updateSubcontractorById(subcontractor, id);
+            return this.subcontractorsService.updateSubcontractorById(id, subcontractor);
         } catch (IdNotFoundInDatabaseException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);

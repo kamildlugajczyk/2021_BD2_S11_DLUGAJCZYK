@@ -36,10 +36,12 @@ public class ServiceRequestEntity {
 
     @Basic
     @Column(name = "vehicles_id", nullable = false)
+    //TODO @JsonIgnore
     @Getter @Setter private Long vehiclesId;
 
     @Basic
     @Column(name = "people_id", nullable = false)
+    //TODO @JsonIgnore
     @Getter @Setter private Long peopleId;
 
     @Basic

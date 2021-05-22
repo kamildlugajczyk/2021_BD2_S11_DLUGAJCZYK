@@ -35,9 +35,9 @@ public class ServiceTypesController {
     }
 
     @PostMapping("service/types")
-    public ServiceTypesEntity addServiceTypes(@RequestBody ServiceTypesEntity serviceTypesEntity) {
+    public ServiceTypesEntity addServiceTypes(@RequestBody String name) {
         try {
-            return this.serviceTypesService.addServiceTypes(serviceTypesEntity);
+            return this.serviceTypesService.addServiceTypes(name);
         } catch (ItemExistsInDatabaseException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
@@ -48,9 +48,9 @@ public class ServiceTypesController {
     }
 
     @PutMapping("service/types/{id}")
-    public ServiceTypesEntity updateServiceType(@RequestBody String name, @PathVariable Long id) {
+    public ServiceTypesEntity updateServiceType( @PathVariable Long id, @RequestBody String name) {
         try {
-            return this.serviceTypesService.updateServiceType(name, id);
+            return this.serviceTypesService.updateServiceType(id, name);
         } catch (IdNotFoundInDatabaseException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);

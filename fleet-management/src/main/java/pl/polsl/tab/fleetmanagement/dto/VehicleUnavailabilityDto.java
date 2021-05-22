@@ -4,10 +4,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.sql.Date;
+import java.util.Objects;
 
 @NoArgsConstructor
 public class VehicleUnavailabilityDto {
-    @Getter @Setter private Long id;
     @Getter @Setter private Date startDate;
     @Getter @Setter private Date endDate;
     @Getter @Setter private String business;
@@ -20,5 +20,29 @@ public class VehicleUnavailabilityDto {
         this.business = business;
         this.vehiclesId = vehiclesId;
         this.peopleId = peopleId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VehicleUnavailabilityDto that = (VehicleUnavailabilityDto) o;
+        return startDate.equals(that.startDate) && endDate.equals(that.endDate) && business.equals(that.business) && vehiclesId.equals(that.vehiclesId) && peopleId.equals(that.peopleId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(startDate, endDate, business, vehiclesId, peopleId);
+    }
+
+    @Override
+    public String toString() {
+        return "VehicleUnavailabilityDto{" +
+                "startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", business='" + business + '\'' +
+                ", vehiclesId=" + vehiclesId +
+                ", peopleId=" + peopleId +
+                '}';
     }
 }
