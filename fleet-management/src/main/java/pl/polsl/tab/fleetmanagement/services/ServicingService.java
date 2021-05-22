@@ -12,7 +12,6 @@ import pl.polsl.tab.fleetmanagement.models.ServicingEntity;
 import pl.polsl.tab.fleetmanagement.repositories.ServicingRepository;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 

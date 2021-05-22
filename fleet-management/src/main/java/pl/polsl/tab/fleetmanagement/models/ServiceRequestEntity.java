@@ -23,7 +23,7 @@ public class ServiceRequestEntity {
 
     @Basic
     @Column(name = "date", nullable = false)
-    @Getter @Setter private Date date;
+    @Getter @Setter private Date date = new Date(System.currentTimeMillis());
 
     @Basic
     @Column(name = "description", nullable = false, length = 100)
