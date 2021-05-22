@@ -39,4 +39,17 @@ public class VehicleDTO {
         this.type = typesByTypesId.getName();
         this.purpose = purposesByPurposesId.getName();
     }
+
+    public VehicleDTO(String vin, String equipmentlevel, int mileage, BigDecimal avgfuelconsumption,
+                      TypesEntity typesByTypesId, PurposesEntity purposesByPurposesId, BrandsModelsEntity brandsModelsByBrandsModelsId) {
+        this.vin = vin;
+        this.equipmentlevel = equipmentlevel;
+        this.mileage = mileage;
+        this.avgfuelconsumption = avgfuelconsumption;
+        this.brand = brandsModelsByBrandsModelsId.getBrand();
+        this.model = brandsModelsByBrandsModelsId.getModel();
+        this.type = typesByTypesId.getName();
+        this.purpose = purposesByPurposesId.getName();
+    }
+
 }

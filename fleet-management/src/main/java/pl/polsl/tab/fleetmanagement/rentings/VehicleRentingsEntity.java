@@ -33,6 +33,19 @@ public class VehicleRentingsEntity {
 
     }
 
+    @Override
+    public String toString() {
+        return "VehicleRentingsEntity{" +
+                "id=" + id +
+                ", startmileage=" + startmileage +
+                ", endmileage=" + endmileage +
+                ", startdate=" + startdate +
+                ", enddate=" + enddate +
+                ", isbusiness='" + isbusiness + '\'' +
+                ", vehicleUnavailabilityId=" + vehicleUnavailabilityId +
+                '}';
+    }
+
     @Id
     @SequenceGenerator(
             name = "vehicle_rentings_id_seq",
