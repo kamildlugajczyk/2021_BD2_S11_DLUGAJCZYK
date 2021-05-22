@@ -1,16 +1,21 @@
 package pl.polsl.tab.fleetmanagement.services;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
+import pl.polsl.tab.fleetmanagement.dto.ServiceRequestDto;
+import pl.polsl.tab.fleetmanagement.dto.ServicingDto;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.models.ServiceRequestEntity;
 import pl.polsl.tab.fleetmanagement.models.ServicingEntity;
 import pl.polsl.tab.fleetmanagement.repositories.ServiceRequestRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 // TODO permissions
 
@@ -20,18 +25,31 @@ public class ServiceRequestService {
 
     private final ServiceRequestRepository serviceRequestRepository;
     private final ServicingService servicingService;
+    private final ModelMapper modelMapper;
 
     @Autowired
     public ServiceRequestService (
             ServiceRequestRepository serviceRequestRepository,
-            ServicingService servicingService
+            ServicingService servicingService,
+            ModelMapper modelMapper
     ) {
         this.serviceRequestRepository = serviceRequestRepository;
         this.servicingService = servicingService;
+        this.modelMapper = modelMapper;
     }
 
     public List<ServiceRequestEntity> getAllServicesRequest() {
         return this.serviceRequestRepository.findAll();
+    }
+
+    public List<ServiceRequestEntity> getAllUnprocessedServicesRequest() {
+        List<ServiceRequestEntity> allItems = this.getAllServicesRequest();
+        return allItems.stream().filter(i -> !i.getProcessed()).collect(Collectors.toList());
+    }
+
+    public List<ServiceRequestEntity> getAllProcessedServicesRequest() {
+        List<ServiceRequestEntity> allItems = this.getAllServicesRequest();
+        return allItems.stream().filter(ServiceRequestEntity::getProcessed).collect(Collectors.toList());
     }
 
     public ServiceRequestEntity getServiceRequestById(Long id) {
@@ -40,36 +58,35 @@ public class ServiceRequestService {
                 .orElseThrow(() -> new IdNotFoundInDatabaseException("Service Request (" + id + ") not exists"));
     }
 
-    public ServiceRequestEntity addServiceRequest(ServiceRequestEntity request) {
-        return this.serviceRequestRepository.save(request);
+    public ServiceRequestEntity addServiceRequest(ServiceRequestDto requestDto) {
+        ServiceRequestEntity sre = this.modelMapper.map(requestDto, ServiceRequestEntity.class);
+        sre.setProcessed(false);
+        return this.serviceRequestRepository.save(sre);
     }
 
     /**
-     * Method check whether vehicle is availability.
-     * If true method update information about unavailability and servicing
+     * Method try processed service request. If no error request is set as processed and
+     * servicing information is adding to database
      * */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public ServicingEntity executeServiceRequest(ServicingEntity servicing, Long id) {
-        ServicingEntity res;
-
+    @Transactional
+    public ServicingEntity executeServiceRequest(ServicingDto servicingDto, Long id) {
         try {
-            this.requestProcess(id); // It also check whether id is correct, otherwise exception
+            ServiceRequestEntity sre = this.getServiceRequestById(id);
+
+            if(sre.getProcessed())
+                throw new RuntimeException("Service request already processed");
+
             // Add servicing to database
-            res = this.servicingService.addServicing(servicing, id);
+            ServicingEntity se = this.servicingService.addServicing(servicingDto, sre.getPeopleId(), sre.getVehiclesId(), id);
+
+            // Set request as processed
+            sre.setProcessed(true);
+            this.serviceRequestRepository.save(sre);
+
+            return se;
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
-
-        return res;
-    }
-
-    private void requestProcess(Long id) {
-        ServiceRequestEntity obj = this.getServiceRequestById(id);
-        // TODO
-        // if(obj.getProcess())
-        // throw new RuntimeException("Service request already process");
-        // entity obj.setProcess(true);
-        this.serviceRequestRepository.save(obj);
     }
 
     public void deleteServiceRequest(Long id) {

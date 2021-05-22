@@ -29,6 +29,7 @@ public class ServiceTypesController {
         try {
             return this.serviceTypesService.getServiceTypesById(id);
         } catch (IdNotFoundInDatabaseException e) {
+            System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
@@ -38,8 +39,10 @@ public class ServiceTypesController {
         try {
             return this.serviceTypesService.addServiceTypes(serviceTypesEntity);
         } catch (ItemExistsInDatabaseException e) {
+            System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
         } catch (RuntimeException  e) {
+            System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
@@ -49,10 +52,13 @@ public class ServiceTypesController {
         try {
             return this.serviceTypesService.updateServiceType(name, id);
         } catch (IdNotFoundInDatabaseException e) {
+            System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         } catch (ItemExistsInDatabaseException e) {
+            System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
         } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
@@ -62,6 +68,7 @@ public class ServiceTypesController {
         try {
             this.serviceTypesService.deleteServiceTypeById(id);
         } catch (IdNotFoundInDatabaseException e) {
+            System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }

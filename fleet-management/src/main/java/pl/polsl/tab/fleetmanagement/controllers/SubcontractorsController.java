@@ -29,6 +29,7 @@ public class SubcontractorsController {
         try {
             return this.subcontractorsService.getSubcontractorById(id);
         } catch (IdNotFoundInDatabaseException e) {
+            System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
@@ -38,10 +39,13 @@ public class SubcontractorsController {
         try {
             return this.subcontractorsService.addSubcontractor(subcontractor);
         } catch (ItemExistsInDatabaseException e) {
+            System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
         } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         } catch (RuntimeException  e) {
+            System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
@@ -51,12 +55,16 @@ public class SubcontractorsController {
         try {
             return this.subcontractorsService.updateSubcontractorById(subcontractor, id);
         } catch (IdNotFoundInDatabaseException e) {
+            System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         } catch (ItemExistsInDatabaseException e) {
+            System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
         } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
@@ -66,6 +74,7 @@ public class SubcontractorsController {
        try {
            this.subcontractorsService.deleteSubcontractorById(id);
        } catch (IdNotFoundInDatabaseException e) {
+           System.out.println(e.getMessage());
            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
        }
     }

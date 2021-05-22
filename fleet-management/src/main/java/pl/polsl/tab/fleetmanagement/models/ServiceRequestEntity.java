@@ -1,111 +1,83 @@
 package pl.polsl.tab.fleetmanagement.models;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
+@NoArgsConstructor
 @Table(name = "service_request", schema = "public", catalog = "testdb")
 public class ServiceRequestEntity {
-    private long id;
-    private Date date;
-    private String description;
-    private int serviceTypesId;
-    private int vehicleUnavailabilityId;
-    private ServiceTypesEntity serviceTypesByServiceTypesId;
-    private VehicleUnavailabilityEntity vehicleUnavailabilityByVehicleUnavailabilityId;
-    private Collection<ServicingEntity> servicingsById;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+    @Getter private Long id;
 
     @Basic
     @Column(name = "date", nullable = false)
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
+    @Getter @Setter private Date date;
 
     @Basic
     @Column(name = "description", nullable = false, length = 100)
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    @Getter @Setter private String description;
 
     @Basic
     @Column(name = "service_types_id", nullable = false)
-    public int getServiceTypesId() {
-        return serviceTypesId;
-    }
-
-    public void setServiceTypesId(int serviceTypesId) {
-        this.serviceTypesId = serviceTypesId;
-    }
+    @Getter @Setter private Long serviceTypesId;
 
     @Basic
-    @Column(name = "vehicle_unavailability_id", nullable = false)
-    public int getVehicleUnavailabilityId() {
-        return vehicleUnavailabilityId;
-    }
+    @Column(name = "vehicles_id", nullable = false)
+    @Getter @Setter private Long vehiclesId;
 
-    public void setVehicleUnavailabilityId(int vehicleUnavailabilityId) {
-        this.vehicleUnavailabilityId = vehicleUnavailabilityId;
-    }
+    @Basic
+    @Column(name = "people_id", nullable = false)
+    @Getter @Setter private Long peopleId;
+
+    @Basic
+    @Column(name = "processed", nullable = false)
+    @Getter @Setter private Boolean processed = false;
+
+    @OneToMany(mappedBy = "serviceRequestByServiceRequestId", fetch = FetchType.LAZY)
+    @Getter @Setter private Set<ServicingEntity> servicingById;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vehicles_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @Getter @Setter private VehiclesEntity vehiclesByVehiclesId;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "people_Id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @Getter @Setter private PeopleEntity peopleByPeopleId;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ServiceRequestEntity that = (ServiceRequestEntity) o;
-        return id == that.id && serviceTypesId == that.serviceTypesId && vehicleUnavailabilityId == that.vehicleUnavailabilityId && Objects.equals(date, that.date) && Objects.equals(description, that.description);
+        return id.equals(that.id) && date.equals(that.date) && description.equals(that.description) && Objects.equals(serviceTypesId, that.serviceTypesId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, date, description, serviceTypesId, vehicleUnavailabilityId);
+        return Objects.hash(id);
     }
 
-    @ManyToOne
-    @JoinColumn(name = "service_types_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    public ServiceTypesEntity getServiceTypesByServiceTypesId() {
-        return serviceTypesByServiceTypesId;
-    }
-
-    public void setServiceTypesByServiceTypesId(ServiceTypesEntity serviceTypesByServiceTypesId) {
-        this.serviceTypesByServiceTypesId = serviceTypesByServiceTypesId;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "vehicle_unavailability_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    public VehicleUnavailabilityEntity getVehicleUnavailabilityByVehicleUnavailabilityId() {
-        return vehicleUnavailabilityByVehicleUnavailabilityId;
-    }
-
-    public void setVehicleUnavailabilityByVehicleUnavailabilityId(VehicleUnavailabilityEntity vehicleUnavailabilityByVehicleUnavailabilityId) {
-        this.vehicleUnavailabilityByVehicleUnavailabilityId = vehicleUnavailabilityByVehicleUnavailabilityId;
-    }
-
-    @OneToMany(mappedBy = "serviceRequestByServiceRequestId")
-    public Collection<ServicingEntity> getServicingsById() {
-        return servicingsById;
-    }
-
-    public void setServicingsById(Collection<ServicingEntity> servicingsById) {
-        this.servicingsById = servicingsById;
+    @Override
+    public String toString() {
+        return "ServiceRequestEntity{" +
+                "id=" + id +
+                ", date=" + date +
+                ", description='" + description + '\'' +
+                ", serviceTypesId=" + serviceTypesId +
+                ", vehiclesId=" + vehiclesId +
+                ", peopleId=" + peopleId +
+                ", processed=" + processed +
+                ", servicingById=" + servicingById +
+                '}';
     }
 }
