@@ -1,7 +1,6 @@
 package pl.polsl.tab.fleetmanagement.models;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -11,9 +10,7 @@ public class VehicleRentingsEntity {
     private long id;
     private int startmileage;
     private int endmileage;
-    private Date startdate;
-    private Date enddate;
-    private String isbusiness;
+    private Boolean isbusiness;
     private int vehicleUnavailabilityId;
     private Collection<OperationCostsEntity> operationCostsById;
     private VehicleUnavailabilityEntity vehicleUnavailabilityByVehicleUnavailabilityId;
@@ -48,33 +45,14 @@ public class VehicleRentingsEntity {
         this.endmileage = endmileage;
     }
 
-    @Basic
-    @Column(name = "startdate", nullable = false)
-    public Date getStartdate() {
-        return startdate;
-    }
-
-    public void setStartdate(Date startdate) {
-        this.startdate = startdate;
-    }
-
-    @Basic
-    @Column(name = "enddate", nullable = false)
-    public Date getEnddate() {
-        return enddate;
-    }
-
-    public void setEnddate(Date enddate) {
-        this.enddate = enddate;
-    }
 
     @Basic
     @Column(name = "isbusiness", nullable = false, length = 1)
-    public String getIsbusiness() {
+    public Boolean getIsbusiness() {
         return isbusiness;
     }
 
-    public void setIsbusiness(String isbusiness) {
+    public void setIsbusiness(Boolean isbusiness) {
         this.isbusiness = isbusiness;
     }
 
@@ -93,12 +71,12 @@ public class VehicleRentingsEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         VehicleRentingsEntity that = (VehicleRentingsEntity) o;
-        return id == that.id && startmileage == that.startmileage && endmileage == that.endmileage && vehicleUnavailabilityId == that.vehicleUnavailabilityId && Objects.equals(startdate, that.startdate) && Objects.equals(enddate, that.enddate) && Objects.equals(isbusiness, that.isbusiness);
+        return id == that.id && startmileage == that.startmileage && endmileage == that.endmileage && vehicleUnavailabilityId == that.vehicleUnavailabilityId && Objects.equals(isbusiness, that.isbusiness);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, startmileage, endmileage, startdate, enddate, isbusiness, vehicleUnavailabilityId);
+        return Objects.hash(id, startmileage, endmileage, isbusiness, vehicleUnavailabilityId);
     }
 
     @OneToMany(mappedBy = "vehicleRentingsByVehicleRentingsId")

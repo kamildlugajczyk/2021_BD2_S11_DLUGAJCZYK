@@ -68,7 +68,7 @@ create table Service_types (
 create table Vehicle_unavailability (
     id BIGSERIAL NOT NULL PRIMARY KEY,
 	startDate DATE NOT NULL,
-	predictEndDate DATE NOT NULL,
+	predictEndDate DATE DEFAULT NULL,
 	endDate DATE DEFAULT NULL,
 	Vehicles_id INT NOT NULL,
 	People_id INT NOT NULL,
@@ -113,9 +113,7 @@ create table Vehicle_rentings (
     id BIGSERIAL NOT NULL PRIMARY KEY,
 	startMileage INT NOT NULL,
 	endMileage INT NOT NULL,
-    startDate DATE NOT NULL,
-	endDate DATE NOT NULL,
-	isBusiness VARCHAR(1) NOT NULL,
+	isBusiness boolean NOT NULL DEFAULT false,
     Vehicle_unavailability_id INT NOT NULL,
     CONSTRAINT Vehicle_rentings_Vehicle_unavailability_FK FOREIGN KEY ( Vehicle_unavailability_id ) REFERENCES Vehicle_unavailability ( id )
 );

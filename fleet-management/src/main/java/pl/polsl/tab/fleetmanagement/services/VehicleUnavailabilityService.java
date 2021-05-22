@@ -29,13 +29,21 @@ public class VehicleUnavailabilityService {
             .orElseThrow(() -> new IdNotFoundInDatabaseException("Unavailability " + id + " not found"));
     }
 
-    public Long addVehicleUnavailability(VehicleUnavailabilityDto dto) {
+    public Long addVehicleUnavailability(VehicleUnavailabilityDto dto, boolean archive) {
 
-        if(dto.getPredictEndDate().before(dto.getStartDate()))
+        if(dto.getEndDate().before(dto.getStartDate()))
             throw new RuntimeException("Start Date is after Predict End Day");
 
         VehicleUnavailabilityEntity vue = this.modelMapper.map(dto, VehicleUnavailabilityEntity.class);
-        vue.setEndDate(null);
+
+        if (!archive) {
+            vue.setPredictEndDate(dto.getEndDate());
+            vue.setEndDate(null);
+        } else {
+            vue.setPredictEndDate(null);
+            vue.setEndDate(dto.getEndDate());
+        }
+
         vue = this.vehicleUnavailabilityRepository.save(vue);
         return vue.getId();
     }

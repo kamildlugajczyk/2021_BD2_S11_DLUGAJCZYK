@@ -24,8 +24,8 @@ public class VehicleUnavailabilityEntity {
     @Getter @Setter private Date startDate;
 
     @Basic
-    @Column(name = "predictenddate", nullable = false)
-    @Getter @Setter private Date predictEndDate;
+    @Column(name = "predictenddate")
+    @Getter @Setter private Date predictEndDate = null;
 
     @Basic
     @Column(name = "enddate")
