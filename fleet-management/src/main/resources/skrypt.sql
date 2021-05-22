@@ -55,21 +55,21 @@ create table Keeping (
 
 create table Subcontractors (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-	name VARCHAR(50) NOT NULL,
+	name VARCHAR(50) NOT NULL UNIQUE,
 	address VARCHAR(50) NOT NULL,
 	phoneNumber VARCHAR(50) NOT NULL
 );
 
 create table Service_types (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-	name VARCHAR(50) NOT NULL
+	name VARCHAR(50) NOT NULL UNIQUE
 );
 
 create table Vehicle_unavailability (
     id BIGSERIAL NOT NULL PRIMARY KEY,
 	startDate DATE NOT NULL,
-	endDate DATE NOT NULL,
-	business VARCHAR(1) NOT NULL,
+	predictEndDate DATE DEFAULT NULL,
+	endDate DATE DEFAULT NULL,
 	Vehicles_id INT NOT NULL,
 	People_id INT NOT NULL,
     CONSTRAINT Vehicle_unavailability_People_FK FOREIGN KEY ( People_id ) REFERENCES People ( id ),
@@ -80,23 +80,28 @@ create table Service_request (
     id BIGSERIAL NOT NULL PRIMARY KEY,
 	date DATE NOT NULL,
 	description VARCHAR(100) NOT NULL,
-    Service_types_id INT NOT NULL,
-    Vehicle_unavailability_id INT NOT NULL,
-    CONSTRAINT Service_request_Vehicle_unavailability_FK FOREIGN KEY ( Vehicle_unavailability_id ) REFERENCES Vehicle_unavailability ( id ),
+    Service_types_id BIGINT NOT NULL,
+    Vehicles_id BIGINT NOT NULL,
+    People_id BIGINT NOT NULL,
+    Processed boolean NOT NULL DEFAULT false,
+    CONSTRAINT Service_request_People_FK FOREIGN KEY ( People_id ) REFERENCES People ( id ),
+    CONSTRAINT Service_request_Vehicles_FK FOREIGN KEY ( Vehicles_id ) REFERENCES Vehicles ( id ),
     CONSTRAINT Service_request_Service_types_FK FOREIGN KEY ( Service_types_id ) REFERENCES Service_types ( id )
 );
 
 create table Servicing (
     id BIGSERIAL NOT NULL PRIMARY KEY,
 	price DECIMAL(8,2) NOT NULL,
-	Subcontractors_id INT NOT NULL,
-	startDate DATE NOT NULL,
-	endDate DATE NOT NULL,
-	isFinished VARCHAR(1) NOT NULL,
-	description VARCHAR(100) NOT NULL,
-    Service_request_id INT NOT NULL,
+    description VARCHAR(100) NOT NULL,
+    isFinished boolean NOT NULL DEFAULT false,
+    Service_request_id BIGINT,
+    Service_types_id BIGINT NOT NULL,
+	Subcontractors_id BIGINT NOT NULL,
+    Vehicle_unavailability_id BIGINT NOT NULL,
+    CONSTRAINT Servicing_Vehicle_unavailability_FK FOREIGN KEY ( Vehicle_unavailability_id ) REFERENCES Vehicle_unavailability ( id ),
     CONSTRAINT Servicing_Subcontractors_FK FOREIGN KEY ( Subcontractors_id ) REFERENCES Subcontractors ( id ),
-    CONSTRAINT Servicing_Service_request_FK FOREIGN KEY ( Service_request_id ) REFERENCES Service_request ( id )
+    CONSTRAINT Servicing_Service_request_FK FOREIGN KEY ( Service_request_id ) REFERENCES Service_request ( id ),
+    CONSTRAINT Servicing_Service_types_FK FOREIGN KEY ( Service_types_id ) REFERENCES Service_types ( id )
 );
 
 create table Operation_type (
@@ -108,9 +113,7 @@ create table Vehicle_rentings (
     id BIGSERIAL NOT NULL PRIMARY KEY,
 	startMileage INT NOT NULL,
 	endMileage INT NOT NULL,
-    startDate DATE NOT NULL,
-	endDate DATE NOT NULL,
-	isBusiness VARCHAR(1) NOT NULL,
+	isBusiness boolean NOT NULL DEFAULT false,
     Vehicle_unavailability_id INT NOT NULL,
     CONSTRAINT Vehicle_rentings_Vehicle_unavailability_FK FOREIGN KEY ( Vehicle_unavailability_id ) REFERENCES Vehicle_unavailability ( id )
 );
@@ -769,5 +772,4 @@ insert into Subcontractors (name, address, phoneNumber) values ('Flashpoint', '5
 insert into Subcontractors (name, address, phoneNumber) values ('Kanoodle', '81243 Warner Alley', '973-163-2625');
 insert into Subcontractors (name, address, phoneNumber) values ('Flashspan', '40333 Tony Road', '559-165-7247');
 insert into Subcontractors (name, address, phoneNumber) values ('Gabspot', '294 Gateway Drive', '517-815-1233');
-insert into Subcontractors (name, address, phoneNumber) values ('Tekfly', '0266 Cascade Trail', '385-956-5529');
 insert into Subcontractors (name, address, phoneNumber) values ('Photobug', '58 Montana Parkway', '794-148-2781');
