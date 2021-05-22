@@ -11,7 +11,6 @@ import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.models.ServicingEntity;
 import pl.polsl.tab.fleetmanagement.repositories.ServicingRepository;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,12 +50,13 @@ public class ServicingService {
     }
 
     public ServicingEntity getServicingById(Long id) {
-        return this.servicingRepository.findById(id)
-                .orElseThrow(() -> new IdNotFoundInDatabaseException("Servicing " + id + " not exists"));
+        return this.servicingRepository
+            .findById(id)
+            .orElseThrow(() -> new IdNotFoundInDatabaseException("Servicing " + id + " not exists"));
     }
 
     /**
-     * @param servicingDto
+     * @param servicingDto json source object
      * @param personId id of keeper
      * @param vehiclesId id of vehicle
      * @param serviceRequestId if of service request. Can be NULL
@@ -65,16 +65,17 @@ public class ServicingService {
     public ServicingEntity addServicing(ServicingDto servicingDto, Long personId, Long vehiclesId, Long serviceRequestId) {
         ServicingEntity resp;
 
+        // TODO archive
+
         try {
 
             VehicleUnavailabilityDto vud = new VehicleUnavailabilityDto(
                 servicingDto.getStartDate(),
-                servicingDto.getEndDate(),
-                "0",
+                servicingDto.getPredictEndDate(),
                 vehiclesId,
                 personId
             );
-            
+
             Long unavailabilityId = this.vehicleUnavailabilityService.addVehicleUnavailability(vud);
 
             ServicingEntity servicing = this.modelMapper.map(servicingDto, ServicingEntity.class);
@@ -92,15 +93,18 @@ public class ServicingService {
 
     @Transactional
     public ServicingEntity finishServicing(Long id) {
-        LocalDate localDate = LocalDate.now();
+        try {
+            // Finish service
+            ServicingEntity service = this.getServicingById(id);
+            service.setFinished(true);
 
-        ServicingEntity service = this.getServicingById(id);
-        service.setEndDate(java.sql.Date.valueOf(localDate));
-        service.setFinished(true);
+            // Unblock vehicle (update endDate)
+            this.vehicleUnavailabilityService.unlockVehicleBySetEndDate(service.getVehicleUnavailabilityId());
 
-        // TODO unblock vehicle
-
-        return this.servicingRepository.save(service);
+            return this.servicingRepository.save(service);
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void deleteServicing(Long id) {

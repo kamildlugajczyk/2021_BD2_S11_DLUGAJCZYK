@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.util.Objects;
 
 @Entity
@@ -26,14 +25,6 @@ public class ServicingEntity {
     @Column(name = "subcontractors_id", nullable = false)
     @JsonIgnore
     @Getter @Setter private Long subcontractorsId;
-
-    @Basic
-    @Column(name = "startdate", nullable = false)
-    @Getter @Setter private Date startDate;
-
-    @Basic
-    @Column(name = "enddate", nullable = false)
-    @Getter @Setter private Date endDate;
 
     @Basic
     @Column(name = "isfinished", nullable = false, length = 1)
@@ -83,11 +74,29 @@ public class ServicingEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ServicingEntity that = (ServicingEntity) o;
-        return id.equals(that.id) && price.equals(that.price) && subcontractorsId.equals(that.subcontractorsId) && startDate.equals(that.startDate) && endDate.equals(that.endDate) && finished.equals(that.finished) && description.equals(that.description) && Objects.equals(serviceRequestId, that.serviceRequestId) && vehicleUnavailabilityId.equals(that.vehicleUnavailabilityId) && serviceTypesId.equals(that.serviceTypesId) && vehicleUnavailability.equals(that.vehicleUnavailability) && serviceTypes.equals(that.serviceTypes) && subcontractors.equals(that.subcontractors) && serviceRequest.equals(that.serviceRequest);
+        return id.equals(that.id) && price.equals(that.price) && subcontractorsId.equals(that.subcontractorsId) && finished.equals(that.finished) && description.equals(that.description) && Objects.equals(serviceRequestId, that.serviceRequestId) && vehicleUnavailabilityId.equals(that.vehicleUnavailabilityId) && serviceTypesId.equals(that.serviceTypesId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, price, subcontractorsId, finished, description, serviceRequestId, vehicleUnavailabilityId, serviceTypesId);
+    }
+
+    @Override
+    public String toString() {
+        return "ServicingEntity{" +
+                "id=" + id +
+                ", price=" + price +
+                ", subcontractorsId=" + subcontractorsId +
+                ", finished=" + finished +
+                ", description='" + description + '\'' +
+                ", serviceRequestId=" + serviceRequestId +
+                ", vehicleUnavailabilityId=" + vehicleUnavailabilityId +
+                ", serviceTypesId=" + serviceTypesId +
+                ", serviceTypes=" + serviceTypes +
+                ", subcontractors=" + subcontractors +
+                ", vehicleUnavailability=" + vehicleUnavailability +
+                ", serviceRequest=" + serviceRequest +
+                '}';
     }
 }

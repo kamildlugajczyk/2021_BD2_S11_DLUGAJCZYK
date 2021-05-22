@@ -11,15 +11,15 @@ public class ServicingDto {
     @Getter @Setter private BigDecimal price;
     @Getter @Setter private String description;
     @Getter @Setter private Date startDate;
-    @Getter @Setter private Date endDate;
+    @Getter @Setter private Date predictEndDate;
     @Getter @Setter private Long subcontractorsId;
     @Getter @Setter private Long serviceTypesId;
 
-    public ServicingDto(BigDecimal price, String description, Date startDate, Date endDate, Long subcontractorsId, Long serviceTypesId) {
+    public ServicingDto(BigDecimal price, String description, Date startDate, Date predictEndDate, Long subcontractorsId, Long serviceTypesId) {
         this.price = price;
         this.description = description;
         this.startDate = startDate;
-        this.endDate = endDate;
+        this.predictEndDate = predictEndDate;
         this.subcontractorsId = subcontractorsId;
         this.serviceTypesId = serviceTypesId;
     }
@@ -29,12 +29,12 @@ public class ServicingDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ServicingDto that = (ServicingDto) o;
-        return price.equals(that.price) && description.equals(that.description) && startDate.equals(that.startDate) && endDate.equals(that.endDate) && subcontractorsId.equals(that.subcontractorsId) && serviceTypesId.equals(that.serviceTypesId);
+        return price.equals(that.price) && description.equals(that.description) && startDate.equals(that.startDate) && predictEndDate.equals(that.predictEndDate) && subcontractorsId.equals(that.subcontractorsId) && serviceTypesId.equals(that.serviceTypesId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(price, description, startDate, endDate, subcontractorsId, serviceTypesId);
+        return Objects.hash(price, description, startDate, predictEndDate, subcontractorsId, serviceTypesId);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ServicingDto {
                 "price=" + price +
                 ", description='" + description + '\'' +
                 ", startDate=" + startDate +
-                ", endDate=" + endDate +
+                ", predictEndDate=" + predictEndDate +
                 ", subcontractorsId=" + subcontractorsId +
                 ", serviceTypesId=" + serviceTypesId +
                 '}';

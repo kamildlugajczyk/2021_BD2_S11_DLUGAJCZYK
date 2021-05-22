@@ -24,12 +24,12 @@ public class VehicleUnavailabilityEntity {
     @Getter @Setter private Date startDate;
 
     @Basic
-    @Column(name = "enddate", nullable = false)
-    @Getter @Setter private Date endDate;
+    @Column(name = "predictenddate", nullable = false)
+    @Getter @Setter private Date predictEndDate;
 
     @Basic
-    @Column(name = "business", nullable = false, length = 1)
-    @Getter @Setter private String business;
+    @Column(name = "enddate")
+    @Getter @Setter private Date endDate = null;
 
     @Basic
     @Column(name = "vehicles_id", nullable = false)
@@ -64,11 +64,27 @@ public class VehicleUnavailabilityEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         VehicleUnavailabilityEntity that = (VehicleUnavailabilityEntity) o;
-        return id == that.id && vehiclesId == that.vehiclesId && peopleId == that.peopleId && Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate) && Objects.equals(business, that.business);
+        return id.equals(that.id) && startDate.equals(that.startDate) && predictEndDate.equals(that.predictEndDate) && Objects.equals(endDate, that.endDate) && vehiclesId.equals(that.vehiclesId) && peopleId.equals(that.peopleId) && Objects.equals(servicings, that.servicings) && Objects.equals(vehicleRentingsById, that.vehicleRentingsById) && Objects.equals(vehiclesByVehiclesId, that.vehiclesByVehiclesId) && Objects.equals(peopleByPeopleId, that.peopleByPeopleId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, startDate, endDate, business, vehiclesId, peopleId);
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "VehicleUnavailabilityEntity{" +
+                "id=" + id +
+                ", startDate=" + startDate +
+                ", predictEndDate=" + predictEndDate +
+                ", endDate=" + endDate +
+                ", vehiclesId=" + vehiclesId +
+                ", peopleId=" + peopleId +
+                ", servicings=" + servicings +
+                ", vehicleRentingsById=" + vehicleRentingsById +
+                ", vehiclesByVehiclesId=" + vehiclesByVehiclesId +
+                ", peopleByPeopleId=" + peopleByPeopleId +
+                '}';
     }
 }
