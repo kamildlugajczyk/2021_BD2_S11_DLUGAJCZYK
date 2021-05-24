@@ -1,4 +1,4 @@
-package pl.polsl.tab.fleetmanagement.dto;
+package pl.polsl.tab.fleetmanagement.vehicleunavailability;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

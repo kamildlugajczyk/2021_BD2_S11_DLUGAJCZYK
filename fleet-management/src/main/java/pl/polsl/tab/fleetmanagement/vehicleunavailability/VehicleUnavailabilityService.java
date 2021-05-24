@@ -1,12 +1,13 @@
-package pl.polsl.tab.fleetmanagement.services;
+package pl.polsl.tab.fleetmanagement.vehicleunavailability;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.polsl.tab.fleetmanagement.dto.VehicleUnavailabilityDto;
+import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
+import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityDto;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
-import pl.polsl.tab.fleetmanagement.models.VehicleUnavailabilityEntity;
-import pl.polsl.tab.fleetmanagement.repositories.VehicleUnavailabilityRepository;
+import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityEntity;
+import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityRepository;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -54,5 +55,9 @@ public class VehicleUnavailabilityService {
         VehicleUnavailabilityEntity vue = this.getVehicleUnavailabilityById(id);
         vue.setEndDate(nowSql);
         this.vehicleUnavailabilityRepository.save(vue);
+    }
+
+    public void deleteVehicleUnavailability(Long id) {
+        this.vehicleUnavailabilityRepository.deleteById(id);
     }
 }

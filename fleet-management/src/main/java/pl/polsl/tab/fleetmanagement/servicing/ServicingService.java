@@ -1,15 +1,14 @@
-package pl.polsl.tab.fleetmanagement.services;
+package pl.polsl.tab.fleetmanagement.servicing;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
-import pl.polsl.tab.fleetmanagement.dto.ServicingDto;
-import pl.polsl.tab.fleetmanagement.dto.VehicleUnavailabilityDto;
+import org.springframework.web.client.HttpStatusCodeException;
+import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityService;
+import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityDto;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
-import pl.polsl.tab.fleetmanagement.models.ServicingEntity;
-import pl.polsl.tab.fleetmanagement.repositories.ServicingRepository;
 
 import java.sql.Date;
 import java.util.List;
@@ -89,7 +88,7 @@ public class ServicingService {
             if(archive)
                 servicing.setFinished(true);
 
-            resp = this.servicingRepository.save(servicing);
+            resp = this.servicingRepository.saveAndFlush(servicing);
 
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
@@ -108,17 +107,13 @@ public class ServicingService {
             // Unblock vehicle (update endDate)
             this.vehicleUnavailabilityService.unlockVehicleBySetEndDate(service.getVehicleUnavailabilityId());
 
-            return this.servicingRepository.save(service);
+            return this.servicingRepository.saveAndFlush(service);
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void deleteServicing(Long id) {
-        try {
-            this.servicingRepository.deleteById(id);
-        } catch (RuntimeException e) {
-            throw new IdNotFoundInDatabaseException("Servicing " + id + " not exists");
-        }
+        this.servicingRepository.deleteById(id);
     }
 }

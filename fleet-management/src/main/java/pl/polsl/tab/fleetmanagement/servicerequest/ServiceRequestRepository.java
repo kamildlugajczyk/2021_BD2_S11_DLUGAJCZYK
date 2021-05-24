@@ -1,7 +1,6 @@
-package pl.polsl.tab.fleetmanagement.repositories;
+package pl.polsl.tab.fleetmanagement.servicerequest;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.polsl.tab.fleetmanagement.models.ServiceRequestEntity;
 
 public interface ServiceRequestRepository extends JpaRepository<ServiceRequestEntity, Long> {
 }

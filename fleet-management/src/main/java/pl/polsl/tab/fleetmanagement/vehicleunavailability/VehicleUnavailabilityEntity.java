@@ -1,9 +1,13 @@
-package pl.polsl.tab.fleetmanagement.models;
+package pl.polsl.tab.fleetmanagement.vehicleunavailability;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import pl.polsl.tab.fleetmanagement.models.PeopleEntity;
+import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
+import pl.polsl.tab.fleetmanagement.models.VehicleRentingsEntity;
+import pl.polsl.tab.fleetmanagement.models.VehiclesEntity;
 
 import javax.persistence.*;
 import java.sql.Date;

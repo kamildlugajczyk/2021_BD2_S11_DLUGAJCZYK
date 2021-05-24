@@ -1,15 +1,12 @@
-package pl.polsl.tab.fleetmanagement.controllers;
+package pl.polsl.tab.fleetmanagement.servicerequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import pl.polsl.tab.fleetmanagement.dto.ServiceRequestDto;
-import pl.polsl.tab.fleetmanagement.dto.ServicingDto;
+import pl.polsl.tab.fleetmanagement.servicing.ServicingDto;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
-import pl.polsl.tab.fleetmanagement.models.ServiceRequestEntity;
-import pl.polsl.tab.fleetmanagement.models.ServicingEntity;
-import pl.polsl.tab.fleetmanagement.services.ServiceRequestService;
+import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
 
 import java.util.List;
 

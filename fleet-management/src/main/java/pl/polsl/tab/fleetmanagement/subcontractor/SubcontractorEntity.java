@@ -1,9 +1,10 @@
-package pl.polsl.tab.fleetmanagement.models;
+package pl.polsl.tab.fleetmanagement.subcontractor;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -12,7 +13,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @Table(name = "subcontractors", schema = "public", catalog = "testdb")
-public class SubcontractorsEntity {
+public class SubcontractorEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +36,7 @@ public class SubcontractorsEntity {
     @JsonIgnoreProperties("subcontractors")
     @Getter @Setter public Set<ServicingEntity> servicingEntities;
 
-    public SubcontractorsEntity(String name, String address, String phoneNumber) {
+    public SubcontractorEntity(String name, String address, String phoneNumber) {
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -45,7 +46,7 @@ public class SubcontractorsEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SubcontractorsEntity that = (SubcontractorsEntity) o;
+        SubcontractorEntity that = (SubcontractorEntity) o;
         return id.equals(that.id) && Objects.equals(name, that.name) && Objects.equals(address, that.address) && Objects.equals(phoneNumber, that.phoneNumber);
     }
 

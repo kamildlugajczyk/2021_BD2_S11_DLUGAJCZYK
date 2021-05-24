@@ -1,7 +1,6 @@
-package pl.polsl.tab.fleetmanagement.repositories;
+package pl.polsl.tab.fleetmanagement.servicing;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.polsl.tab.fleetmanagement.models.ServicingEntity;
 
 public interface ServicingRepository extends JpaRepository<ServicingEntity, Long> {
 }

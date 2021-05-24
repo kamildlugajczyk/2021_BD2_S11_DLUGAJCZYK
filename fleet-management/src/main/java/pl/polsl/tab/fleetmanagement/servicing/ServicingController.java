@@ -1,13 +1,10 @@
-package pl.polsl.tab.fleetmanagement.controllers;
+package pl.polsl.tab.fleetmanagement.servicing;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import pl.polsl.tab.fleetmanagement.dto.ServicingDto;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
-import pl.polsl.tab.fleetmanagement.models.ServicingEntity;
-import pl.polsl.tab.fleetmanagement.services.ServicingService;
 
 import java.util.List;
 
@@ -97,6 +94,9 @@ public class ServicingController {
         } catch (IdNotFoundInDatabaseException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
 }

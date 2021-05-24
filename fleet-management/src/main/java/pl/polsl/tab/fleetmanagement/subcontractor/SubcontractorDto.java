@@ -1,17 +1,17 @@
-package pl.polsl.tab.fleetmanagement.dto;
+package pl.polsl.tab.fleetmanagement.subcontractor;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Objects;
 
-public class SubcontractorsDto {
+public class SubcontractorDto {
 
     @Getter @Setter private String name;
     @Getter @Setter private String address;
     @Getter @Setter private String phoneNumber;
 
-    public SubcontractorsDto(String name, String address, String phoneNumber) {
+    public SubcontractorDto(String name, String address, String phoneNumber) {
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -21,7 +21,7 @@ public class SubcontractorsDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SubcontractorsDto that = (SubcontractorsDto) o;
+        SubcontractorDto that = (SubcontractorDto) o;
         return name.equals(that.name) && address.equals(that.address) && phoneNumber.equals(that.phoneNumber);
     }
 

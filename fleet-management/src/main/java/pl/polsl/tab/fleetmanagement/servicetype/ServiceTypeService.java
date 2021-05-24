@@ -1,38 +1,36 @@
-package pl.polsl.tab.fleetmanagement.services;
+package pl.polsl.tab.fleetmanagement.servicetype;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
-import pl.polsl.tab.fleetmanagement.models.ServiceTypesEntity;
-import pl.polsl.tab.fleetmanagement.repositories.ServiceTypesRepository;
 
 import java.sql.SQLException;
 import java.util.Optional;
 
 @Component
-public class ServiceTypesService {
+public class ServiceTypeService {
 
-    private final ServiceTypesRepository serviceTypesRepository;
+    private final ServiceTypeRepository serviceTypeRepository;
 
     @Autowired
-    public ServiceTypesService(ServiceTypesRepository serviceTypesRepository) {
-        this.serviceTypesRepository = serviceTypesRepository;
+    public ServiceTypeService(ServiceTypeRepository serviceTypeRepository) {
+        this.serviceTypeRepository = serviceTypeRepository;
     }
 
-    public Iterable<ServiceTypesEntity> getServiceTypes() {
-        return this.serviceTypesRepository.findAll();
+    public Iterable<ServiceTypeEntity> getServiceTypes() {
+        return this.serviceTypeRepository.findAll();
     }
 
-    public ServiceTypesEntity getServiceTypesById(Long id) throws IdNotFoundInDatabaseException {
-        return this.serviceTypesRepository
+    public ServiceTypeEntity getServiceTypesById(Long id) throws IdNotFoundInDatabaseException {
+        return this.serviceTypeRepository
                 .findById(id)
                 .orElseThrow(() -> new IdNotFoundInDatabaseException("Service " + id + " not found"));
     }
 
-    public ServiceTypesEntity addServiceTypes(String name) {
+    public ServiceTypeEntity addServiceTypes(String name) {
         try {
-            return this.serviceTypesRepository.save(new ServiceTypesEntity(name));
+            return this.serviceTypeRepository.save(new ServiceTypeEntity(name));
         } catch (RuntimeException e) {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
@@ -44,14 +42,14 @@ public class ServiceTypesService {
         }
     }
 
-    public ServiceTypesEntity updateServiceType(Long id, String name) {
-        Optional<ServiceTypesEntity> ObjById = this.serviceTypesRepository.findById(id);
+    public ServiceTypeEntity updateServiceType(Long id, String name) {
+        Optional<ServiceTypeEntity> ObjById = this.serviceTypeRepository.findById(id);
 
         if(ObjById.isEmpty()) throw new IdNotFoundInDatabaseException("Subcontractor " + id + " not found");
 
         try {
             ObjById.get().setName(name);
-            return this.serviceTypesRepository.save(ObjById.get());
+            return this.serviceTypeRepository.save(ObjById.get());
         } catch (RuntimeException e) {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
@@ -66,7 +64,7 @@ public class ServiceTypesService {
 
     public void deleteServiceTypeById(Long id) throws IdNotFoundInDatabaseException {
         try {
-            this.serviceTypesRepository.deleteById(id);
+            this.serviceTypeRepository.deleteById(id);
         } catch (RuntimeException ignored) {
             throw new IdNotFoundInDatabaseException("Service " + id + " not found");
         }

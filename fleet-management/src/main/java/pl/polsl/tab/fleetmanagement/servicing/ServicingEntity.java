@@ -1,8 +1,12 @@
-package pl.polsl.tab.fleetmanagement.models;
+package pl.polsl.tab.fleetmanagement.servicing;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
+import pl.polsl.tab.fleetmanagement.servicerequest.ServiceRequestEntity;
+import pl.polsl.tab.fleetmanagement.servicetype.ServiceTypeEntity;
+import pl.polsl.tab.fleetmanagement.subcontractor.SubcontractorEntity;
+import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityEntity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -52,12 +56,12 @@ public class ServicingEntity {
     @ManyToOne
     @JoinColumn(name = "service_types_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     @JsonIgnoreProperties("servicingEntity")
-    @Getter @Setter private ServiceTypesEntity serviceTypes;
+    @Getter @Setter private ServiceTypeEntity serviceTypes;
 
     @ManyToOne
     @JoinColumn(name = "subcontractors_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     @JsonIgnoreProperties("servicingEntities")
-    @Getter @Setter private SubcontractorsEntity subcontractors;
+    @Getter @Setter private SubcontractorEntity subcontractors;
 
     @ManyToOne
     @JoinColumn(name = "vehicle_unavailability_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)

@@ -1,48 +1,45 @@
-package pl.polsl.tab.fleetmanagement.services;
+package pl.polsl.tab.fleetmanagement.subcontractor;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.polsl.tab.fleetmanagement.dto.SubcontractorsDto;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
-import pl.polsl.tab.fleetmanagement.models.SubcontractorsEntity;
-import pl.polsl.tab.fleetmanagement.repositories.SubcontractorsRepository;
 
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Component
-public class SubcontractorsService {
+public class SubcontractorService {
 
-    private final SubcontractorsRepository subcontractorsRepository;
+    private final SubcontractorRepository subcontractorRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public SubcontractorsService(SubcontractorsRepository subcontractorsRepository, ModelMapper modelMapper) {
-        this.subcontractorsRepository = subcontractorsRepository;
+    public SubcontractorService(SubcontractorRepository subcontractorRepository, ModelMapper modelMapper) {
+        this.subcontractorRepository = subcontractorRepository;
         this.modelMapper = modelMapper;
     }
 
-    public Iterable<SubcontractorsEntity> getSubcontractors() {
-        return this.subcontractorsRepository.findAll();
+    public Iterable<SubcontractorEntity> getSubcontractors() {
+        return this.subcontractorRepository.findAll();
     }
 
-    public SubcontractorsEntity getSubcontractorById(Long id) throws IdNotFoundInDatabaseException {
-        return this.subcontractorsRepository
+    public SubcontractorEntity getSubcontractorById(Long id) throws IdNotFoundInDatabaseException {
+        return this.subcontractorRepository
                 .findById(id)
                 .orElseThrow(() -> new IdNotFoundInDatabaseException("Subcontractor " + id + " not found"));
     }
 
-    public SubcontractorsEntity addSubcontractor(SubcontractorsDto dto) {
+    public SubcontractorEntity addSubcontractor(SubcontractorDto dto) {
 
         if(!this.validatePhoneNumber(dto.getPhoneNumber()))
             throw new IllegalArgumentException("Invalid phone number format");
 
         try {
-            SubcontractorsEntity se = this.modelMapper.map(dto, SubcontractorsEntity.class);
-            return subcontractorsRepository.save(se);
+            SubcontractorEntity se = this.modelMapper.map(dto, SubcontractorEntity.class);
+            return subcontractorRepository.save(se);
         } catch (RuntimeException e) {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
@@ -54,9 +51,9 @@ public class SubcontractorsService {
         }
     }
 
-    public SubcontractorsEntity updateSubcontractorById(Long id, SubcontractorsDto dto) {
+    public SubcontractorEntity updateSubcontractorById(Long id, SubcontractorDto dto) {
 
-        Optional<SubcontractorsEntity> se = this.subcontractorsRepository.findById(id);
+        Optional<SubcontractorEntity> se = this.subcontractorRepository.findById(id);
 
         if(se.isEmpty()) throw new IdNotFoundInDatabaseException("Subcontractor " + id + " not found");
 
@@ -67,7 +64,7 @@ public class SubcontractorsService {
             se.get().setName(dto.getName());
             se.get().setAddress(dto.getAddress());
             se.get().setPhoneNumber(dto.getPhoneNumber());
-            return this.subcontractorsRepository.save(se.get());
+            return this.subcontractorRepository.save(se.get());
         } catch (RuntimeException e) {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
@@ -82,7 +79,7 @@ public class SubcontractorsService {
 
     public void deleteSubcontractorById(Long id) throws IdNotFoundInDatabaseException {
         try {
-            this.subcontractorsRepository.deleteById(id);
+            this.subcontractorRepository.deleteById(id);
         } catch (RuntimeException ignored) {
             throw new IdNotFoundInDatabaseException("Subcontractor " + id + " not found");
         }
