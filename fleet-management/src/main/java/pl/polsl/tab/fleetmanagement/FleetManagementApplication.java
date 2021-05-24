@@ -3,6 +3,7 @@ package pl.polsl.tab.fleetmanagement;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import pl.polsl.tab.fleetmanagement.report.Report;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -14,6 +15,8 @@ public class FleetManagementApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(FleetManagementApplication.class, args);
+
+        Report report = new Report();
     }
 
     @Bean
