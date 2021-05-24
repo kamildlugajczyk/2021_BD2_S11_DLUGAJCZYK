@@ -7,7 +7,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import java.io.FileOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 
@@ -37,10 +37,10 @@ public class Report {
 
     private static final Font helvetica16 =new Font(helvetica,12);
 
-    public Report() {
+    public Report(HttpServletResponse response) {
         try {
             Document document = new Document();
-            PdfWriter.getInstance(document, new FileOutputStream(FILE));
+            PdfWriter.getInstance(document, response.getOutputStream());
             document.open();
             addMetaData(document);
             addTitlePage(document);
