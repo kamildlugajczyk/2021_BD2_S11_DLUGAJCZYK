@@ -5,13 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpStatusCodeException;
 import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityService;
 import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityDto;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 // TODO permissions
@@ -50,9 +50,14 @@ public class ServicingService {
     }
 
     public ServicingEntity getServicingById(Long id) {
-        return this.servicingRepository
-            .findById(id)
-            .orElseThrow(() -> new IdNotFoundInDatabaseException("Servicing " + id + " not exists"));
+
+        this.servicingRepository.findAll();
+        Optional<ServicingEntity> servicing = this.servicingRepository.findById(id);
+        this.servicingRepository.flush();
+
+        if(servicing.isPresent()) return servicing.get();
+
+        throw new IdNotFoundInDatabaseException("Servicing " + id + " not exists");
     }
 
     /**
@@ -64,6 +69,8 @@ public class ServicingService {
      * */
     @Transactional
     public ServicingEntity addServicing(ServicingDto servicingDto, Long personId, Long vehiclesId, Long serviceRequestId) {
+
+        // TODO add more service by subcontractors
 
         Date now = new Date(System.currentTimeMillis());
         boolean archive = servicingDto.getEndDate().before(now);
@@ -114,6 +121,17 @@ public class ServicingService {
     }
 
     public void deleteServicing(Long id) {
+        this.servicingRepository.findAll();
+        Optional<ServicingEntity> servicing = this.servicingRepository.findById(id);
+
+        if(servicing.isEmpty()) {
+            this.servicingRepository.flush();
+            throw new IdNotFoundInDatabaseException("Servicing " + id + " not exists");
+        }
+
         this.servicingRepository.deleteById(id);
+        this.servicingRepository.flush();
+
+        // TODO if not servicing exists delete unavailability
     }
 }

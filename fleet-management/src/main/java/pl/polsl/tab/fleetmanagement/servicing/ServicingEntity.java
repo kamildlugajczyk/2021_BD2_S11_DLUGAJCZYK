@@ -63,7 +63,7 @@ public class ServicingEntity {
     @JsonIgnoreProperties("servicingEntities")
     @Getter @Setter private SubcontractorEntity subcontractors;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "vehicle_unavailability_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     @JsonIgnoreProperties("servicings")
     @Getter @Setter private VehicleUnavailabilityEntity vehicleUnavailability;
