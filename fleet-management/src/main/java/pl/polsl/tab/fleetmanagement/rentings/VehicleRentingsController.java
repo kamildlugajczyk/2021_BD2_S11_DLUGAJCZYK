@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -22,13 +23,14 @@ public class VehicleRentingsController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<VehicleRentingsDTO> getVehicleRenting(@PathVariable Long id) {
+    public VehicleRentingsDTO getVehicleRenting(@PathVariable Long id) {
 
-        Optional<VehicleRentingsDTO> response = vehicleRentingsService.getVehicleRenting(id);
-
-        return response
-                .map(operationTypeEntity -> ResponseEntity.status(HttpStatus.OK).body(response.get()))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+        try {
+            return this.vehicleRentingsService.getVehicleRenting(id);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
     }
 
     @PostMapping
@@ -50,12 +52,13 @@ public class VehicleRentingsController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<VehicleRentingsDTO> deleteVehicleRenting(@PathVariable Long id) {
-        Optional<VehicleRentingsDTO> response = vehicleRentingsService.deleteVehicleRenting(id);
-
-        return response
-                .map(purposesEntity -> ResponseEntity.status(HttpStatus.OK).body(response.get()))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+    public void deleteVehicleRenting(@PathVariable Long id) {
+        try {
+            this.vehicleRentingsService.deleteVehicleRenting(id);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
     }
 
     @PutMapping(path = "/{id}")

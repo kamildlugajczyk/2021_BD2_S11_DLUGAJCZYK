@@ -31,21 +31,15 @@ public class VehicleRentingsService {
         return vehicleRentingsDTOs;
     }
 
-    public Optional<VehicleRentingsDTO> getVehicleRenting(Long id) {
+    public VehicleRentingsDTO getVehicleRenting(Long id) throws Exception{
 
-        Optional<VehicleRentingsEntity> vehicleRentingsEntity = vehicleRentingsRepository.findById(id);
+       VehicleRentingsEntity entity = vehicleRentingsRepository.findById(id)
+                .orElseThrow(() -> new Exception("Vehicle Renting " + id + " not found"));
 
-        if (vehicleRentingsEntity.isPresent()) {
-            VehicleRentingsDTO vehicleRentingsDTO = new VehicleRentingsDTO(vehicleRentingsEntity.get().getId(),
-                    vehicleRentingsEntity.get().getStartmileage(), vehicleRentingsEntity.get().getEndmileage(),
-                    vehicleRentingsEntity.get().getStartdate(), vehicleRentingsEntity.get().getEnddate(),
-                    vehicleRentingsEntity.get().getIsbusiness(), vehicleRentingsEntity.get().getVehicleUnavailabilityId());
-
-            return Optional.of(vehicleRentingsDTO);
-
-        }
-
-        return Optional.empty();
+        return new VehicleRentingsDTO(entity.getId(),
+                entity.getStartmileage(), entity.getEndmileage(),
+                entity.getStartdate(), entity.getEnddate(),
+                entity.getIsbusiness(), entity.getVehicleUnavailabilityId());
     }
 
     // TODO: 19.05.2021 nie wiem jak to robić z tym VehicleUnavailability
@@ -108,21 +102,13 @@ public class VehicleRentingsService {
         return Optional.empty();
     }
 
-    public Optional<VehicleRentingsDTO> deleteVehicleRenting(Long id) {
+    public void deleteVehicleRenting(Long id) throws Exception {
 
-        Optional<VehicleRentingsEntity> vehicleRentingsEntity = vehicleRentingsRepository.findById(id);
-
-        if (vehicleRentingsEntity.isPresent()) {
-            vehicleRentingsRepository.deleteById(id);
-            return Optional.of(new VehicleRentingsDTO(
-                    vehicleRentingsEntity.get().getStartmileage(),
-                    vehicleRentingsEntity.get().getEndmileage(),
-                    vehicleRentingsEntity.get().getStartdate(),
-                    vehicleRentingsEntity.get().getEnddate(),
-                    vehicleRentingsEntity.get().getIsbusiness(),
-                    vehicleRentingsEntity.get().getVehicleUnavailabilityId()));
+        try {
+            this.vehicleRentingsRepository.deleteById(id);
+        } catch (RuntimeException ignored) {
+            throw new Exception("Vehicle renting " + id + " not found");
         }
-        return Optional.empty();
 
     }
 
