@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
-import pl.polsl.tab.fleetmanagement.models.PeopleEntity;
+import pl.polsl.tab.fleetmanagement.people.PersonEntity;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
 import pl.polsl.tab.fleetmanagement.models.VehicleRentingsEntity;
 import pl.polsl.tab.fleetmanagement.models.VehiclesEntity;
@@ -61,7 +61,7 @@ public class VehicleUnavailabilityEntity {
     @ManyToOne
     @JoinColumn(name = "people_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     @JsonIgnore
-    @Getter @Setter private PeopleEntity peopleByPeopleId;
+    @Getter @Setter private PersonEntity peopleByPeopleId;
 
     @Override
     public boolean equals(Object o) {

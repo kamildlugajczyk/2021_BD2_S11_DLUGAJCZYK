@@ -1,4 +1,8 @@
-package pl.polsl.tab.fleetmanagement.models;
+package pl.polsl.tab.fleetmanagement.keeping;
+
+import pl.polsl.tab.fleetmanagement.models.OperationCostsEntity;
+import pl.polsl.tab.fleetmanagement.models.VehiclesEntity;
+import pl.polsl.tab.fleetmanagement.people.PersonEntity;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -13,7 +17,7 @@ public class KeepingEntity {
     private Date enddate;
     private int peopleId;
     private int vehiclesId;
-    private PeopleEntity peopleByPeopleId;
+    private PersonEntity peopleByPeopleId;
     private VehiclesEntity vehiclesByVehiclesId;
     private Collection<OperationCostsEntity> operationCostsById;
 
@@ -67,30 +71,17 @@ public class KeepingEntity {
         this.vehiclesId = vehiclesId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        KeepingEntity that = (KeepingEntity) o;
-        return id == that.id && peopleId == that.peopleId && vehiclesId == that.vehiclesId && Objects.equals(startdate, that.startdate) && Objects.equals(enddate, that.enddate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, startdate, enddate, peopleId, vehiclesId);
-    }
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) //EDITEED
     @JoinColumn(name = "people_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    public PeopleEntity getPeopleByPeopleId() {
+    public PersonEntity getPeopleByPeopleId() {
         return peopleByPeopleId;
     }
 
-    public void setPeopleByPeopleId(PeopleEntity peopleByPeopleId) {
+    public void setPeopleByPeopleId(PersonEntity peopleByPeopleId) {
         this.peopleByPeopleId = peopleByPeopleId;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) //EDITED
     @JoinColumn(name = "vehicles_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     public VehiclesEntity getVehiclesByVehiclesId() {
         return vehiclesByVehiclesId;
@@ -107,5 +98,18 @@ public class KeepingEntity {
 
     public void setOperationCostsById(Collection<OperationCostsEntity> operationCostsById) {
         this.operationCostsById = operationCostsById;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        KeepingEntity that = (KeepingEntity) o;
+        return id == that.id && peopleId == that.peopleId && vehiclesId == that.vehiclesId && Objects.equals(startdate, that.startdate) && Objects.equals(enddate, that.enddate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, startdate, enddate, peopleId, vehiclesId);
     }
 }
