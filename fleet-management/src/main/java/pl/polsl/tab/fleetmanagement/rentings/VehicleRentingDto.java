@@ -7,7 +7,7 @@ import java.sql.Date;
 
 @Getter
 @AllArgsConstructor
-public class VehicleRentingDTO {
+public class VehicleRentingDto {
 
     private long id;
     private int startmileage;
@@ -17,7 +17,7 @@ public class VehicleRentingDTO {
     private String isbusiness;
     private int vehicleUnavailability;
 
-    public VehicleRentingDTO(int startmileage, int endmileage, Date startdate, Date enddate,
+    public VehicleRentingDto(int startmileage, int endmileage, Date startdate, Date enddate,
                              String isbusiness, int vehicleUnavailability) {
 
         this.startmileage = startmileage;
@@ -28,10 +28,11 @@ public class VehicleRentingDTO {
         this.vehicleUnavailability = vehicleUnavailability;
     }
 
-    public VehicleRentingDTO() {
+    public VehicleRentingDto() {
     }
 
-    public VehicleRentingDTO(VehicleRentingEntity vehicleRentingEntity) {
+    public VehicleRentingDto(VehicleRentingEntity vehicleRentingEntity) {
+        this.id = vehicleRentingEntity.getId();
         this.startmileage = vehicleRentingEntity.getStartmileage();
         this.endmileage = vehicleRentingEntity.getEndmileage();
         this.startdate = vehicleRentingEntity.getStartdate();

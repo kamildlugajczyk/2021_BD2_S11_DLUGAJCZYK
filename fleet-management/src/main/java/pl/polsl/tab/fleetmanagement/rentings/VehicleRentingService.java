@@ -1,12 +1,16 @@
 package pl.polsl.tab.fleetmanagement.rentings;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
+import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
 
 import javax.transaction.Transactional;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -15,99 +19,82 @@ public class VehicleRentingService {
 
     private final VehicleRentingRepository vehicleRentingRepository;
 
-    public List<VehicleRentingDTO> getVehicleRentings() {
+    public List<VehicleRentingDto> getVehicleRentings() {
 
-        List<VehicleRentingDTO> vehicleRentingDTOS = new ArrayList<>();
-
+        List<VehicleRentingDto> vehicleRentingDtos = new ArrayList<>();
         List<VehicleRentingEntity> vehicleRentingsEntities = new ArrayList<>(vehicleRentingRepository.findAll());
 
-        for (VehicleRentingEntity vehicleRentingEntity : vehicleRentingsEntities) {
-            vehicleRentingDTOS.add(new VehicleRentingDTO(vehicleRentingEntity.getId(),
-                    vehicleRentingEntity.getStartmileage(), vehicleRentingEntity.getEndmileage(),
-                    vehicleRentingEntity.getStartdate(), vehicleRentingEntity.getEnddate(),
-                    vehicleRentingEntity.getIsbusiness(), vehicleRentingEntity.getVehicleUnavailabilityId()));
-        }
+        vehicleRentingsEntities.addAll(vehicleRentingRepository.findAll());
 
-        return vehicleRentingDTOS;
+        for (VehicleRentingEntity vehicleRentingEntity : vehicleRentingsEntities) {
+            vehicleRentingDtos.add(new VehicleRentingDto(vehicleRentingEntity));
+        }
+        return vehicleRentingDtos;
     }
 
-    public VehicleRentingDTO getVehicleRenting(Long id) throws Exception{
+    public VehicleRentingDto getVehicleRenting(Long id) {
 
-       VehicleRentingEntity entity = vehicleRentingRepository.findById(id)
-                .orElseThrow(() -> new Exception("Vehicle Renting " + id + " not found"));
+        VehicleRentingEntity vehicleRentingEntity = vehicleRentingRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundInDatabaseException("Vehicle renting of id " + id + " not found"));
 
-        return new VehicleRentingDTO(entity.getId(),
-                entity.getStartmileage(), entity.getEndmileage(),
-                entity.getStartdate(), entity.getEnddate(),
-                entity.getIsbusiness(), entity.getVehicleUnavailabilityId());
+        return new VehicleRentingDto(vehicleRentingEntity);
     }
 
     // TODO: 19.05.2021 nie wiem jak to robić z tym VehicleUnavailability
-    public VehicleRentingEntity addVehicleRenting(VehicleRentingDTO vehicleRentingDTO) {
+    public VehicleRentingDto addVehicleRenting(VehicleRentingDto vehicleRentingDTO) {
 
-        VehicleRentingEntity vehicleRentingEntity = new VehicleRentingEntity(vehicleRentingDTO.getStartmileage(),
-                vehicleRentingDTO.getEndmileage(), vehicleRentingDTO.getStartdate(), vehicleRentingDTO.getEnddate(),
-                vehicleRentingDTO.getIsbusiness(), vehicleRentingDTO.getVehicleUnavailability());
+        try {
+            VehicleRentingEntity vehicleRentingEntity = vehicleRentingRepository.save(new VehicleRentingEntity(
+                    vehicleRentingDTO.getStartmileage(),
+                    vehicleRentingDTO.getEndmileage(),
+                    vehicleRentingDTO.getStartdate(),
+                    vehicleRentingDTO.getEnddate(),
+                    vehicleRentingDTO.getIsbusiness(),
+                    vehicleRentingDTO.getVehicleUnavailability()));
 
-        return vehicleRentingRepository.save(vehicleRentingEntity);
+            return new VehicleRentingDto(vehicleRentingEntity);
+        } catch (RuntimeException e) {
+            Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
+            if (rootCause instanceof SQLException) {
+                if ("23505".equals(((SQLException) rootCause).getSQLState())) {
+                    // TODO add unique annotation in database script
+                    throw new ItemExistsInDatabaseException("Operation cost ( " + vehicleRentingDTO.getId() + ") exists in DB");
+                }
+            }
+            throw new RuntimeException(e);
+        }
     }
 
     @Transactional
-    public Optional<VehicleRentingDTO> updateVehicleRenting(Long id, VehicleRentingDTO vehicleRentingDTO) {
+    public VehicleRentingDto updateVehicleRenting(Long id, VehicleRentingDto vehicleRentingDTO) {
+        Optional<VehicleRentingEntity> vehicleRentingEntity = vehicleRentingRepository.findById(id);
 
-        Optional<VehicleRentingEntity> vehicleRentingsEntity = vehicleRentingRepository.findById(id);
-
-        if (vehicleRentingsEntity.isPresent()) {
-
-            if (vehicleRentingDTO.getStartmileage() != vehicleRentingsEntity.get().getStartmileage()) {
-                vehicleRentingsEntity.get().setStartmileage(vehicleRentingDTO.getStartmileage());
+        try {
+            vehicleRentingEntity.get().setStartmileage(vehicleRentingDTO.getStartmileage());
+            vehicleRentingEntity.get().setEndmileage(vehicleRentingDTO.getEndmileage());
+            vehicleRentingEntity.get().setStartdate(vehicleRentingDTO.getStartdate());
+            vehicleRentingEntity.get().setEnddate(vehicleRentingDTO.getEnddate());
+            vehicleRentingEntity.get().setIsbusiness(vehicleRentingDTO.getIsbusiness());
+            vehicleRentingEntity.get().setVehicleUnavailabilityId(vehicleRentingDTO.getVehicleUnavailability());
+            return new VehicleRentingDto(vehicleRentingRepository.save(vehicleRentingEntity.get()));
+        } catch (RuntimeException e) {
+            Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
+            if (rootCause instanceof SQLException) {
+                if ("23505".equals(((SQLException) rootCause).getSQLState())) {
+                    // TODO add unique annotation in database script
+                    throw new ItemExistsInDatabaseException("Operation cost ( " + vehicleRentingDTO.getId() + ") exists in DB");
+                }
             }
-
-            if (vehicleRentingDTO.getEndmileage() != vehicleRentingsEntity.get().getEndmileage()) {
-                vehicleRentingsEntity.get().setEndmileage(vehicleRentingDTO.getEndmileage());
-            }
-
-            if (vehicleRentingDTO.getStartdate() != null &&
-                    !Objects.equals(vehicleRentingsEntity.get().getStartdate(),
-                            vehicleRentingDTO.getStartdate())) {
-                vehicleRentingsEntity.get().setStartdate(vehicleRentingDTO.getStartdate());
-            }
-
-            if (vehicleRentingDTO.getEnddate() != null &&
-                    !Objects.equals(vehicleRentingsEntity.get().getEnddate(),
-                            vehicleRentingDTO.getEnddate())) {
-                vehicleRentingsEntity.get().setStartdate(vehicleRentingDTO.getEnddate());
-            }
-
-            if (vehicleRentingDTO.getIsbusiness() != null && vehicleRentingDTO.getIsbusiness().length() > 0 &&
-                    !Objects.equals(vehicleRentingsEntity.get().getIsbusiness(), vehicleRentingDTO.getIsbusiness())) {
-                vehicleRentingsEntity.get().setIsbusiness((vehicleRentingDTO.getIsbusiness()));
-            }
-
-            //// TODO: 19.05.2021 nie wiem jak to będzie sprawdzane itede
-            if (vehicleRentingDTO.getVehicleUnavailability() != vehicleRentingsEntity.get().getVehicleUnavailabilityId()) {
-                vehicleRentingsEntity.get().setVehicleUnavailabilityId(vehicleRentingDTO.getVehicleUnavailability());
-            }
-
-            vehicleRentingRepository.save(vehicleRentingsEntity.get());
-            return Optional.of(new VehicleRentingDTO(
-                    vehicleRentingsEntity.get().getStartmileage(),
-                    vehicleRentingsEntity.get().getEndmileage(),
-                    vehicleRentingsEntity.get().getStartdate(),
-                    vehicleRentingsEntity.get().getEnddate(),
-                    vehicleRentingsEntity.get().getIsbusiness(),
-                    vehicleRentingsEntity.get().getVehicleUnavailabilityId()));
+            throw new RuntimeException(e);
         }
-
-        return Optional.empty();
     }
 
-    public void deleteVehicleRenting(Long id) throws Exception {
+    public void deleteVehicleRenting(Long id) {
 
         try {
             this.vehicleRentingRepository.deleteById(id);
-        } catch (RuntimeException ignored) {
-            throw new Exception("Vehicle renting " + id + " not found");
+        } catch (IdNotFoundInDatabaseException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
 
     }
