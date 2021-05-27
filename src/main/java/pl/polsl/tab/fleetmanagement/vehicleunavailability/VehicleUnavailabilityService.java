@@ -3,7 +3,7 @@ package pl.polsl.tab.fleetmanagement.vehicleunavailability;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
+import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -23,7 +23,7 @@ public class VehicleUnavailabilityService {
     public VehicleUnavailabilityEntity getVehicleUnavailabilityById(Long id) {
         return this.vehicleUnavailabilityRepository
             .findById(id)
-            .orElseThrow(() -> new IdNotFoundInDatabaseException("Unavailability " + id + " not found"));
+            .orElseThrow(() -> new IdNotFoundException("Unavailability", id));
     }
 
     public Long addVehicleUnavailability(VehicleUnavailabilityDto dto, boolean archive) {

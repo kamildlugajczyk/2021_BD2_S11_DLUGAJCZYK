@@ -3,8 +3,8 @@ package pl.polsl.tab.fleetmanagement.function;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
-import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
+import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
+import pl.polsl.tab.fleetmanagement.exceptions.NotUniqueException;
 
 
 @RestController
@@ -25,7 +25,7 @@ public class FunctionController {
     public FunctionDTO getFunction(@PathVariable Long id) {
         try {
             return functionService.getFunction(id);
-        } catch (IdNotFoundInDatabaseException e) {
+        } catch (IdNotFoundException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
@@ -35,7 +35,7 @@ public class FunctionController {
     public FunctionDTO addFunction(@RequestBody FunctionDTO functionDTO) {
         try {
             return functionService.addFunction(functionDTO);
-        } catch (ItemExistsInDatabaseException e) {
+        } catch (NotUniqueException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
         } catch (RuntimeException  e) {
@@ -48,13 +48,13 @@ public class FunctionController {
     public FunctionDTO updateFunction(@PathVariable Long id, @RequestBody FunctionDTO functionDTO) {
         try {
             return functionService.updateFunction(id, functionDTO);
-        } catch (IdNotFoundInDatabaseException e) {
+        } catch (IdNotFoundException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        } catch (ItemExistsInDatabaseException e) {
+        } catch (NotUniqueException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
         } catch (RuntimeException e) {
@@ -67,7 +67,7 @@ public class FunctionController {
     public void deleteFunction(@PathVariable Long id) {
         try {
             functionService.deleteFunction(id);
-        } catch (IdNotFoundInDatabaseException e) {
+        } catch (IdNotFoundException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }

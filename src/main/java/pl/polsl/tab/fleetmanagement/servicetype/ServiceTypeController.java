@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
-import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
+import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
+import pl.polsl.tab.fleetmanagement.exceptions.NotUniqueException;
 
 @RestController
 public class ServiceTypeController {
@@ -24,51 +24,22 @@ public class ServiceTypeController {
 
     @GetMapping("service/type/{id}")
     public ServiceTypeEntity getServiceTypesById(@PathVariable Long id) {
-        try {
-            return this.serviceTypeService.getServiceTypesById(id);
-        } catch (IdNotFoundInDatabaseException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        }
+        return this.serviceTypeService.getServiceTypesById(id);
     }
 
     @PostMapping("service/type")
     public ServiceTypeEntity addServiceTypes(@RequestBody String name) {
-        try {
-            return this.serviceTypeService.addServiceTypes(name);
-        } catch (ItemExistsInDatabaseException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
-        } catch (RuntimeException  e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
+        return this.serviceTypeService.addServiceTypes(name);
     }
 
     @PutMapping("service/type/{id}")
     public ServiceTypeEntity updateServiceType(@PathVariable Long id, @RequestBody String name) {
-        try {
-            return this.serviceTypeService.updateServiceType(id, name);
-        } catch (IdNotFoundInDatabaseException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        } catch (ItemExistsInDatabaseException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
+        return this.serviceTypeService.updateServiceType(id, name);
     }
 
     @DeleteMapping("service/type/{id}")
     public void deleteServiceTypesById(@PathVariable Long id) {
-        try {
-            this.serviceTypeService.deleteServiceTypeById(id);
-        } catch (IdNotFoundInDatabaseException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        }
+        this.serviceTypeService.deleteServiceTypeById(id);
     }
 
 }

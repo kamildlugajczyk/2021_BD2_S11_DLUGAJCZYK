@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingService;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingDto;
-import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
+import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
 
 import java.util.List;
@@ -51,7 +51,7 @@ public class ServiceRequestService {
     public ServiceRequestEntity getServiceRequestById(Long id) {
         return this.serviceRequestRepository
                 .findById(id)
-                .orElseThrow(() -> new IdNotFoundInDatabaseException("Service Request (" + id + ") not exists"));
+                .orElseThrow(() -> new IdNotFoundException("Service Request", id));
     }
 
     public ServiceRequestEntity addServiceRequest(ServiceRequestDto requestDto) {
@@ -89,7 +89,7 @@ public class ServiceRequestService {
         try {
             this.serviceRequestRepository.deleteById(id);
         } catch (RuntimeException e) {
-            throw new IdNotFoundInDatabaseException("Service Request (" + id + ") not exists");
+            throw new IdNotFoundException("Service Request", id);
         }
     }
 }

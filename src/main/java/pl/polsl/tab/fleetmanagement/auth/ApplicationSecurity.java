@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
@@ -34,11 +35,10 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
             .csrf().disable()
             .authorizeRequests()
             .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-            .antMatchers("/boss").hasAnyAuthority( "ROLE_BOSS")
+            .antMatchers("/**/boss/**").hasAnyAuthority( "ROLE_BOSS")
             .antMatchers(HttpMethod.POST, "/person*").hasAnyAuthority("ROLE_ADMIN", "ROLE_BOSS")
             .antMatchers("/swagger-ui.html/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_PROGRAMMER")
-            .antMatchers("/keeper").hasAnyAuthority( "ROLE_BOSS", "ROLE_KEEPER")
-            .antMatchers("/employee").hasAnyAuthority( "ROLE_BOSS", "ROLE_KEEPER", "ROLE_EMPLOYEE")
+            .antMatchers("/**/keeper/**").hasAnyAuthority( "ROLE_ADMIN", "ROLE_BOSS", "ROLE_KEEPER")
             .antMatchers("login*").permitAll()
             .anyRequest().authenticated()
             .and()
@@ -47,7 +47,14 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
             .and()
             .logout()
                 .logoutSuccessUrl("/login")
-                .deleteCookies("JSESSIONID");
+                .deleteCookies("JSESSIONID")
+            .and()
+            .sessionManagement()
+                .sessionFixation().migrateSession()
+                .maximumSessions(1)
+                .expiredUrl("/login")
+                .and()
+                .invalidSessionUrl("/login");
     }
 
     @Bean
@@ -57,6 +64,11 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         daoAuthenticationProvider.setUserDetailsService(this.userPrincipalDetailsService);
         return daoAuthenticationProvider;
+    }
+
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
     }
 
     @Bean

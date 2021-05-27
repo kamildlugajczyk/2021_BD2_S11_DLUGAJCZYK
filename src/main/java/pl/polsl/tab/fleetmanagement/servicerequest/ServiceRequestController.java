@@ -1,16 +1,14 @@
 package pl.polsl.tab.fleetmanagement.servicerequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingDto;
-import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("service/request")
 public class ServiceRequestController {
 
     private final ServiceRequestService serviceRequestService;
@@ -20,54 +18,29 @@ public class ServiceRequestController {
         this.serviceRequestService = serviceRequestService;
     }
 
-    /**
-     * Check whether request exists in database
-     * @param id service request id
-     * @return true - exists, otherwise false
-    **/
-    @RequestMapping(value = "service/request/exist/{id}", method = RequestMethod.HEAD)
-    public Boolean exist(@PathVariable Long id) {
-        try {
-            this.serviceRequestService.getServiceRequestById(id);
-            return true;
-        } catch (Error ignored) {
-            return false;
-        }
-    }
-
-    @GetMapping("service/request")
+    @GetMapping()
     public List<ServiceRequestEntity> getAllServicesRequest() {
         return this.serviceRequestService.getAllServicesRequest();
     }
 
-    @GetMapping("service/request/unprocessed")
+    @GetMapping("unprocessed")
     public List<ServiceRequestEntity> getAllUnprocessedServicesRequest() {
         return this.serviceRequestService.getAllUnprocessedServicesRequest();
     }
 
-    @GetMapping("service/request/processed")
+    @GetMapping("processed")
     public List<ServiceRequestEntity> getAllProcessedServicesRequest() {
         return this.serviceRequestService.getAllProcessedServicesRequest();
     }
 
-    @GetMapping("service/request/{id}")
+    @GetMapping("{id}")
     public ServiceRequestEntity getServicesRequest(@PathVariable Long id) {
-        try {
-            return this.serviceRequestService.getServiceRequestById(id);
-        } catch (IdNotFoundInDatabaseException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        }
+        return this.serviceRequestService.getServiceRequestById(id);
     }
 
-    @PostMapping("service/request/")
+    @PostMapping("")
     public ServiceRequestEntity addServiceRequest(@RequestBody ServiceRequestDto request) {
-        try {
-            return this.serviceRequestService.addServiceRequest(request);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
+        return this.serviceRequestService.addServiceRequest(request);
     }
 
     /**
@@ -76,26 +49,13 @@ public class ServiceRequestController {
      * @param servicingDto servicing data
      * @return servicing json object
      **/
-    @PatchMapping("service/request/execute/{id}")
+    @PatchMapping("keeper/execute/{id}")
     public ServicingEntity executeServiceRequest(@RequestBody ServicingDto servicingDto, @PathVariable Long id) {
-        try {
-            return this.serviceRequestService.executeServiceRequest(servicingDto, id);
-        } catch (IdNotFoundInDatabaseException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
+        return this.serviceRequestService.executeServiceRequest(servicingDto, id);
     }
 
-    @DeleteMapping("service/request/{id}")
+    @DeleteMapping("keeper/{id}")
     public void deleteServicesRequest(@PathVariable Long id) {
-        try {
-            this.serviceRequestService.deleteServiceRequest(id);
-        } catch (IdNotFoundInDatabaseException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        }
+        this.serviceRequestService.deleteServiceRequest(id);
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityService;
 import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityDto;
-import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
+import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
 
 import java.sql.Date;
 import java.util.List;
@@ -57,7 +57,7 @@ public class ServicingService {
 
         if(servicing.isPresent()) return servicing.get();
 
-        throw new IdNotFoundInDatabaseException("Servicing " + id + " not exists");
+        throw new IdNotFoundException("Servicing", id);
     }
 
     /**
@@ -126,7 +126,7 @@ public class ServicingService {
 
         if(servicing.isEmpty()) {
             this.servicingRepository.flush();
-            throw new IdNotFoundInDatabaseException("Servicing " + id + " not exists");
+            throw new IdNotFoundException("Servicing", id);
         }
 
         this.servicingRepository.deleteById(id);

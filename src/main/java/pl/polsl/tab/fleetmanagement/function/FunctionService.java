@@ -3,8 +3,8 @@ package pl.polsl.tab.fleetmanagement.function;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
-import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
+import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
+import pl.polsl.tab.fleetmanagement.exceptions.NotUniqueException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class FunctionService {
 
     public FunctionDTO getFunction(Long id) {
         FunctionEntity functionEntity = functionRepository.findById(id)
-                .orElseThrow(() -> new IdNotFoundInDatabaseException("Person function " + id + " not found"));
+                .orElseThrow(() -> new IdNotFoundException("Person Function", id));
 
         return new FunctionDTO(functionEntity);
     }
@@ -49,7 +49,7 @@ public class FunctionService {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    throw new ItemExistsInDatabaseException("Person function ( " + functionDTO.getName() + ") exists in DB");
+                    throw new NotUniqueException("Person Function", "name", functionDTO.getName());
                 }
             }
             throw new RuntimeException(e);
@@ -60,7 +60,7 @@ public class FunctionService {
         Optional<FunctionEntity> functionEntity = functionRepository.findById(id);
 
         if(functionEntity.isEmpty())
-            throw new IdNotFoundInDatabaseException("Person function " + id + " not found");
+            throw new IdNotFoundException("Person Function", id);
 
         try {
             functionEntity.get().setName(functionDTO.getName());
@@ -69,7 +69,7 @@ public class FunctionService {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    throw new ItemExistsInDatabaseException("Person function ( " + functionDTO.getName() + ") exists in DB");
+                    throw new NotUniqueException("Person Function", "name", functionDTO.getName());
                 }
             }
             throw new RuntimeException(e);
@@ -79,7 +79,7 @@ public class FunctionService {
     public void deleteFunction(Long id) {
         try {
             functionRepository.deleteById(id);
-        } catch (IdNotFoundInDatabaseException e) {
+        } catch (IdNotFoundException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
