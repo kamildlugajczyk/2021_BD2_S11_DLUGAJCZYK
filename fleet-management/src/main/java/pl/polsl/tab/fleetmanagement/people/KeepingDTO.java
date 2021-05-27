@@ -1,7 +1,7 @@
 package pl.polsl.tab.fleetmanagement.people;
 
 import lombok.Getter;
-import pl.polsl.tab.fleetmanagement.exploitation.OperationCostsEntity;
+import pl.polsl.tab.fleetmanagement.exploitation.OperationCostEntity;
 import pl.polsl.tab.fleetmanagement.vehicle.VehiclesEntity;
 
 import java.sql.Date;
@@ -17,6 +17,6 @@ public class KeepingDTO {
     private int vehiclesId;
     private PeopleEntity peopleByPeopleId;
     private VehiclesEntity vehiclesByVehiclesId;
-    private Collection<OperationCostsEntity> operationCostsById;
+    private Collection<OperationCostEntity> operationCostsById;
 
 }

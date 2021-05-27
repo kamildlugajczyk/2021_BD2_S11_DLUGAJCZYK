@@ -1,6 +1,6 @@
 package pl.polsl.tab.fleetmanagement.rentings;
 
-import pl.polsl.tab.fleetmanagement.exploitation.OperationCostsEntity;
+import pl.polsl.tab.fleetmanagement.exploitation.OperationCostEntity;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "vehicle_rentings", schema = "public", catalog = "testdb")
-public class VehicleRentingsEntity {
+public class VehicleRentingEntity {
     private long id;
     private int startmileage;
     private int endmileage;
@@ -17,10 +17,10 @@ public class VehicleRentingsEntity {
     private Date enddate;
     private String isbusiness;
     private int vehicleUnavailabilityId;
-    private Collection<OperationCostsEntity> operationCostsById;
+    private Collection<OperationCostEntity> operationCostsById;
     private VehicleUnavailabilityEntity vehicleUnavailabilityByVehicleUnavailabilityId;
 
-    public VehicleRentingsEntity(int startmileage, int endmileage, Date startdate, Date enddate, String isbusiness, int vehicleUnavailabilityId) {
+    public VehicleRentingEntity(int startmileage, int endmileage, Date startdate, Date enddate, String isbusiness, int vehicleUnavailabilityId) {
         this.startmileage = startmileage;
         this.endmileage = endmileage;
         this.startdate = startdate;
@@ -29,7 +29,7 @@ public class VehicleRentingsEntity {
         this.vehicleUnavailabilityId = vehicleUnavailabilityId;
     }
 
-    public VehicleRentingsEntity() {
+    public VehicleRentingEntity() {
 
     }
 
@@ -129,7 +129,7 @@ public class VehicleRentingsEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        VehicleRentingsEntity that = (VehicleRentingsEntity) o;
+        VehicleRentingEntity that = (VehicleRentingEntity) o;
         return id == that.id && startmileage == that.startmileage && endmileage == that.endmileage && vehicleUnavailabilityId == that.vehicleUnavailabilityId && Objects.equals(startdate, that.startdate) && Objects.equals(enddate, that.enddate) && Objects.equals(isbusiness, that.isbusiness);
     }
 
@@ -139,11 +139,11 @@ public class VehicleRentingsEntity {
     }
 
     @OneToMany(mappedBy = "vehicleRentingsByVehicleRentingsId")
-    public Collection<OperationCostsEntity> getOperationCostsById() {
+    public Collection<OperationCostEntity> getOperationCostsById() {
         return operationCostsById;
     }
 
-    public void setOperationCostsById(Collection<OperationCostsEntity> operationCostsById) {
+    public void setOperationCostsById(Collection<OperationCostEntity> operationCostsById) {
         this.operationCostsById = operationCostsById;
     }
 

@@ -13,20 +13,20 @@ import java.util.Optional;
 @RestController
 @AllArgsConstructor
 @RequestMapping(path = "/rentings")
-public class VehicleRentingsController {
+public class VehicleRentingController {
 
-    private final VehicleRentingsService vehicleRentingsService;
+    private final VehicleRentingService vehicleRentingService;
 
     @GetMapping
-    public List<VehicleRentingsDTO> getVehicleRantings() {
-        return vehicleRentingsService.getVehicleRentings();
+    public List<VehicleRentingDTO> getVehicleRantings() {
+        return vehicleRentingService.getVehicleRentings();
     }
 
     @GetMapping(path = "/{id}")
-    public VehicleRentingsDTO getVehicleRenting(@PathVariable Long id) {
+    public VehicleRentingDTO getVehicleRenting(@PathVariable Long id) {
 
         try {
-            return this.vehicleRentingsService.getVehicleRenting(id);
+            return this.vehicleRentingService.getVehicleRenting(id);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
@@ -34,10 +34,10 @@ public class VehicleRentingsController {
     }
 
     @PostMapping
-    public ResponseEntity<VehicleRentingsDTO> addVehicleRenting(@RequestBody VehicleRentingsDTO vehicleRentingsDTO) {
+    public ResponseEntity<VehicleRentingDTO> addVehicleRenting(@RequestBody VehicleRentingDTO vehicleRentingDTO) {
         try {
-            VehicleRentingsEntity response = vehicleRentingsService.addVehicleRenting(vehicleRentingsDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(vehicleRentingsDTO);
+            VehicleRentingEntity response = vehicleRentingService.addVehicleRenting(vehicleRentingDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(vehicleRentingDTO);
         } catch (RuntimeException e) {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
 
@@ -54,7 +54,7 @@ public class VehicleRentingsController {
     @DeleteMapping(path = "/{id}")
     public void deleteVehicleRenting(@PathVariable Long id) {
         try {
-            this.vehicleRentingsService.deleteVehicleRenting(id);
+            this.vehicleRentingService.deleteVehicleRenting(id);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
@@ -62,8 +62,8 @@ public class VehicleRentingsController {
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<VehicleRentingsDTO> updateVehicleRenting(@PathVariable Long id, @RequestBody VehicleRentingsDTO vehicleRentingsDTO) {
-        Optional<VehicleRentingsDTO> response = vehicleRentingsService.updateVehicleRenting(id, vehicleRentingsDTO);
+    public ResponseEntity<VehicleRentingDTO> updateVehicleRenting(@PathVariable Long id, @RequestBody VehicleRentingDTO vehicleRentingDTO) {
+        Optional<VehicleRentingDTO> response = vehicleRentingService.updateVehicleRenting(id, vehicleRentingDTO);
 
         return response
                 .map(purposesEntity -> ResponseEntity.status(HttpStatus.OK).body(response.get()))

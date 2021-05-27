@@ -1,8 +1,8 @@
 package pl.polsl.tab.fleetmanagement.vehicle;
 
 import pl.polsl.tab.fleetmanagement.brandmodel.BrandsModelsEntity;
+import pl.polsl.tab.fleetmanagement.exploitation.OperationCostEntity;
 import pl.polsl.tab.fleetmanagement.people.KeepingEntity;
-import pl.polsl.tab.fleetmanagement.exploitation.OperationCostsEntity;
 import pl.polsl.tab.fleetmanagement.rentings.VehicleUnavailabilityEntity;
 import pl.polsl.tab.fleetmanagement.vehiclepurpose.PurposesEntity;
 import pl.polsl.tab.fleetmanagement.vehicletype.TypesEntity;
@@ -24,7 +24,7 @@ public class VehiclesEntity {
     private int typesId;
     private int purposesId;
     private Collection<KeepingEntity> keepingsById;
-    private Collection<OperationCostsEntity> operationCostsById;
+    private Collection<OperationCostEntity> operationCostsById;
     private Collection<VehicleUnavailabilityEntity> vehicleUnavailabilitiesById;
     private TypesEntity typesByTypesId;
     private PurposesEntity purposesByPurposesId;
@@ -120,11 +120,11 @@ public class VehiclesEntity {
     }
 
     @OneToMany(mappedBy = "vehiclesByVehiclesId")
-    public Collection<OperationCostsEntity> getOperationCostsById() {
+    public Collection<OperationCostEntity> getOperationCostsById() {
         return operationCostsById;
     }
 
-    public void setOperationCostsById(Collection<OperationCostsEntity> operationCostsById) {
+    public void setOperationCostsById(Collection<OperationCostEntity> operationCostsById) {
         this.operationCostsById = operationCostsById;
     }
 

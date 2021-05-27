@@ -1,6 +1,6 @@
 package pl.polsl.tab.fleetmanagement.people;
 
-import pl.polsl.tab.fleetmanagement.exploitation.OperationCostsEntity;
+import pl.polsl.tab.fleetmanagement.exploitation.OperationCostEntity;
 import pl.polsl.tab.fleetmanagement.vehicle.VehiclesEntity;
 
 import javax.persistence.*;
@@ -18,7 +18,7 @@ public class KeepingEntity {
     private int vehiclesId;
     private PeopleEntity peopleByPeopleId;
     private VehiclesEntity vehiclesByVehiclesId;
-    private Collection<OperationCostsEntity> operationCostsById;
+    private Collection<OperationCostEntity> operationCostsById;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -91,11 +91,11 @@ public class KeepingEntity {
     }
 
     @OneToMany(mappedBy = "keepingByKeepingId")
-    public Collection<OperationCostsEntity> getOperationCostsById() {
+    public Collection<OperationCostEntity> getOperationCostsById() {
         return operationCostsById;
     }
 
-    public void setOperationCostsById(Collection<OperationCostsEntity> operationCostsById) {
+    public void setOperationCostsById(Collection<OperationCostEntity> operationCostsById) {
         this.operationCostsById = operationCostsById;
     }
 

@@ -19,7 +19,7 @@ public class VehicleUnavailabilityEntity {
     private int vehiclesId;
     private int peopleId;
     private Collection<ServiceRequestEntity> serviceRequestsById;
-    private Collection<VehicleRentingsEntity> vehicleRentingsById;
+    private Collection<VehicleRentingEntity> vehicleRentingsById;
     private VehiclesEntity vehiclesByVehiclesId;
     private PeopleEntity peopleByPeopleId;
 
@@ -106,11 +106,11 @@ public class VehicleUnavailabilityEntity {
     }
 
     @OneToMany(mappedBy = "vehicleUnavailabilityByVehicleUnavailabilityId")
-    public Collection<VehicleRentingsEntity> getVehicleRentingsById() {
+    public Collection<VehicleRentingEntity> getVehicleRentingsById() {
         return vehicleRentingsById;
     }
 
-    public void setVehicleRentingsById(Collection<VehicleRentingsEntity> vehicleRentingsById) {
+    public void setVehicleRentingsById(Collection<VehicleRentingEntity> vehicleRentingsById) {
         this.vehicleRentingsById = vehicleRentingsById;
     }
 
