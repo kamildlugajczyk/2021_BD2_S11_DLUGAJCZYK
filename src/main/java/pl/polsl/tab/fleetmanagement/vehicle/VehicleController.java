@@ -1,7 +1,13 @@
 package pl.polsl.tab.fleetmanagement.vehicle;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
+import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
+import pl.polsl.tab.fleetmanagement.keeping.KeepingDTO;
+import pl.polsl.tab.fleetmanagement.person.PersonDTO;
+import pl.polsl.tab.fleetmanagement.person.PersonDTORequest;
 
 import java.util.List;
 
@@ -18,5 +24,73 @@ public class VehicleController {
     @GetMapping("/vehicle")
     public List<VehicleDTO> getAllVehicles() {
         return vehicleService.getAllVehicles();
+    }
+
+    @GetMapping("/vehicle/{id}")
+    public VehicleDTO getVehicle(@PathVariable Long id) {
+        try {
+            return vehicleService.getVehicle(id);
+        } catch (IdNotFoundInDatabaseException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
+    @PostMapping("/vehicle")
+    public VehicleDTO addVehicle(@RequestBody VehicleDTORequest vehicleDTO) {
+        try {
+            return vehicleService.addVehicle(vehicleDTO);
+        } catch (ItemExistsInDatabaseException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        } catch (IdNotFoundInDatabaseException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (RuntimeException  e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @PutMapping("/vehicle/{id}")
+    public VehicleDTO updateVehicle(@PathVariable Long id, @RequestBody VehicleDTORequest vehicleDTO) {
+        try {
+            return vehicleService.updateVehicle(id, vehicleDTO);
+        } catch (IdNotFoundInDatabaseException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        } catch (ItemExistsInDatabaseException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @DeleteMapping("/vehicle/{id}")
+    public void deleteVehicle(@PathVariable Long id) {
+        try {
+            vehicleService.deleteVehicle(id);
+        } catch (IdNotFoundInDatabaseException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
+    @GetMapping("/vehicle/{id}/keeping")
+    public Iterable<KeepingDTO> getVehiclesKeepings(@PathVariable Long id) {
+        try {
+            return vehicleService.getVehiclesKeepings(id);
+        } catch (IdNotFoundInDatabaseException e)
+        {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
     }
 }

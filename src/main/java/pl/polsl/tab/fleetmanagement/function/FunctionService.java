@@ -36,7 +36,7 @@ public class FunctionService {
 
     public FunctionDTO getFunction(Long id) {
         FunctionEntity functionEntity = functionRepository.findById(id)
-                .orElseThrow(() -> new IdNotFoundInDatabaseException("Person function " + id + " not found"));
+                .orElseThrow(() -> new IdNotFoundInDatabaseException("Person function of " + id + " not found"));
 
         return new FunctionDTO(functionEntity);
     }
@@ -60,7 +60,7 @@ public class FunctionService {
         Optional<FunctionEntity> functionEntity = functionRepository.findById(id);
 
         if(functionEntity.isEmpty())
-            throw new IdNotFoundInDatabaseException("Person function " + id + " not found");
+            throw new IdNotFoundInDatabaseException("Person function of " + id + " not found");
 
         try {
             functionEntity.get().setName(functionDTO.getName());

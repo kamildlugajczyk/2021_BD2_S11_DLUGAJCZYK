@@ -5,6 +5,7 @@ import pl.polsl.tab.fleetmanagement.keeping.KeepingEntity;
 import pl.polsl.tab.fleetmanagement.model.OperationCostsEntity;
 import pl.polsl.tab.fleetmanagement.model.VehicleUnavailabilityEntity;
 import pl.polsl.tab.fleetmanagement.vehiclepurpose.PurposeEntity;
+import pl.polsl.tab.fleetmanagement.vehiclepurpose.PurposeRepository;
 import pl.polsl.tab.fleetmanagement.vehicletype.TypeEntity;
 
 import javax.persistence.*;
@@ -17,12 +18,12 @@ import java.util.Objects;
 public class VehicleEntity {
     private long id;
     private String vin;
-    private String equipmentlevel;
+    private String equipmentLevel;
     private int mileage;
-    private BigDecimal avgfuelconsumption;
-    private int brandsModelsId;
-    private int typesId;
-    private int purposesId;
+    private BigDecimal avgFuelConsumption;
+    private long brandsModelsId;
+    private long typesId;
+    private long purposesId;
     private Collection<KeepingEntity> keepingsById;
     private Collection<OperationCostsEntity> operationCostsById;
     private Collection<VehicleUnavailabilityEntity> vehicleUnavailabilitiesById;
@@ -30,8 +31,26 @@ public class VehicleEntity {
     private PurposeEntity purposesByPurposesId;
     private BrandModelEntity brandsModelsByBrandsModelsId;
 
+    public VehicleEntity() {
+    }
+
+    public VehicleEntity(String vin, String equipmentLevel, int mileage, BigDecimal avgFuelConsumption,
+                         BrandModelEntity brandModelEntity, TypeEntity typeEntity, PurposeEntity purposeEntity) {
+        this.vin = vin;
+        this.equipmentLevel = equipmentLevel;
+        this.mileage = mileage;
+        this.avgFuelConsumption = avgFuelConsumption;
+        this.brandsModelsId = brandModelEntity.getId();
+        this.brandsModelsByBrandsModelsId = brandModelEntity;
+        this.typesId = typeEntity.getId();
+        this.typesByTypesId = typeEntity;
+        this.purposesId = purposeEntity.getId();
+        this.purposesByPurposesId = purposeEntity;
+    }
+
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long getId() {
         return id;
     }
@@ -52,12 +71,12 @@ public class VehicleEntity {
 
     @Basic
     @Column(name = "equipmentlevel", nullable = false, length = 8)
-    public String getEquipmentlevel() {
-        return equipmentlevel;
+    public String getEquipmentLevel() {
+        return equipmentLevel;
     }
 
-    public void setEquipmentlevel(String equipmentlevel) {
-        this.equipmentlevel = equipmentlevel;
+    public void setEquipmentLevel(String equipmentlevel) {
+        this.equipmentLevel = equipmentlevel;
     }
 
     @Basic
@@ -72,41 +91,41 @@ public class VehicleEntity {
 
     @Basic
     @Column(name = "avgfuelconsumption", nullable = false, precision = 2)
-    public BigDecimal getAvgfuelconsumption() {
-        return avgfuelconsumption;
+    public BigDecimal getAvgFuelConsumption() {
+        return avgFuelConsumption;
     }
 
-    public void setAvgfuelconsumption(BigDecimal avgfuelconsumption) {
-        this.avgfuelconsumption = avgfuelconsumption;
+    public void setAvgFuelConsumption(BigDecimal avgfuelconsumption) {
+        this.avgFuelConsumption = avgfuelconsumption;
     }
 
     @Basic
     @Column(name = "brands_models_id", nullable = false)
-    public int getBrandsModelsId() {
+    public long getBrandsModelsId() {
         return brandsModelsId;
     }
 
-    public void setBrandsModelsId(int brandsModelsId) {
+    public void setBrandsModelsId(long brandsModelsId) {
         this.brandsModelsId = brandsModelsId;
     }
 
     @Basic
     @Column(name = "types_id", nullable = false)
-    public int getTypesId() {
+    public long getTypesId() {
         return typesId;
     }
 
-    public void setTypesId(int typesId) {
+    public void setTypesId(long typesId) {
         this.typesId = typesId;
     }
 
     @Basic
     @Column(name = "purposes_id", nullable = false)
-    public int getPurposesId() {
+    public long getPurposesId() {
         return purposesId;
     }
 
-    public void setPurposesId(int purposesId) {
+    public void setPurposesId(long purposesId) {
         this.purposesId = purposesId;
     }
 
@@ -172,11 +191,11 @@ public class VehicleEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         VehicleEntity that = (VehicleEntity) o;
-        return id == that.id && mileage == that.mileage && brandsModelsId == that.brandsModelsId && typesId == that.typesId && purposesId == that.purposesId && Objects.equals(vin, that.vin) && Objects.equals(equipmentlevel, that.equipmentlevel) && Objects.equals(avgfuelconsumption, that.avgfuelconsumption);
+        return id == that.id && mileage == that.mileage && brandsModelsId == that.brandsModelsId && typesId == that.typesId && purposesId == that.purposesId && Objects.equals(vin, that.vin) && Objects.equals(equipmentLevel, that.equipmentLevel) && Objects.equals(avgFuelConsumption, that.avgFuelConsumption);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, vin, equipmentlevel, mileage, avgfuelconsumption, brandsModelsId, typesId, purposesId);
+        return Objects.hash(id, vin, equipmentLevel, mileage, avgFuelConsumption, brandsModelsId, typesId, purposesId);
     }
 }

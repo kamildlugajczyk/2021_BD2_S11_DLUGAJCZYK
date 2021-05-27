@@ -36,7 +36,7 @@ public class TypeService {
 
     public TypeDTO getType(Long id) {
         TypeEntity typeEntity = typeRepository.findById(id)
-                .orElseThrow(() -> new IdNotFoundInDatabaseException("Vehicle type " + id + " not found"));
+                .orElseThrow(() -> new IdNotFoundInDatabaseException("Vehicle type of id " + id + " not found"));
 
         return new TypeDTO(typeEntity);
     }
@@ -60,7 +60,7 @@ public class TypeService {
         Optional<TypeEntity> typeEntity = typeRepository.findById(id);
 
         if(typeEntity.isEmpty())
-            throw new IdNotFoundInDatabaseException("Vehicle type " + id + " not found");
+            throw new IdNotFoundInDatabaseException("Vehicle type of id " + id + " not found");
 
         try {
             typeEntity.get().setName(typeDTO.getName());

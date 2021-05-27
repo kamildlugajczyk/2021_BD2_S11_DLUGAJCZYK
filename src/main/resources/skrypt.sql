@@ -46,7 +46,7 @@ create table People (
 create table Keeping (
     id BIGSERIAL NOT NULL PRIMARY KEY,
 	startDate DATE NOT NULL,
-	endDate DATE NOT NULL,
+	endDate DATE,
 	People_id INT NOT NULL,
 	Vehicles_id INT NOT NULL,
     CONSTRAINT Keeping_Vehicles_FK FOREIGN KEY ( Vehicles_id ) REFERENCES Vehicles ( id ),

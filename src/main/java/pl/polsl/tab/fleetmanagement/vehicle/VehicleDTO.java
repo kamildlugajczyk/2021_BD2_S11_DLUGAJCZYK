@@ -16,9 +16,9 @@ public class VehicleDTO {
 
     private long id;
     private String vin;
-    private String equipmentlevel;
+    private String equipmentLevel;
     private int mileage;
-    private BigDecimal avgfuelconsumption;
+    private BigDecimal avgFuelConsumption;
 //    private Collection<KeepingEntity> keepingsById;
 //    private Collection<OperationCostsEntity> operationCostsById;
 //    private Collection<VehicleUnavailabilityEntity> vehicleUnavailabilitiesById;
@@ -27,15 +27,26 @@ public class VehicleDTO {
     private BrandModelDTO brandmodel;
 
 
-    public VehicleDTO(long id, String vin, String equipmentlevel, int mileage, BigDecimal avgfuelconsumption,
+    public VehicleDTO(long id, String vin, String equipmentLevel, int mileage, BigDecimal avgFuelConsumption,
                       TypeEntity type, PurposeEntity purpose, BrandModelEntity brandmodel) {
         this.id = id;
         this.vin = vin;
-        this.equipmentlevel = equipmentlevel;
+        this.equipmentLevel = equipmentLevel;
         this.mileage = mileage;
-        this.avgfuelconsumption = avgfuelconsumption;
+        this.avgFuelConsumption = avgFuelConsumption;
         this.type = new TypeDTO(type);
         this.purpose = new PurposeDTO(purpose);
         this.brandmodel = new BrandModelDTO(brandmodel);
+    }
+
+    public VehicleDTO(VehicleEntity vehicleEntity) {
+        this.id = vehicleEntity.getId();
+        this.vin = vehicleEntity.getVin();
+        this.equipmentLevel = vehicleEntity.getEquipmentLevel();
+        this.mileage = vehicleEntity.getMileage();
+        this.avgFuelConsumption = vehicleEntity.getAvgFuelConsumption();
+        this.type = new TypeDTO(vehicleEntity.getTypesByTypesId());
+        this.purpose = new PurposeDTO(vehicleEntity.getPurposesByPurposesId());
+        this.brandmodel = new BrandModelDTO(vehicleEntity.getBrandsModelsByBrandsModelsId());
     }
 }

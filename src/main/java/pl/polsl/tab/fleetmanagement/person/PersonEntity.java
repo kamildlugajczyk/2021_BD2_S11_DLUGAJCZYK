@@ -14,14 +14,34 @@ public class PersonEntity {
     private long id;
     private String firstname;
     private String lastname;
-    private String phonenumber;
-    private int functionsId;
+    private String phoneNumber;
+    private long functionsId;
     private Collection<KeepingEntity> keepingsById;
     private FunctionEntity functionsByFunctionsId;
     private Collection<VehicleUnavailabilityEntity> vehicleUnavailabilitiesById;
 
+    public PersonEntity() {
+    }
+
+    public PersonEntity(String firstname, String lastname, String phoneNumber, FunctionEntity functionsByFunctionsId) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.phoneNumber = phoneNumber;
+        this.functionsId = functionsByFunctionsId.getId();
+        this.functionsByFunctionsId = functionsByFunctionsId;
+    }
+
+    public PersonEntity(PersonDTO personDTO) {
+        this.firstname = personDTO.getFirstname();
+        this.lastname = personDTO.getLastname();
+        this.phoneNumber = personDTO.getPhoneNumber();
+        this.functionsId = personDTO.getFunction().getId();
+        this.functionsByFunctionsId = new FunctionEntity(personDTO.getFunction().getId(), personDTO.getFunction().getName());
+    }
+
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long getId() {
         return id;
     }
@@ -52,21 +72,21 @@ public class PersonEntity {
 
     @Basic
     @Column(name = "phonenumber", nullable = false, length = 50)
-    public String getPhonenumber() {
-        return phonenumber;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhonenumber(String phonenumber) {
-        this.phonenumber = phonenumber;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Basic
     @Column(name = "functions_id", nullable = false)
-    public int getFunctionsId() {
+    public long getFunctionsId() {
         return functionsId;
     }
 
-    public void setFunctionsId(int functionsId) {
+    public void setFunctionsId(long functionsId) {
         this.functionsId = functionsId;
     }
 
@@ -103,11 +123,12 @@ public class PersonEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PersonEntity that = (PersonEntity) o;
-        return id == that.id && functionsId == that.functionsId && Objects.equals(firstname, that.firstname) && Objects.equals(lastname, that.lastname) && Objects.equals(phonenumber, that.phonenumber);
+        return id == that.id && functionsId == that.functionsId && Objects.equals(firstname, that.firstname)
+                && Objects.equals(lastname, that.lastname) && Objects.equals(phoneNumber, that.phoneNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstname, lastname, phonenumber, functionsId);
+        return Objects.hash(id, firstname, lastname, phoneNumber, functionsId);
     }
 }

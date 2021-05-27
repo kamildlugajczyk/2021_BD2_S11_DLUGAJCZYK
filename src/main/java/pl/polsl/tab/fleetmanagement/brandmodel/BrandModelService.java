@@ -62,7 +62,7 @@ public class BrandModelService {
         Optional<BrandModelEntity> brandModelEntity = brandModelRepository.findById(id);
 
         if(brandModelEntity.isEmpty())
-            throw new IdNotFoundInDatabaseException("Vehicle type " + id + " not found");
+            throw new IdNotFoundInDatabaseException("Vehicle type of id " + id + " not found");
 
         try {
             brandModelEntity.get().setBrand(brandModelDTO.getBrand());

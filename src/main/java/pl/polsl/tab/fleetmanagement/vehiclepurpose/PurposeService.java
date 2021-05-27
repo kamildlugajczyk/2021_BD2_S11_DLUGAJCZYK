@@ -36,7 +36,7 @@ public class PurposeService {
 
     public PurposeDTO getPurpose(Long id) {
         PurposeEntity purposeEntity = purposeRepository.findById(id)
-                .orElseThrow(() -> new IdNotFoundInDatabaseException("Vehicle purpose " + id + " not found"));
+                .orElseThrow(() -> new IdNotFoundInDatabaseException("Vehicle purpose of id " + id + " not found"));
 
         return new PurposeDTO(purposeEntity);
     }
@@ -60,7 +60,7 @@ public class PurposeService {
         Optional<PurposeEntity> purposeEntity = purposeRepository.findById(id);
 
         if(purposeEntity.isEmpty())
-            throw new IdNotFoundInDatabaseException("Vehicle purpose " + id + " not found");
+            throw new IdNotFoundInDatabaseException("Vehicle purpose of id " + id + " not found");
 
         try {
             purposeEntity.get().setName(purposeDTO.getName());
