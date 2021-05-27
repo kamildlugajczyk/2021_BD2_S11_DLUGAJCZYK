@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.polsl.tab.fleetmanagement.models.PeopleEntity;
-import pl.polsl.tab.fleetmanagement.models.VehiclesEntity;
+import pl.polsl.tab.fleetmanagement.people.PeopleEntity;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
+import pl.polsl.tab.fleetmanagement.vehicle.VehiclesEntity;
 
 import javax.persistence.*;
 import java.sql.Date;
