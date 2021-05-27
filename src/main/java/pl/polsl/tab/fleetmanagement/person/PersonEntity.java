@@ -90,7 +90,7 @@ public class PersonEntity {
         this.functionsId = functionsId;
     }
 
-    @OneToMany(mappedBy = "peopleByPeopleId")
+    @OneToMany(mappedBy = "peopleByPeopleId"/*, cascade = CascadeType.PERSIST*/)
     public Collection<KeepingEntity> getKeepingsById() {
         return keepingsById;
     }

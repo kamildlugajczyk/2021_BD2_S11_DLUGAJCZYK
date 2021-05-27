@@ -82,8 +82,6 @@ public class PersonController {
         }
     }
 
-    // dodac crudy powyzej
-
     @GetMapping("/person/{id}/keeping")
     public Iterable<KeepingDTO> getPersonsKeepings(@PathVariable Long id) {
         try {
@@ -94,4 +92,19 @@ public class PersonController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
+
+//    @PostMapping("/person/{id}/keeping")
+//    public KeepingDTO addPersonsKeeping(@PathVariable Long id, @RequestBody KeepingDTO keepingDTO) {
+//        try {
+//            return personService.addPersonsKeeping(keepingDTO);
+//        } catch (ItemExistsInDatabaseException e) {
+//            System.out.println(e.getMessage());
+//            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
+//        } catch (IdNotFoundInDatabaseException e) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+//        } catch (RuntimeException  e) {
+//            System.out.println(e.getMessage());
+//            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+//        }
+//    }
 }

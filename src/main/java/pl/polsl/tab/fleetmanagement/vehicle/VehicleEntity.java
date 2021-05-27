@@ -129,7 +129,7 @@ public class VehicleEntity {
         this.purposesId = purposesId;
     }
 
-    @OneToMany(mappedBy = "vehiclesByVehiclesId")
+    @OneToMany(mappedBy = "vehiclesByVehiclesId"/*, cascade = CascadeType.ALL*/)
     public Collection<KeepingEntity> getKeepingsById() {
         return keepingsById;
     }

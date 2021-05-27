@@ -8,6 +8,8 @@ import pl.polsl.tab.fleetmanagement.function.FunctionEntity;
 import pl.polsl.tab.fleetmanagement.function.FunctionRepository;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingDTO;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingEntity;
+import pl.polsl.tab.fleetmanagement.vehicle.VehicleEntity;
+import pl.polsl.tab.fleetmanagement.vehicle.VehicleRepository;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,10 +22,13 @@ public class PersonService {
 
     private PersonRepository personRepository;
     private FunctionRepository functionRepository;
+    private VehicleRepository vehicleRepository;
 
-    public PersonService(PersonRepository personRepository, FunctionRepository functionRepository) {
+    public PersonService(PersonRepository personRepository, FunctionRepository functionRepository,
+                         VehicleRepository vehicleRepository) {
         this.personRepository = personRepository;
         this.functionRepository = functionRepository;
+        this.vehicleRepository = vehicleRepository;
     }
 
     public List<PersonDTO> getAllPeople() {
@@ -122,6 +127,31 @@ public class PersonService {
 
         return keepingDTOs;
     }
+
+//    public KeepingDTO addPersonsKeeping(KeepingDTO keepingDTO) {
+//
+//        PersonEntity personEntity = personRepository.findById(keepingDTO.getPeopleId())
+//                .orElseThrow(() -> new IdNotFoundInDatabaseException("Person of id " + keepingDTO.getPeopleId() + " not found"));
+//
+//        VehicleEntity vehicleEntity = vehicleRepository.findById(keepingDTO.getVehicleId())
+//                .orElseThrow(() -> new IdNotFoundInDatabaseException("Vehicle of id " + keepingDTO.getVehicleId() + " not found"));
+//
+//        try {
+//            KeepingEntity keepingEntity = new KeepingEntity(keepingDTO);
+//            personEntity.getKeepingsById().add(keepingEntity);
+//            personRepository.save(personEntity);
+//            return new KeepingDTO(keepingEntity);
+//        } catch (RuntimeException e) {
+//            Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
+//            if (rootCause instanceof SQLException) {
+//                if ("23505".equals(((SQLException) rootCause).getSQLState())) {
+//                    // TODO check if email exists (after database refactor)
+//                    //throw new ItemExistsInDatabaseException("Email ( " + personDTO.getEmail() + ") exists in DB");
+//                }
+//            }
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     private boolean validatePhoneNumber(String phoneNumber) {
         String patterns

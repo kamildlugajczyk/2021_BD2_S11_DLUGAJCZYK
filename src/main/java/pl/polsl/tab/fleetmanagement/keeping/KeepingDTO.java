@@ -31,4 +31,20 @@ public class KeepingDTO {
         this.peopleId = keepingEntity.getPeopleId();
         this.vehicleId = keepingEntity.getVehiclesId();
     }
+
+    public Date getStartdate() {
+        return startdate;
+    }
+
+    public Date getEnddate() {
+        return enddate;
+    }
+
+    public long getPeopleId() {
+        return peopleId;
+    }
+
+    public long getVehicleId() {
+        return vehicleId;
+    }
 }

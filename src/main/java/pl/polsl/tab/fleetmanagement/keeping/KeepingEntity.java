@@ -15,14 +15,28 @@ public class KeepingEntity {
     private long id;
     private Date startdate;
     private Date enddate;
-    private int peopleId;
-    private int vehiclesId;
+    private long peopleId;
+    private long vehiclesId;
     private PersonEntity peopleByPeopleId;
     private VehicleEntity vehiclesByVehiclesId;
     private Collection<OperationCostsEntity> operationCostsById;
 
+    public KeepingEntity() {
+    }
+
+    public KeepingEntity(Date startdate, Date enddate, long peopleId, PersonEntity personEntity,
+                         long vehiclesId, VehicleEntity vehicleEntity) {
+        this.startdate = startdate;
+        this.enddate = enddate;
+        this.peopleId = peopleId;
+        this.peopleByPeopleId = personEntity;
+        this.vehiclesId = vehiclesId;
+        this.vehiclesByVehiclesId = vehicleEntity;
+    }
+
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long getId() {
         return id;
     }
@@ -42,7 +56,7 @@ public class KeepingEntity {
     }
 
     @Basic
-    @Column(name = "enddate", nullable = false)
+    @Column(name = "enddate", nullable = true)
     public Date getEnddate() {
         return enddate;
     }
@@ -53,21 +67,21 @@ public class KeepingEntity {
 
     @Basic
     @Column(name = "people_id", nullable = false)
-    public int getPeopleId() {
+    public long getPeopleId() {
         return peopleId;
     }
 
-    public void setPeopleId(int peopleId) {
+    public void setPeopleId(long peopleId) {
         this.peopleId = peopleId;
     }
 
     @Basic
     @Column(name = "vehicles_id", nullable = false)
-    public int getVehiclesId() {
+    public long getVehiclesId() {
         return vehiclesId;
     }
 
-    public void setVehiclesId(int vehiclesId) {
+    public void setVehiclesId(long vehiclesId) {
         this.vehiclesId = vehiclesId;
     }
 

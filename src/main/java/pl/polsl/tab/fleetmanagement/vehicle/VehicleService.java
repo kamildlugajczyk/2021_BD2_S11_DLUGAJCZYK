@@ -9,11 +9,15 @@ import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingDTO;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingEntity;
+import pl.polsl.tab.fleetmanagement.keeping.KeepingRepository;
+import pl.polsl.tab.fleetmanagement.person.PersonEntity;
+import pl.polsl.tab.fleetmanagement.person.PersonRepository;
 import pl.polsl.tab.fleetmanagement.vehiclepurpose.PurposeEntity;
 import pl.polsl.tab.fleetmanagement.vehiclepurpose.PurposeRepository;
 import pl.polsl.tab.fleetmanagement.vehicletype.TypeEntity;
 import pl.polsl.tab.fleetmanagement.vehicletype.TypeRepository;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +30,18 @@ public class VehicleService {
     private TypeRepository typeRepository;
     private PurposeRepository purposeRepository;
     private BrandModelRepository brandModelRepository;
+    private PersonRepository personRepository;
+    private KeepingRepository keepingRepository;
 
     public VehicleService(VehicleRepository vehicleRepository, TypeRepository typeRepository,
-                          PurposeRepository purposeRepository, BrandModelRepository brandModelRepository) {
+                          PurposeRepository purposeRepository, BrandModelRepository brandModelRepository,
+                          PersonRepository personRepository, KeepingRepository keepingRepository) {
         this.vehicleRepository = vehicleRepository;
         this.typeRepository = typeRepository;
         this.purposeRepository = purposeRepository;
         this.brandModelRepository = brandModelRepository;
+        this.personRepository = personRepository;
+        this.keepingRepository = keepingRepository;
     }
 
     public List<VehicleDTO> getAllVehicles() {
@@ -144,5 +153,34 @@ public class VehicleService {
         }
 
         return keepingDTOs;
+    }
+
+    public void changeVehiclesKeeper(Long id, Long personId) {
+        PersonEntity personEntity = personRepository.findById(personId)
+                .orElseThrow(() -> new IdNotFoundInDatabaseException("Person of id " + personId + " not found"));
+
+        VehicleEntity vehicleEntity = vehicleRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundInDatabaseException("Vehicle of id " + id + " not found"));
+
+        for (KeepingEntity keepingEntity : vehicleEntity.getKeepingsById()) {
+            if (keepingEntity.getEnddate() == null) {
+                keepingEntity.setEnddate(new Date(System.currentTimeMillis()));
+            }
+        }
+
+        try {
+            KeepingEntity keepingEntity = new KeepingEntity(new Date(System.currentTimeMillis()), null, personId,
+                    personEntity, id, vehicleEntity);
+
+            keepingRepository.save(keepingEntity);
+        } catch (RuntimeException e) {
+            Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
+            if (rootCause instanceof SQLException) {
+                if ("23505".equals(((SQLException) rootCause).getSQLState())) {
+                    //throw new ItemExistsInDatabaseException("Email ( " + personDTO.getEmail() + ") exists in DB");
+                }
+            }
+            throw new RuntimeException(e);
+        }
     }
 }
