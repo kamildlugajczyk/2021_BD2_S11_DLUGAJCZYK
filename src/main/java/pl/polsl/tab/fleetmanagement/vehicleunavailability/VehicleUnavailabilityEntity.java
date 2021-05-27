@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
-import pl.polsl.tab.fleetmanagement.models.PeopleEntity;
+import pl.polsl.tab.fleetmanagement.people.PeopleEntity;
+import pl.polsl.tab.fleetmanagement.rentings.VehicleRentingEntity;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
-import pl.polsl.tab.fleetmanagement.models.VehicleRentingsEntity;
-import pl.polsl.tab.fleetmanagement.models.VehiclesEntity;
+import pl.polsl.tab.fleetmanagement.vehicle.VehiclesEntity;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -51,7 +51,7 @@ public class VehicleUnavailabilityEntity {
 
     @OneToMany(mappedBy = "vehicleUnavailabilityByVehicleUnavailabilityId")
     @JsonIgnore
-    @Getter @Setter private Set<VehicleRentingsEntity> vehicleRentingsById;
+    @Getter @Setter private Set<VehicleRentingEntity> vehicleRentingsById;
 
     @ManyToOne
     @JoinColumn(name = "vehicles_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)

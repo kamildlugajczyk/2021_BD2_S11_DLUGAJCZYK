@@ -47,8 +47,6 @@ public class VehicleRentingService {
             VehicleRentingEntity vehicleRentingEntity = vehicleRentingRepository.save(new VehicleRentingEntity(
                     vehicleRentingDTO.getStartmileage(),
                     vehicleRentingDTO.getEndmileage(),
-                    vehicleRentingDTO.getStartdate(),
-                    vehicleRentingDTO.getEnddate(),
                     vehicleRentingDTO.getIsbusiness(),
                     vehicleRentingDTO.getVehicleUnavailability()));
 
@@ -72,8 +70,6 @@ public class VehicleRentingService {
         try {
             vehicleRentingEntity.get().setStartmileage(vehicleRentingDTO.getStartmileage());
             vehicleRentingEntity.get().setEndmileage(vehicleRentingDTO.getEndmileage());
-            vehicleRentingEntity.get().setStartdate(vehicleRentingDTO.getStartdate());
-            vehicleRentingEntity.get().setEnddate(vehicleRentingDTO.getEnddate());
             vehicleRentingEntity.get().setIsbusiness(vehicleRentingDTO.getIsbusiness());
             vehicleRentingEntity.get().setVehicleUnavailabilityId(vehicleRentingDTO.getVehicleUnavailability());
             return new VehicleRentingDto(vehicleRentingRepository.save(vehicleRentingEntity.get()));

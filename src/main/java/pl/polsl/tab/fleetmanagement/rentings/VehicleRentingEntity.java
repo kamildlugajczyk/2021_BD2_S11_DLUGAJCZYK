@@ -4,7 +4,6 @@ import pl.polsl.tab.fleetmanagement.exploitation.OperationCostEntity;
 import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityEntity;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -14,18 +13,14 @@ public class VehicleRentingEntity {
     private long id;
     private int startmileage;
     private int endmileage;
-    private Date startdate;
-    private Date enddate;
-    private String isbusiness;
+    private boolean isbusiness;
     private int vehicleUnavailabilityId;
     private Collection<OperationCostEntity> operationCostsById;
     private VehicleUnavailabilityEntity vehicleUnavailabilityByVehicleUnavailabilityId;
 
-    public VehicleRentingEntity(int startmileage, int endmileage, Date startdate, Date enddate, String isbusiness, int vehicleUnavailabilityId) {
+    public VehicleRentingEntity(int startmileage, int endmileage, boolean isbusiness, int vehicleUnavailabilityId) {
         this.startmileage = startmileage;
         this.endmileage = endmileage;
-        this.startdate = startdate;
-        this.enddate = enddate;
         this.isbusiness = isbusiness;
         this.vehicleUnavailabilityId = vehicleUnavailabilityId;
     }
@@ -40,8 +35,6 @@ public class VehicleRentingEntity {
                 "id=" + id +
                 ", startmileage=" + startmileage +
                 ", endmileage=" + endmileage +
-                ", startdate=" + startdate +
-                ", enddate=" + enddate +
                 ", isbusiness='" + isbusiness + '\'' +
                 ", vehicleUnavailabilityId=" + vehicleUnavailabilityId +
                 '}';
@@ -87,32 +80,12 @@ public class VehicleRentingEntity {
     }
 
     @Basic
-    @Column(name = "startdate", nullable = false)
-    public Date getStartdate() {
-        return startdate;
-    }
-
-    public void setStartdate(Date startdate) {
-        this.startdate = startdate;
-    }
-
-    @Basic
-    @Column(name = "enddate", nullable = false)
-    public Date getEnddate() {
-        return enddate;
-    }
-
-    public void setEnddate(Date enddate) {
-        this.enddate = enddate;
-    }
-
-    @Basic
     @Column(name = "isbusiness", nullable = false, length = 1)
-    public String getIsbusiness() {
+    public boolean getIsbusiness() {
         return isbusiness;
     }
 
-    public void setIsbusiness(String isbusiness) {
+    public void setIsbusiness(boolean isbusiness) {
         this.isbusiness = isbusiness;
     }
 
@@ -131,12 +104,12 @@ public class VehicleRentingEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         VehicleRentingEntity that = (VehicleRentingEntity) o;
-        return id == that.id && startmileage == that.startmileage && endmileage == that.endmileage && vehicleUnavailabilityId == that.vehicleUnavailabilityId && Objects.equals(startdate, that.startdate) && Objects.equals(enddate, that.enddate) && Objects.equals(isbusiness, that.isbusiness);
+        return id == that.id && startmileage == that.startmileage && endmileage == that.endmileage && vehicleUnavailabilityId == that.vehicleUnavailabilityId && Objects.equals(isbusiness, that.isbusiness);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, startmileage, endmileage, startdate, enddate, isbusiness, vehicleUnavailabilityId);
+        return Objects.hash(id, startmileage, endmileage, isbusiness, vehicleUnavailabilityId);
     }
 
     @OneToMany(mappedBy = "vehicleRentingsByVehicleRentingsId")
