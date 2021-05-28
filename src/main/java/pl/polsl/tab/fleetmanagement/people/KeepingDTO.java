@@ -15,8 +15,10 @@ public class KeepingDTO {
     private Date enddate;
     private int peopleId;
     private int vehiclesId;
-    private PeopleEntity peopleByPeopleId;
+    private PersonEntity peopleByPeopleId;
     private VehiclesEntity vehiclesByVehiclesId;
     private Collection<OperationCostEntity> operationCostsById;
+
+
 
 }

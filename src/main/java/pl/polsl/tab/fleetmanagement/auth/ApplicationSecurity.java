@@ -29,7 +29,7 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception
     {
-        // TODO login, logout page (default, success, failure)
+        // TODO login and logout page (default, success, failure)
 
         http
             .requiresChannel()

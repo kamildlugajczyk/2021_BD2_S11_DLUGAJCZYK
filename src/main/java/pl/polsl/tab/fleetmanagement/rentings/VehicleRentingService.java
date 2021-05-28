@@ -1,11 +1,9 @@
 package pl.polsl.tab.fleetmanagement.rentings;
 
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
-import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
+import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
+import pl.polsl.tab.fleetmanagement.exceptions.NotUniqueException;
 
 import javax.transaction.Transactional;
 import java.sql.SQLException;
@@ -35,7 +33,7 @@ public class VehicleRentingService {
     public VehicleRentingDto getVehicleRenting(Long id) {
 
         VehicleRentingEntity vehicleRentingEntity = vehicleRentingRepository.findById(id)
-                .orElseThrow(() -> new IdNotFoundInDatabaseException("Vehicle renting of id " + id + " not found"));
+                .orElseThrow(() -> new IdNotFoundException("Vehicle renting", id));
 
         return new VehicleRentingDto(vehicleRentingEntity);
     }
@@ -56,7 +54,7 @@ public class VehicleRentingService {
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
                     // TODO add unique annotation in database script
-                    throw new ItemExistsInDatabaseException("Operation cost ( " + vehicleRentingDTO.getId() + ") exists in DB");
+                    throw new NotUniqueException("Operation cost", "id", vehicleRentingDTO.getId().toString());
                 }
             }
             throw new RuntimeException(e);
@@ -78,7 +76,7 @@ public class VehicleRentingService {
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
                     // TODO add unique annotation in database script
-                    throw new ItemExistsInDatabaseException("Operation cost ( " + vehicleRentingDTO.getId() + ") exists in DB");
+                    throw new NotUniqueException("Operation cost", "id", vehicleRentingDTO.getId().toString());
                 }
             }
             throw new RuntimeException(e);
@@ -89,8 +87,8 @@ public class VehicleRentingService {
 
         try {
             this.vehicleRentingRepository.deleteById(id);
-        } catch (IdNotFoundInDatabaseException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (RuntimeException e) {
+            throw new IdNotFoundException("Vehicle", id);
         }
 
     }

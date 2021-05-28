@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.polsl.tab.fleetmanagement.function.FunctionEntity;
-import pl.polsl.tab.fleetmanagement.keeping.KeepingEntity;
 import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityEntity;
 
 import javax.persistence.*;
@@ -48,7 +47,7 @@ public class PersonEntity {
     @Column(name = "functions_id", nullable = false)
     @Getter @Setter private Long functionId;
 
-    @OneToMany(mappedBy = "peopleByPeopleId")
+    @OneToMany(mappedBy = "personByPersonId")
     @Getter @Setter private Collection<KeepingEntity> keepingsById;
 
     @ManyToOne

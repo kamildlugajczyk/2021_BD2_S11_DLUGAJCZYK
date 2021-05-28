@@ -12,11 +12,11 @@ import java.util.Objects;
 @Table(name = "keeping", schema = "public", catalog = "testdb")
 public class KeepingEntity {
     private long id;
-    private Date startdate;
-    private Date enddate;
+    private Date startDate;
+    private Date endDate;
     private int peopleId;
     private int vehiclesId;
-    private PeopleEntity peopleByPeopleId;
+    private PersonEntity personByPersonId;
     private VehiclesEntity vehiclesByVehiclesId;
     private Collection<OperationCostEntity> operationCostsById;
 
@@ -32,22 +32,22 @@ public class KeepingEntity {
 
     @Basic
     @Column(name = "startdate", nullable = false)
-    public Date getStartdate() {
-        return startdate;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setStartdate(Date startdate) {
-        this.startdate = startdate;
+    public void setStartDate(Date startdate) {
+        this.startDate = startdate;
     }
 
     @Basic
     @Column(name = "enddate", nullable = false)
-    public Date getEnddate() {
-        return enddate;
+    public Date getEndDate() {
+        return endDate;
     }
 
-    public void setEnddate(Date enddate) {
-        this.enddate = enddate;
+    public void setEndDate(Date enddate) {
+        this.endDate = enddate;
     }
 
     @Basic
@@ -72,12 +72,12 @@ public class KeepingEntity {
 
     @ManyToOne(fetch = FetchType.LAZY) //EDITEED
     @JoinColumn(name = "people_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    public PeopleEntity getPeopleByPeopleId() {
-        return peopleByPeopleId;
+    public PersonEntity getPersonByPersonId() {
+        return personByPersonId;
     }
 
-    public void setPeopleByPeopleId(PeopleEntity peopleByPeopleId) {
-        this.peopleByPeopleId = peopleByPeopleId;
+    public void setPersonByPersonId(PersonEntity peopleByPeopleId) {
+        this.personByPersonId = peopleByPeopleId;
     }
 
     @ManyToOne(fetch = FetchType.LAZY) //EDITED
@@ -104,11 +104,11 @@ public class KeepingEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         KeepingEntity that = (KeepingEntity) o;
-        return id == that.id && peopleId == that.peopleId && vehiclesId == that.vehiclesId && Objects.equals(startdate, that.startdate) && Objects.equals(enddate, that.enddate);
+        return id == that.id && peopleId == that.peopleId && vehiclesId == that.vehiclesId && Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, startdate, enddate, peopleId, vehiclesId);
+        return Objects.hash(id, startDate, endDate, peopleId, vehiclesId);
     }
 }

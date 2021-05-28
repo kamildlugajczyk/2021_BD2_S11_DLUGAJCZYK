@@ -13,6 +13,7 @@ public class NotUniqueAdvice {
     @ExceptionHandler(NotUniqueException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public String notUniqueHandler(NotUniqueException ex) {
+        System.out.println(ex.getMessage());
         return ex.getMessage();
     }
 }

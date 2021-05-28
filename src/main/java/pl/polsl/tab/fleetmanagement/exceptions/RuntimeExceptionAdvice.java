@@ -13,6 +13,7 @@ public class RuntimeExceptionAdvice {
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String runtimeExceptionHandler(RuntimeException ex) {
+        System.out.println(ex.getMessage());
         return ex.getMessage();
     }
 }

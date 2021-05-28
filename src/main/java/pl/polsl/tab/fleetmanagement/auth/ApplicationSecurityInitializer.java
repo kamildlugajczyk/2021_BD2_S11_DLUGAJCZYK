@@ -1,6 +1,5 @@
 package pl.polsl.tab.fleetmanagement.auth;
 
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.WebApplicationInitializer;
 

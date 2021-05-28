@@ -23,16 +23,16 @@ public class PersonService {
 
     public List<PersonDTO> getAllPeople() {
         List<PersonEntity> peopleEntities = new ArrayList<>();
-        List<PersonDTO> personDTOS = new ArrayList<>();
+        List<PersonDTO> peopleDTOs = new ArrayList<>();
 
         personRepository.findAll().forEach(peopleEntities::add);
 
-        for (PersonEntity personEntity : peopleEntities) {
-            personDTOS.add(new PersonDTO(personEntity.getId(), personEntity.getFirstname(), personEntity.getLastname(),
-                    personEntity.getPhonenumber(), personEntity.getFunctionsByFunctionsId(), personEntity.getKeepingsById()));
+        for (PersonEntity peopleEntity : peopleEntities) {
+            peopleDTOs.add(new PersonDTO(peopleEntity.getId(), peopleEntity.getFirstname(), peopleEntity.getLastname(),
+                    peopleEntity.getPhonenumber(), peopleEntity.getFunctionsByFunctionsId(), peopleEntity.getKeepingsById()));
         }
 
-        return personDTOS;
+        return peopleDTOs;
     }
 
     public void addPerson(PersonPOST newPersonData) {

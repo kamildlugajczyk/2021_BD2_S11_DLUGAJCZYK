@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class VehicleRentingDto {
 
-    private long id;
+    private Long id;
     private int startmileage;
     private int endmileage;
     private boolean isbusiness;

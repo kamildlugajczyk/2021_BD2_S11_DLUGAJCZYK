@@ -13,6 +13,7 @@ public class IdNotFoundAdvice {
     @ExceptionHandler(IdNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String idNotFoundHandler(IdNotFoundException ex) {
+        System.out.println(ex.getMessage());
         return ex.getMessage();
     }
 }

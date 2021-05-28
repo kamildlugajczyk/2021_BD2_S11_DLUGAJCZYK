@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import pl.polsl.tab.fleetmanagement.people.PersonEntity;
+import pl.polsl.tab.fleetmanagement.rentings.VehicleRentingEntity;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
 import pl.polsl.tab.fleetmanagement.vehicle.VehiclesEntity;
 
