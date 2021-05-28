@@ -7,13 +7,16 @@ public class PersonDTORequest {
     private String firstname;
     private String lastname;
     private String phoneNumber;
+    private String mail;
     private long functionId;
 
-    public PersonDTORequest(long id, String firstname, String lastname, String phoneNumber, long functionId ) {
+    public PersonDTORequest(long id, String firstname, String lastname, String phoneNumber,
+                            String mail, long functionId ) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.phoneNumber = phoneNumber;
+        this.mail = mail;
         this.functionId = functionId;
     }
 
@@ -22,6 +25,7 @@ public class PersonDTORequest {
         this.firstname = personEntity.getFirstname();
         this.lastname = personEntity.getLastname();
         this.phoneNumber = personEntity.getPhoneNumber();
+        this.mail = personEntity.getMail();
         this.functionId = personEntity.getFunctionsByFunctionsId().getId();
     }
 
@@ -39,6 +43,10 @@ public class PersonDTORequest {
 
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public String getMail() {
+        return mail;
     }
 
     public long getFunctionId() {

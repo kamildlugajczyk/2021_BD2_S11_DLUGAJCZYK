@@ -10,6 +10,7 @@ public class VehicleDTORequest {
 
     private long id;
     private String vin;
+    private String plates;
     private String equipmentLevel;
     private int mileage;
     private BigDecimal avgFuelConsumption;
@@ -18,10 +19,11 @@ public class VehicleDTORequest {
     private long brandModelId;
 
 
-    public VehicleDTORequest(long id, String vin, String equipmentLevel, int mileage, BigDecimal avgFuelConsumption,
+    public VehicleDTORequest(long id, String vin, String plates, String equipmentLevel, int mileage, BigDecimal avgFuelConsumption,
                              long typeId, long purposeId, long brandModelId) {
         this.id = id;
         this.vin = vin;
+        this.plates = plates;
         this.equipmentLevel = equipmentLevel;
         this.mileage = mileage;
         this.avgFuelConsumption = avgFuelConsumption;
@@ -36,6 +38,14 @@ public class VehicleDTORequest {
 
     public void setVin(String vin) {
         this.vin = vin;
+    }
+
+    public String getPlates() {
+        return plates;
+    }
+
+    public void setPlates(String plates) {
+        this.plates = plates;
     }
 
     public String getEquipmentLevel() {

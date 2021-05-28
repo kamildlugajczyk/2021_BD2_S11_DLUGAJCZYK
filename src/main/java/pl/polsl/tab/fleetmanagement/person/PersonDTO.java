@@ -1,14 +1,8 @@
 package pl.polsl.tab.fleetmanagement.person;
 
 
-import lombok.Getter;
 import pl.polsl.tab.fleetmanagement.function.FunctionDTO;
 import pl.polsl.tab.fleetmanagement.function.FunctionEntity;
-import pl.polsl.tab.fleetmanagement.keeping.KeepingDTO;
-import pl.polsl.tab.fleetmanagement.keeping.KeepingEntity;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 
 public class PersonDTO {
@@ -17,22 +11,20 @@ public class PersonDTO {
     private String firstname;
     private String lastname;
     private String phoneNumber;
+    private String mail;
     private FunctionDTO function;
-    //private Collection<KeepingEntity> keepingsById;
     //private Collection<KeepingDTO> keeping = new ArrayList<>();
     //private Collection<VehicleUnavailabilityEntity> vehicleUnavailabilitiesById;
 
 
     public PersonDTO(long id, String firstname, String lastname, String phoneNumber,
-                     FunctionEntity functionEntity /*,Collection<KeepingEntity> keepingEntities*/) {
+                     String mail, FunctionEntity functionEntity) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.phoneNumber = phoneNumber;
+        this.mail = mail;
         this.function = new FunctionDTO(functionEntity);
-//        for (KeepingEntity keepingEntity : keepingEntities) {
-//            this.keeping.add(new KeepingDTO(keepingEntity));
-//        }
     }
 
     public PersonDTO(PersonEntity personEntity) {
@@ -40,10 +32,8 @@ public class PersonDTO {
         this.firstname = personEntity.getFirstname();
         this.lastname = personEntity.getLastname();
         this.phoneNumber = personEntity.getPhoneNumber();
+        this.mail = personEntity.getMail();
         this.function = new FunctionDTO(personEntity.getFunctionsByFunctionsId());
-//        for (KeepingEntity keepingEntity : keepingEntities) {
-//            this.keeping.add(new KeepingDTO(keepingEntity));
-//        }
     }
 
     public long getId() {
@@ -61,6 +51,11 @@ public class PersonDTO {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
+    public String getMail() {
+        return mail;
+    }
+
 
     public FunctionDTO getFunction() {
         return function;

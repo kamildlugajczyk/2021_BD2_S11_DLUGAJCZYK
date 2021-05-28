@@ -51,7 +51,7 @@ public class VehicleService {
         vehicleRepository.findAll().forEach(vehicleEntities::add);
 
         for (VehicleEntity vehicleEntity : vehicleEntities) {
-            vehicleDTOs.add(new VehicleDTO(vehicleEntity.getId(), vehicleEntity.getVin(), vehicleEntity.getEquipmentLevel(),
+            vehicleDTOs.add(new VehicleDTO(vehicleEntity.getId(), vehicleEntity.getVin(), vehicleEntity.getPlates(), vehicleEntity.getEquipmentLevel(),
                     vehicleEntity.getMileage(), vehicleEntity.getAvgFuelConsumption(), vehicleEntity.getTypesByTypesId(),
                     vehicleEntity.getPurposesByPurposesId(), vehicleEntity.getBrandsModelsByBrandsModelsId()));
         }
@@ -77,15 +77,17 @@ public class VehicleService {
                 .orElseThrow(() -> new IdNotFoundInDatabaseException("Vehicle brand model of id " + vehicleDTO.getBrandModelId() + " not found"));
 
         try {
-            VehicleEntity vehicleEntity = vehicleRepository.save(new VehicleEntity(vehicleDTO.getVin(), vehicleDTO.getEquipmentLevel(),
-                    vehicleDTO.getMileage(), vehicleDTO.getAvgFuelConsumption(), brandModelEntity, typeEntity, purposeEntity));
+            VehicleEntity vehicleEntity = vehicleRepository.save(new VehicleEntity(vehicleDTO.getVin(), vehicleDTO.getPlates(),
+                    vehicleDTO.getEquipmentLevel(), vehicleDTO.getMileage(), vehicleDTO.getAvgFuelConsumption(), brandModelEntity,
+                    typeEntity, purposeEntity));
+
             return new VehicleDTO(vehicleEntity);
         } catch (RuntimeException e) {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    // TODO add unique annotation in database script
-                    throw new ItemExistsInDatabaseException("Vehicle VIN ( " + vehicleDTO.getVin() + ") exists in DB");
+                    throw new ItemExistsInDatabaseException("Vehicle VIN ( " + vehicleDTO.getVin() + ") or vehicle plates (" +
+                             vehicleDTO.getPlates() + ") exists in DB");
                 }
             }
             throw new RuntimeException(e);
@@ -123,8 +125,8 @@ public class VehicleService {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    // TODO add unique annotation in database script
-                    throw new ItemExistsInDatabaseException("Vehicle VIN ( " + vehicleDTO.getVin() + ") exists in DB");
+                    throw new ItemExistsInDatabaseException("Vehicle VIN ( " + vehicleDTO.getVin() + ") or vehicle plates (" +
+                            vehicleDTO.getPlates() + ") exists in DB");
                 }
             }
             throw new RuntimeException(e);
@@ -168,19 +170,9 @@ public class VehicleService {
             }
         }
 
-        try {
-            KeepingEntity keepingEntity = new KeepingEntity(new Date(System.currentTimeMillis()), null, personId,
-                    personEntity, id, vehicleEntity);
+        KeepingEntity keepingEntity = new KeepingEntity(new Date(System.currentTimeMillis()), null, personId,
+                personEntity, id, vehicleEntity);
 
-            keepingRepository.save(keepingEntity);
-        } catch (RuntimeException e) {
-            Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
-            if (rootCause instanceof SQLException) {
-                if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    //throw new ItemExistsInDatabaseException("Email ( " + personDTO.getEmail() + ") exists in DB");
-                }
-            }
-            throw new RuntimeException(e);
-        }
+        keepingRepository.save(keepingEntity);
     }
 }

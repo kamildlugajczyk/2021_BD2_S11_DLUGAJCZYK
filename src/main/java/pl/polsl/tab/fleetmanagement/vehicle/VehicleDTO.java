@@ -16,6 +16,7 @@ public class VehicleDTO {
 
     private long id;
     private String vin;
+    private String plates;
     private String equipmentLevel;
     private int mileage;
     private BigDecimal avgFuelConsumption;
@@ -27,10 +28,11 @@ public class VehicleDTO {
     private BrandModelDTO brandmodel;
 
 
-    public VehicleDTO(long id, String vin, String equipmentLevel, int mileage, BigDecimal avgFuelConsumption,
+    public VehicleDTO(long id, String vin, String plates, String equipmentLevel, int mileage, BigDecimal avgFuelConsumption,
                       TypeEntity type, PurposeEntity purpose, BrandModelEntity brandmodel) {
         this.id = id;
         this.vin = vin;
+        this.plates = plates;
         this.equipmentLevel = equipmentLevel;
         this.mileage = mileage;
         this.avgFuelConsumption = avgFuelConsumption;
@@ -42,6 +44,7 @@ public class VehicleDTO {
     public VehicleDTO(VehicleEntity vehicleEntity) {
         this.id = vehicleEntity.getId();
         this.vin = vehicleEntity.getVin();
+        this.plates = vehicleEntity.getPlates();
         this.equipmentLevel = vehicleEntity.getEquipmentLevel();
         this.mileage = vehicleEntity.getMileage();
         this.avgFuelConsumption = vehicleEntity.getAvgFuelConsumption();

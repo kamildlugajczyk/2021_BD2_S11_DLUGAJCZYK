@@ -18,6 +18,7 @@ import java.util.Objects;
 public class VehicleEntity {
     private long id;
     private String vin;
+    private String plates;
     private String equipmentLevel;
     private int mileage;
     private BigDecimal avgFuelConsumption;
@@ -34,9 +35,10 @@ public class VehicleEntity {
     public VehicleEntity() {
     }
 
-    public VehicleEntity(String vin, String equipmentLevel, int mileage, BigDecimal avgFuelConsumption,
+    public VehicleEntity(String vin, String plates, String equipmentLevel, int mileage, BigDecimal avgFuelConsumption,
                          BrandModelEntity brandModelEntity, TypeEntity typeEntity, PurposeEntity purposeEntity) {
         this.vin = vin;
+        this.plates = plates;
         this.equipmentLevel = equipmentLevel;
         this.mileage = mileage;
         this.avgFuelConsumption = avgFuelConsumption;
@@ -67,6 +69,16 @@ public class VehicleEntity {
 
     public void setVin(String vin) {
         this.vin = vin;
+    }
+
+    @Basic
+    @Column(name = "plates", nullable = false, length = 50)
+    public String getPlates() {
+        return plates;
+    }
+
+    public void setPlates(String plates) {
+        this.plates = plates;
     }
 
     @Basic
@@ -191,11 +203,14 @@ public class VehicleEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         VehicleEntity that = (VehicleEntity) o;
-        return id == that.id && mileage == that.mileage && brandsModelsId == that.brandsModelsId && typesId == that.typesId && purposesId == that.purposesId && Objects.equals(vin, that.vin) && Objects.equals(equipmentLevel, that.equipmentLevel) && Objects.equals(avgFuelConsumption, that.avgFuelConsumption);
+        return id == that.id && mileage == that.mileage && brandsModelsId == that.brandsModelsId &&
+                typesId == that.typesId && purposesId == that.purposesId && Objects.equals(vin, that.vin) &&
+                Objects.equals(plates, that.plates) && Objects.equals(equipmentLevel, that.equipmentLevel) &&
+                Objects.equals(avgFuelConsumption, that.avgFuelConsumption);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, vin, equipmentLevel, mileage, avgFuelConsumption, brandsModelsId, typesId, purposesId);
+        return Objects.hash(id, vin, plates, equipmentLevel, mileage, avgFuelConsumption, brandsModelsId, typesId, purposesId);
     }
 }

@@ -15,6 +15,8 @@ public class PersonEntity {
     private String firstname;
     private String lastname;
     private String phoneNumber;
+    private String mail;
+    private String password;
     private long functionsId;
     private Collection<KeepingEntity> keepingsById;
     private FunctionEntity functionsByFunctionsId;
@@ -23,10 +25,13 @@ public class PersonEntity {
     public PersonEntity() {
     }
 
-    public PersonEntity(String firstname, String lastname, String phoneNumber, FunctionEntity functionsByFunctionsId) {
+    public PersonEntity(String firstname, String lastname, String phoneNumber,
+                        String mail, String password, FunctionEntity functionsByFunctionsId) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.phoneNumber = phoneNumber;
+        this.mail = mail;
+        this.password = password;
         this.functionsId = functionsByFunctionsId.getId();
         this.functionsByFunctionsId = functionsByFunctionsId;
     }
@@ -35,6 +40,7 @@ public class PersonEntity {
         this.firstname = personDTO.getFirstname();
         this.lastname = personDTO.getLastname();
         this.phoneNumber = personDTO.getPhoneNumber();
+        this.mail = personDTO.getMail();
         this.functionsId = personDTO.getFunction().getId();
         this.functionsByFunctionsId = new FunctionEntity(personDTO.getFunction().getId(), personDTO.getFunction().getName());
     }
@@ -81,6 +87,26 @@ public class PersonEntity {
     }
 
     @Basic
+    @Column(name = "mail", nullable = false, length = 50)
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    @Basic
+    @Column(name = "password", nullable = false, length = 64)
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Basic
     @Column(name = "functions_id", nullable = false)
     public long getFunctionsId() {
         return functionsId;
@@ -124,11 +150,12 @@ public class PersonEntity {
         if (o == null || getClass() != o.getClass()) return false;
         PersonEntity that = (PersonEntity) o;
         return id == that.id && functionsId == that.functionsId && Objects.equals(firstname, that.firstname)
-                && Objects.equals(lastname, that.lastname) && Objects.equals(phoneNumber, that.phoneNumber);
+                && Objects.equals(lastname, that.lastname) && Objects.equals(phoneNumber, that.phoneNumber)
+                && Objects.equals(mail, that.mail) && Objects.equals(password, that.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstname, lastname, phoneNumber, functionsId);
+        return Objects.hash(id, firstname, lastname, phoneNumber, mail, password, functionsId);
     }
 }

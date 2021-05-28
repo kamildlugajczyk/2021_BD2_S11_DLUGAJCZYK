@@ -4,11 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
+import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
 import pl.polsl.tab.fleetmanagement.function.FunctionEntity;
 import pl.polsl.tab.fleetmanagement.function.FunctionRepository;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingDTO;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingEntity;
-import pl.polsl.tab.fleetmanagement.vehicle.VehicleEntity;
 import pl.polsl.tab.fleetmanagement.vehicle.VehicleRepository;
 
 import java.sql.SQLException;
@@ -39,7 +39,7 @@ public class PersonService {
 
         for (PersonEntity personEntity : peopleEntities) {
             personDTOS.add(new PersonDTO(personEntity.getId(), personEntity.getFirstname(), personEntity.getLastname(),
-                    personEntity.getPhoneNumber(), personEntity.getFunctionsByFunctionsId()/*, personEntity.getKeepingsById()*/));
+                    personEntity.getPhoneNumber(), personEntity.getMail(), personEntity.getFunctionsByFunctionsId()));
         }
 
         return personDTOS;
@@ -57,19 +57,22 @@ public class PersonService {
         if(!this.validatePhoneNumber(personDTO.getPhoneNumber()))
             throw new IllegalArgumentException("Invalid phone number format");
 
+        if(!this.validateMail(personDTO.getMail()))
+            throw new IllegalArgumentException("Invalid mail format");
+
         FunctionEntity functionEntity = functionRepository.findById(personDTO.getFunctionId())
                 .orElseThrow(() -> new IdNotFoundInDatabaseException("Function of id " + personDTO.getFunctionId() + " not found"));
 
         try {
             PersonEntity personEntity = personRepository.save(new PersonEntity(personDTO.getFirstname(),
-                    personDTO.getLastname(), personDTO.getPhoneNumber(), functionEntity));
+                    personDTO.getLastname(), personDTO.getPhoneNumber(), personDTO.getMail(),
+                    personDTO.getMail(), functionEntity));
             return new PersonDTO(personEntity);
         } catch (RuntimeException e) {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    // TODO check if email exists (after database refactor)
-                    //throw new ItemExistsInDatabaseException("Email ( " + personDTO.getEmail() + ") exists in DB");
+                    throw new ItemExistsInDatabaseException("Email (" + personDTO.getMail() + ") exists in DB");
                 }
             }
             throw new RuntimeException(e);
@@ -82,6 +85,12 @@ public class PersonService {
         if(personEntity.isEmpty())
             throw new IdNotFoundInDatabaseException("Person of id " + id + " not found");
 
+        if(!this.validatePhoneNumber(personDTO.getPhoneNumber()))
+            throw new IllegalArgumentException("Invalid phone number format");
+
+        if(!this.validateMail(personDTO.getMail()))
+            throw new IllegalArgumentException("Invalid mail format");
+
         FunctionEntity functionEntity = functionRepository.findById(personDTO.getFunctionId())
                 .orElseThrow(() -> new IdNotFoundInDatabaseException("Function of id " + personDTO.getFunctionId() + " not found"));
 
@@ -89,6 +98,7 @@ public class PersonService {
             personEntity.get().setFirstname(personDTO.getFirstname());
             personEntity.get().setLastname(personDTO.getLastname());
             personEntity.get().setPhoneNumber(personDTO.getPhoneNumber());
+            personEntity.get().setMail(personDTO.getPhoneNumber());
             personEntity.get().setFunctionsId(functionEntity.getId());
             personEntity.get().setFunctionsByFunctionsId(functionEntity);
             return new PersonDTO(personRepository.save(personEntity.get()));
@@ -96,8 +106,7 @@ public class PersonService {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    // TODO check if email exists (after database refactor)
-                    //throw new ItemExistsInDatabaseException("Vehicle type ( " + typeDTO.getName() + ") exists in DB");
+                    throw new ItemExistsInDatabaseException("Email (" + personDTO.getMail() + ") exists in DB");
                 }
             }
             throw new RuntimeException(e);
@@ -128,36 +137,19 @@ public class PersonService {
         return keepingDTOs;
     }
 
-//    public KeepingDTO addPersonsKeeping(KeepingDTO keepingDTO) {
-//
-//        PersonEntity personEntity = personRepository.findById(keepingDTO.getPeopleId())
-//                .orElseThrow(() -> new IdNotFoundInDatabaseException("Person of id " + keepingDTO.getPeopleId() + " not found"));
-//
-//        VehicleEntity vehicleEntity = vehicleRepository.findById(keepingDTO.getVehicleId())
-//                .orElseThrow(() -> new IdNotFoundInDatabaseException("Vehicle of id " + keepingDTO.getVehicleId() + " not found"));
-//
-//        try {
-//            KeepingEntity keepingEntity = new KeepingEntity(keepingDTO);
-//            personEntity.getKeepingsById().add(keepingEntity);
-//            personRepository.save(personEntity);
-//            return new KeepingDTO(keepingEntity);
-//        } catch (RuntimeException e) {
-//            Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
-//            if (rootCause instanceof SQLException) {
-//                if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-//                    // TODO check if email exists (after database refactor)
-//                    //throw new ItemExistsInDatabaseException("Email ( " + personDTO.getEmail() + ") exists in DB");
-//                }
-//            }
-//            throw new RuntimeException(e);
-//        }
-//    }
-
     private boolean validatePhoneNumber(String phoneNumber) {
         String patterns
                 = "^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$"
                 + "|^(\\+\\d{1,3}( )?)?(\\d{3}[ ]?){2}\\d{3}$"
                 + "|^(\\+\\d{1,3}( )?)?(\\d{3}[ ]?)(\\d{2}[ ]?){2}\\d{2}$";
+
+        Pattern pattern = Pattern.compile(patterns);
+        return pattern.matcher(phoneNumber).matches();
+    }
+
+    private boolean validateMail(String phoneNumber) {
+        String patterns = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}" +
+                "\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";;
 
         Pattern pattern = Pattern.compile(patterns);
         return pattern.matcher(phoneNumber).matches();
