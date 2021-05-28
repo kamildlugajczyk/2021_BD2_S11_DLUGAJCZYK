@@ -3,8 +3,8 @@ package pl.polsl.tab.fleetmanagement.subcontractor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
-import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
+import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
+import pl.polsl.tab.fleetmanagement.exceptions.NotUniqueException;
 
 import java.sql.SQLException;
 import java.util.Optional;
@@ -26,10 +26,10 @@ public class SubcontractorService {
         return this.subcontractorRepository.findAll();
     }
 
-    public SubcontractorEntity getSubcontractorById(Long id) throws IdNotFoundInDatabaseException {
+    public SubcontractorEntity getSubcontractorById(Long id) throws IdNotFoundException {
         return this.subcontractorRepository
                 .findById(id)
-                .orElseThrow(() -> new IdNotFoundInDatabaseException("Subcontractor " + id + " not found"));
+                .orElseThrow(() -> new IdNotFoundException("Subcontractor", id));
     }
 
     public SubcontractorEntity addSubcontractor(SubcontractorDto dto) {
@@ -44,7 +44,7 @@ public class SubcontractorService {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    throw new ItemExistsInDatabaseException("Subcontractor ( " + dto.getName() + ") exists in DB");
+                    throw new NotUniqueException("Subcontractor", "name", dto.getName());
                 }
             }
             throw new RuntimeException(e);
@@ -55,7 +55,7 @@ public class SubcontractorService {
 
         Optional<SubcontractorEntity> se = this.subcontractorRepository.findById(id);
 
-        if(se.isEmpty()) throw new IdNotFoundInDatabaseException("Subcontractor " + id + " not found");
+        if(se.isEmpty()) throw new IdNotFoundException("Subcontractor", id);
 
         if(!this.validatePhoneNumber(dto.getPhoneNumber()))
             throw new IllegalArgumentException("Invalid phone number format");
@@ -69,7 +69,7 @@ public class SubcontractorService {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    throw new ItemExistsInDatabaseException("Subcontractor ( " + dto.getName() + ") exists in DB");
+                    throw new NotUniqueException("Subcontractor", "name", dto.getName());
                 }
             }
             throw new RuntimeException(e);
@@ -77,11 +77,11 @@ public class SubcontractorService {
 
     }
 
-    public void deleteSubcontractorById(Long id) throws IdNotFoundInDatabaseException {
+    public void deleteSubcontractorById(Long id) throws IdNotFoundException {
         try {
             this.subcontractorRepository.deleteById(id);
         } catch (RuntimeException ignored) {
-            throw new IdNotFoundInDatabaseException("Subcontractor " + id + " not found");
+            throw new IdNotFoundException("Subcontractor", id);
         }
 
     }

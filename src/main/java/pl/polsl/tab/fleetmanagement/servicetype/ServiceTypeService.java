@@ -2,8 +2,8 @@ package pl.polsl.tab.fleetmanagement.servicetype;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
-import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
+import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
+import pl.polsl.tab.fleetmanagement.exceptions.NotUniqueException;
 
 import java.sql.SQLException;
 import java.util.Optional;
@@ -22,10 +22,10 @@ public class ServiceTypeService {
         return this.serviceTypeRepository.findAll();
     }
 
-    public ServiceTypeEntity getServiceTypesById(Long id) throws IdNotFoundInDatabaseException {
+    public ServiceTypeEntity getServiceTypesById(Long id) throws IdNotFoundException {
         return this.serviceTypeRepository
                 .findById(id)
-                .orElseThrow(() -> new IdNotFoundInDatabaseException("Service " + id + " not found"));
+                .orElseThrow(() -> new IdNotFoundException("Service Type", id));
     }
 
     public ServiceTypeEntity addServiceTypes(String name) {
@@ -35,7 +35,7 @@ public class ServiceTypeService {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    throw new ItemExistsInDatabaseException("Service (" + name + ") exists in DB");
+                    throw new NotUniqueException("Service Type", "name", name);
                 }
             }
             throw new RuntimeException(e);
@@ -45,7 +45,7 @@ public class ServiceTypeService {
     public ServiceTypeEntity updateServiceType(Long id, String name) {
         Optional<ServiceTypeEntity> ObjById = this.serviceTypeRepository.findById(id);
 
-        if(ObjById.isEmpty()) throw new IdNotFoundInDatabaseException("Subcontractor " + id + " not found");
+        if(ObjById.isEmpty()) throw new IdNotFoundException("Subcontractor", id);
 
         try {
             ObjById.get().setName(name);
@@ -54,7 +54,7 @@ public class ServiceTypeService {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    throw new ItemExistsInDatabaseException("Service ( " + name + ") exists in DB");
+                    throw new NotUniqueException("Service Type", "name", name);
                 }
             }
             throw new RuntimeException(e);
@@ -62,11 +62,11 @@ public class ServiceTypeService {
 
     }
 
-    public void deleteServiceTypeById(Long id) throws IdNotFoundInDatabaseException {
+    public void deleteServiceTypeById(Long id) throws IdNotFoundException {
         try {
             this.serviceTypeRepository.deleteById(id);
         } catch (RuntimeException ignored) {
-            throw new IdNotFoundInDatabaseException("Service " + id + " not found");
+            throw new IdNotFoundException("Service Type", id);
         }
     }
 }
