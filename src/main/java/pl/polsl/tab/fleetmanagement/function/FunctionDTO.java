@@ -1,10 +1,13 @@
 package pl.polsl.tab.fleetmanagement.function;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class FunctionDTO {
 
-    private long id;
-    private String name;
+    @Getter @Setter private long id;
+    @Getter private String name;
 
     public FunctionDTO() {
     }
@@ -21,17 +24,5 @@ public class FunctionDTO {
     public FunctionDTO(FunctionEntity functionEntity) {
         this.id = functionEntity.getId();
         this.name = functionEntity.getName();
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
     }
 }

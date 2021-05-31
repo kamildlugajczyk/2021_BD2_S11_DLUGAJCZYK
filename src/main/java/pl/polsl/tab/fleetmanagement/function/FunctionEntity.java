@@ -1,6 +1,6 @@
 package pl.polsl.tab.fleetmanagement.function;
 
-import pl.polsl.tab.fleetmanagement.person.PersonEntity;
+import pl.polsl.tab.fleetmanagement.people.PersonEntity;
 
 import javax.persistence.*;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package pl.polsl.tab.fleetmanagement.person;
+package pl.polsl.tab.fleetmanagement.people;
 
 
 public class PersonDTORequest {

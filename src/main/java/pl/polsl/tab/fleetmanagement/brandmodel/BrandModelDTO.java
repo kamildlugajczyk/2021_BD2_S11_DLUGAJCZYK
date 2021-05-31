@@ -1,11 +1,14 @@
 package pl.polsl.tab.fleetmanagement.brandmodel;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class BrandModelDTO {
 
-    private long id;
-    private String brand;
-    private String model;
-    private String modelYear;
+    @Getter @Setter private long id;
+    @Getter private String brand;
+    @Getter private String model;
+    @Getter private String modelYear;
 
     public BrandModelDTO() {
     }
@@ -28,25 +31,5 @@ public class BrandModelDTO {
         this.brand = brandModelEntity.getBrand();
         this.model = brandModelEntity.getModel();
         this.modelYear = brandModelEntity.getModelYear();
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public String getModelYear() {
-        return modelYear;
     }
 }

@@ -1,9 +1,12 @@
 package pl.polsl.tab.fleetmanagement.vehiclepurpose;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class PurposeDTO {
 
-    private long id;
-    private String name;
+    @Getter @Setter private long id;
+    @Getter private String name;
 
     public PurposeDTO() {
     }
@@ -20,17 +23,5 @@ public class PurposeDTO {
     public PurposeDTO(PurposeEntity purposeEntity) {
         this.id = purposeEntity.getId();
         this.name = purposeEntity.getName();
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
     }
 }

@@ -1,4 +1,4 @@
-package pl.polsl.tab.fleetmanagement.person;
+package pl.polsl.tab.fleetmanagement.people;
 
 import pl.polsl.tab.fleetmanagement.function.FunctionEntity;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingEntity;

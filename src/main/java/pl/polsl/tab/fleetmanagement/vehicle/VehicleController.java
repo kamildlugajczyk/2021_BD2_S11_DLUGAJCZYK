@@ -6,8 +6,6 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingDTO;
-import pl.polsl.tab.fleetmanagement.person.PersonDTO;
-import pl.polsl.tab.fleetmanagement.person.PersonDTORequest;
 
 import java.util.List;
 

@@ -1,7 +1,8 @@
 package pl.polsl.tab.fleetmanagement.keeping;
 
 import lombok.Getter;
-import pl.polsl.tab.fleetmanagement.person.PersonEntity;
+import lombok.Setter;
+import pl.polsl.tab.fleetmanagement.people.PersonEntity;
 import pl.polsl.tab.fleetmanagement.vehicle.VehicleEntity;
 
 import java.sql.Date;
@@ -10,10 +11,10 @@ import java.sql.Date;
 public class KeepingDTO {
 
     private long id;
-    private Date startdate;
-    private Date enddate;
-    private long peopleId;
-    private long vehicleId;
+    @Getter @Setter private Date startdate;
+    @Getter @Setter private Date enddate;
+    @Getter @Setter private long peopleId;
+    @Getter @Setter private long vehicleId;
 
 
     public KeepingDTO(long id, Date startdate, Date enddate, PersonEntity personEntity, VehicleEntity vehicleEntity) {
@@ -30,21 +31,5 @@ public class KeepingDTO {
         this.enddate = keepingEntity.getEnddate();
         this.peopleId = keepingEntity.getPeopleId();
         this.vehicleId = keepingEntity.getVehiclesId();
-    }
-
-    public Date getStartdate() {
-        return startdate;
-    }
-
-    public Date getEnddate() {
-        return enddate;
-    }
-
-    public long getPeopleId() {
-        return peopleId;
-    }
-
-    public long getVehicleId() {
-        return vehicleId;
     }
 }
