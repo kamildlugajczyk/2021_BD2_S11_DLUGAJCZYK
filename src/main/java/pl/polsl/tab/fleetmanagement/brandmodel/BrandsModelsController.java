@@ -1,5 +1,7 @@
 package pl.polsl.tab.fleetmanagement.brandmodel;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +11,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 @RestController
+@ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
 public class BrandsModelsController {
 
     private BrandsModelsService brandsModelsService;
@@ -18,11 +21,13 @@ public class BrandsModelsController {
     }
 
     @GetMapping("vehicles/brandsmodels")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public Iterable<BrandModelDTO> getBrandsModels() {
         return brandsModelsService.getBrandsModels();
     }
 
     @GetMapping("vehicles/brandsmodels/{id}")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<BrandModelDTO> getType(@PathVariable Long id) {
         Optional<BrandModelDTO> response = brandsModelsService.getBrandModel(id);
 
@@ -32,6 +37,7 @@ public class BrandsModelsController {
     }
 
     @PostMapping("vehicles/brandsmodels")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<BrandModelDTO> addBrandsModels(@RequestBody BrandModelDTO brandModelDTO) {
         try {
             BrandsModelsEntity response = brandsModelsService.addBrandModel(brandModelDTO);
@@ -51,6 +57,7 @@ public class BrandsModelsController {
     }
 
     @PutMapping("vehicles/brandsmodels/{id}")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<BrandModelDTO> updateBrandsModels(@PathVariable Long id, @RequestBody BrandModelDTO brandModelDTO) {
         Optional<BrandModelDTO> response = brandsModelsService.updateBrandModel(id, brandModelDTO);
 
@@ -60,6 +67,7 @@ public class BrandsModelsController {
     }
 
     @DeleteMapping("vehicles/brandsmodels/{id}")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<BrandModelDTO> deleteBrandsModels(@PathVariable Long id) {
         Optional<BrandModelDTO> response = brandsModelsService.deleteBrandModel(id);
 

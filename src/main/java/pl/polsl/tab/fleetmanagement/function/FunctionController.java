@@ -1,11 +1,12 @@
 package pl.polsl.tab.fleetmanagement.function;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
 import pl.polsl.tab.fleetmanagement.exceptions.NotUniqueException;
-
 
 @RestController
 public class FunctionController {
@@ -17,11 +18,13 @@ public class FunctionController {
     }
 
     @GetMapping("person/function")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public Iterable<FunctionDTO> getFunctions() {
         return functionService.getFunctions();
     }
 
     @GetMapping("person/function/{id}")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public FunctionDTO getFunction(@PathVariable Long id) {
         try {
             return functionService.getFunction(id);
@@ -32,6 +35,7 @@ public class FunctionController {
     }
 
     @PostMapping("person/function")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public FunctionDTO addFunction(@RequestBody FunctionDTO functionDTO) {
         try {
             return functionService.addFunction(functionDTO);
@@ -45,6 +49,7 @@ public class FunctionController {
     }
 
     @PutMapping("person/function/{id}")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public FunctionDTO updateFunction(@PathVariable Long id, @RequestBody FunctionDTO functionDTO) {
         try {
             return functionService.updateFunction(id, functionDTO);
@@ -64,6 +69,7 @@ public class FunctionController {
     }
 
     @DeleteMapping("person/function/{id}")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public void deleteFunction(@PathVariable Long id) {
         try {
             functionService.deleteFunction(id);
