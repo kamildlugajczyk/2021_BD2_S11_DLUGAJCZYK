@@ -34,11 +34,11 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
     {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/**/boss/**").hasRole("BOSS")
-                .antMatchers(HttpMethod.POST, "/person*").hasAnyRole("ADMIN", "BOSS")
-                .antMatchers("/swagger-ui.html/**").hasAnyRole("ADMIN", "PROGRAMMER")
-                .antMatchers("/**/keeper/**").hasAnyRole( "ADMIN", "BOSS", "KEEPER")
+                .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers("/**/boss/**").hasAuthority("ROLE_BOSS")
+                .antMatchers(HttpMethod.POST, "/person*").hasAnyAuthority("ROLE_ADMIN", "ROLE_BOSS")
+                .antMatchers("/swagger-ui.html/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_PROGRAMMER")
+                .antMatchers("/**/keeper/**").hasAnyAuthority( "ROLE_ADMIN", "ROLE_BOSS", "ROLE_KEEPER")
                 .antMatchers("/","/login").permitAll()
                 .anyRequest().authenticated().
                 and().

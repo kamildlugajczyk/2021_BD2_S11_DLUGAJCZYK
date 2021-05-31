@@ -23,7 +23,7 @@ public class UserPrincipal implements UserDetails {
         List<GrantedAuthority> authorities = new ArrayList<>();
         String function = this.personEntity.getFunctionsByFunctionsId().getName();
 
-        GrantedAuthority authority = new SimpleGrantedAuthority(function);
+        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + function);
         authorities.add(authority);
 
         return authorities;
