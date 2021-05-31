@@ -32,6 +32,8 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
         // TODO login and logout page (default, success, failure)
 
         http
+            .httpBasic()
+                .and()
             .requiresChannel()
                 .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
                 .requiresSecure()
@@ -46,16 +48,13 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers("login*").permitAll()
                 .anyRequest().authenticated()
             .and()
-            .formLogin()
-                .defaultSuccessUrl("/swagger-ui.html")
-            .and()
             .logout()
                 .logoutSuccessUrl("/login")
                 .deleteCookies("JSESSIONID")
             .and()
             .sessionManagement()
                 .sessionFixation().migrateSession()
-                .maximumSessions(1)
+                .maximumSessions(2)
                 .expiredUrl("/login")
                 .and()
                 .invalidSessionUrl("/login");
