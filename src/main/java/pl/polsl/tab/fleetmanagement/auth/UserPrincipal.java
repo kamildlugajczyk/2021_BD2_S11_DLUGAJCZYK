@@ -3,7 +3,7 @@ package pl.polsl.tab.fleetmanagement.auth;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pl.polsl.tab.fleetmanagement.people.PersonEntity;
+import pl.polsl.tab.fleetmanagement.person.PersonEntity;
 
 import java.util.ArrayList;
 import java.util.Collection;

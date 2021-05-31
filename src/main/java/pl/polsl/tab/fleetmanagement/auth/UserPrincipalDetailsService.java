@@ -4,8 +4,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import pl.polsl.tab.fleetmanagement.people.PersonEntity;
-import pl.polsl.tab.fleetmanagement.people.PersonRepository;
+import pl.polsl.tab.fleetmanagement.person.PersonEntity;
+import pl.polsl.tab.fleetmanagement.person.PersonRepository;
 
 @Service
 public class UserPrincipalDetailsService implements UserDetailsService {

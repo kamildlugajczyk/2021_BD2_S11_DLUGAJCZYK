@@ -2,9 +2,12 @@ package pl.polsl.tab.fleetmanagement.vehicle;
 
 
 import lombok.Getter;
-import pl.polsl.tab.fleetmanagement.brandmodel.BrandsModelsEntity;
-import pl.polsl.tab.fleetmanagement.vehiclepurpose.PurposesEntity;
-import pl.polsl.tab.fleetmanagement.vehicletype.TypesEntity;
+import pl.polsl.tab.fleetmanagement.vehicle.brandmodel.BrandModelDTO;
+import pl.polsl.tab.fleetmanagement.vehicle.brandmodel.BrandModelEntity;
+import pl.polsl.tab.fleetmanagement.vehicle.purpose.PurposeDTO;
+import pl.polsl.tab.fleetmanagement.vehicle.purpose.PurposeEntity;
+import pl.polsl.tab.fleetmanagement.vehicle.type.TypeDTO;
+import pl.polsl.tab.fleetmanagement.vehicle.type.TypeEntity;
 
 import java.math.BigDecimal;
 
@@ -13,43 +16,40 @@ public class VehicleDTO {
 
     private long id;
     private String vin;
-    private String equipmentlevel;
+    private String plates;
+    private String equipmentLevel;
     private int mileage;
-    private BigDecimal avgfuelconsumption;
-    private String brand;
-    private String model;
-    private String type;
-    private String purpose;
-//    private Collection<KeepingEntity> keepingsById;
+    private BigDecimal avgFuelConsumption;
+    //    private Collection<KeepingEntity> keepingsById;
 //    private Collection<OperationCostsEntity> operationCostsById;
 //    private Collection<VehicleUnavailabilityEntity> vehicleUnavailabilitiesById;
-//    private TypesEntity typesByTypesId;
-//    private PurposesEntity purposesByPurposesId;
-//    private BrandsModelsEntity brandsModelsByBrandsModelsId;
+    private TypeDTO type;
+    private PurposeDTO purpose;
+    private BrandModelDTO brandmodel;
 
-    public VehicleDTO(long id, String vin, String equipmentlevel, int mileage, BigDecimal avgfuelconsumption,
-                      TypesEntity typesByTypesId, PurposesEntity purposesByPurposesId, BrandsModelsEntity brandsModelsByBrandsModelsId) {
+
+    public VehicleDTO(long id, String vin, String plates, String equipmentLevel, int mileage, BigDecimal avgFuelConsumption,
+                      TypeEntity type, PurposeEntity purpose, BrandModelEntity brandmodel) {
         this.id = id;
         this.vin = vin;
-        this.equipmentlevel = equipmentlevel;
+        this.plates = plates;
+        this.equipmentLevel = equipmentLevel;
         this.mileage = mileage;
-        this.avgfuelconsumption = avgfuelconsumption;
-        this.brand = brandsModelsByBrandsModelsId.getBrand();
-        this.model = brandsModelsByBrandsModelsId.getModel();
-        this.type = typesByTypesId.getName();
-        this.purpose = purposesByPurposesId.getName();
+        this.avgFuelConsumption = avgFuelConsumption;
+        this.type = new TypeDTO(type);
+        this.purpose = new PurposeDTO(purpose);
+        this.brandmodel = new BrandModelDTO(brandmodel);
     }
 
-    public VehicleDTO(String vin, String equipmentlevel, int mileage, BigDecimal avgfuelconsumption,
-                      TypesEntity typesByTypesId, PurposesEntity purposesByPurposesId, BrandsModelsEntity brandsModelsByBrandsModelsId) {
-        this.vin = vin;
-        this.equipmentlevel = equipmentlevel;
-        this.mileage = mileage;
-        this.avgfuelconsumption = avgfuelconsumption;
-        this.brand = brandsModelsByBrandsModelsId.getBrand();
-        this.model = brandsModelsByBrandsModelsId.getModel();
-        this.type = typesByTypesId.getName();
-        this.purpose = purposesByPurposesId.getName();
+    public VehicleDTO(VehicleEntity vehicleEntity) {
+        this.id = vehicleEntity.getId();
+        this.vin = vehicleEntity.getVin();
+        this.plates = vehicleEntity.getPlates();
+        this.equipmentLevel = vehicleEntity.getEquipmentLevel();
+        this.mileage = vehicleEntity.getMileage();
+        this.avgFuelConsumption = vehicleEntity.getAvgFuelConsumption();
+        this.type = new TypeDTO(vehicleEntity.getTypesByTypesId());
+        this.purpose = new PurposeDTO(vehicleEntity.getPurposesByPurposesId());
+        this.brandmodel = new BrandModelDTO(vehicleEntity.getBrandsModelsByBrandsModelsId());
     }
-
 }

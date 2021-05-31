@@ -1,4 +1,4 @@
-package pl.polsl.tab.fleetmanagement.vehicle;
+package pl.polsl.tab.fleetmanagement.person;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -11,38 +11,39 @@ import pl.polsl.tab.fleetmanagement.keeping.KeepingDTO;
 
 import java.util.List;
 
+
 @RestController
-public class VehicleController {
+public class PersonController {
 
-    private VehicleService vehicleService;
+    private PersonService personService;
 
-    public VehicleController(VehicleService vehicleService) {
-        this.vehicleService = vehicleService;
+    public PersonController(PersonService personService) {
+        this.personService = personService;
     }
 
 
-    @GetMapping("/vehicle")
+    @GetMapping("/person")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public List<VehicleDTO> getAllVehicles() {
-        return vehicleService.getAllVehicles();
+    public List<PersonDTO> getAllPeople() {
+        return personService.getAllPeople();
     }
 
-    @GetMapping("/vehicle/{id}")
+    @GetMapping("/person/{id}")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public VehicleDTO getVehicle(@PathVariable Long id) {
+    public PersonDTO getPerson(@PathVariable Long id) {
         try {
-            return vehicleService.getVehicle(id);
+            return personService.getPerson(id);
         } catch (IdNotFoundInDatabaseException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
 
-    @PostMapping("/vehicle")
+    @PostMapping("/person")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public VehicleDTO addVehicle(@RequestBody VehicleDTORequest vehicleDTO) {
+    public PersonDTO addPerson(@RequestBody PersonDTORequest personDTO) {
         try {
-            return vehicleService.addVehicle(vehicleDTO);
+            return personService.addPerson(personDTO);
         } catch (ItemExistsInDatabaseException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
@@ -51,17 +52,17 @@ public class VehicleController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         } catch (IdNotFoundInDatabaseException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        } catch (RuntimeException  e) {
+        } catch (RuntimeException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
     }
 
-    @PutMapping("/vehicle/{id}")
+    @PutMapping("/person/{id}")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public VehicleDTO updateVehicle(@PathVariable Long id, @RequestBody VehicleDTORequest vehicleDTO) {
+    public PersonDTO updatePerson(@PathVariable Long id, @RequestBody PersonDTORequest personDTO) {
         try {
-            return vehicleService.updateVehicle(id, vehicleDTO);
+            return personService.updatePerson(id, personDTO);
         } catch (IdNotFoundInDatabaseException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
@@ -77,45 +78,25 @@ public class VehicleController {
         }
     }
 
-    @DeleteMapping("/vehicle/{id}")
+    @DeleteMapping("/person/{id}")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public void deleteVehicle(@PathVariable Long id) {
+    public void deletePerson(@PathVariable Long id) {
         try {
-            vehicleService.deleteVehicle(id);
+            personService.deletePerson(id);
         } catch (IdNotFoundInDatabaseException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
 
-    @GetMapping("/vehicle/{id}/keeping")
+    @GetMapping("/person/{id}/keeping")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public Iterable<KeepingDTO> getVehiclesKeepings(@PathVariable Long id) {
+    public Iterable<KeepingDTO> getPersonsKeepings(@PathVariable Long id) {
         try {
-            return vehicleService.getVehiclesKeepings(id);
-        } catch (IdNotFoundInDatabaseException e)
-        {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        }
-    }
-
-    @PostMapping("/vehicle/{id}/keeping")
-    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public void changeVehiclesKeeper(@PathVariable Long id, @RequestParam Long personId) {
-        try {
-            vehicleService.changeVehiclesKeeper(id, personId);
-        } catch (ItemExistsInDatabaseException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+            return personService.getPersonsKeepings(id);
         } catch (IdNotFoundInDatabaseException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        } catch (RuntimeException  e) {
             System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
 }

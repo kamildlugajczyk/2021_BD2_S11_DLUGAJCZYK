@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.polsl.tab.fleetmanagement.people.PersonEntity;
+import pl.polsl.tab.fleetmanagement.person.PersonEntity;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
-import pl.polsl.tab.fleetmanagement.vehicle.VehiclesEntity;
+import pl.polsl.tab.fleetmanagement.vehicle.VehicleEntity;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -58,7 +58,7 @@ public class ServiceRequestEntity {
     @OneToOne()
     @JoinColumn(name = "vehicles_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     @JsonIgnore
-    @Getter @Setter private VehiclesEntity vehiclesByVehiclesId;
+    @Getter @Setter private VehicleEntity vehiclesByVehiclesId;
 
     @OneToOne()
     @JoinColumn(name = "people_Id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
