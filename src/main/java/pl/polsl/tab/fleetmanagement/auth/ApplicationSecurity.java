@@ -38,8 +38,15 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**/boss/**").hasAuthority("ROLE_BOSS")
                 .antMatchers(HttpMethod.POST, "/person*").hasAnyAuthority("ROLE_ADMIN", "ROLE_BOSS")
                 .antMatchers("/**/keeper/**").hasAnyAuthority( "ROLE_ADMIN", "ROLE_BOSS", "ROLE_KEEPER")
-                .antMatchers("/swagger-ui.html/**").permitAll()
                 .antMatchers("/","/login").permitAll()
+                .antMatchers("/v2/api-docs").permitAll()
+                .antMatchers("/configuration/ui").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/configuration/security").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/swagger-ui/*").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/v2/**").permitAll()
                 .anyRequest().authenticated().
                 and().
                 exceptionHandling().and().sessionManagement()
