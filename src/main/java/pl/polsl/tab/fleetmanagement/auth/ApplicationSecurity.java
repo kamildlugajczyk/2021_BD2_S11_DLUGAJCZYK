@@ -3,80 +3,59 @@ package pl.polsl.tab.fleetmanagement.auth;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
     private final UserPrincipalDetailsService userPrincipalDetailsService;
+    private final JwtRequestFilter jwtRequestFilter;
 
-    public ApplicationSecurity(UserPrincipalDetailsService userPrincipalDetailsService) {
+    public ApplicationSecurity(UserPrincipalDetailsService userPrincipalDetailsService,
+                               JwtRequestFilter jwtRequestFilter) {
         this.userPrincipalDetailsService = userPrincipalDetailsService;
+        this.jwtRequestFilter = jwtRequestFilter;
     }
 
     @Override
-    public void configure(AuthenticationManagerBuilder auth)
-    {
-         auth.authenticationProvider(this.authenticationProvider());
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userPrincipalDetailsService);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception
     {
-        // TODO login and logout page (default, success, failure)
+        http.csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/**/boss/**").hasRole("BOSS")
+                .antMatchers(HttpMethod.POST, "/person*").hasAnyRole("ADMIN", "BOSS")
+                .antMatchers("/swagger-ui.html/**").hasAnyRole("ADMIN", "PROGRAMMER")
+                .antMatchers("/**/keeper/**").hasAnyRole( "ADMIN", "BOSS", "KEEPER")
+                .antMatchers("/","/login").permitAll()
+                .anyRequest().authenticated().
+                and().
+                exceptionHandling().and().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http
-            .httpBasic()
-                .and()
-            .requiresChannel()
-                .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
-                .requiresSecure()
-            .and()
-            .csrf().disable()
-            .authorizeRequests()
-                .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                .antMatchers("/**/boss/**").hasAnyAuthority( "ROLE_BOSS")
-                .antMatchers(HttpMethod.POST, "/person*").hasAnyAuthority("ROLE_ADMIN", "ROLE_BOSS")
-                .antMatchers("/swagger-ui.html/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_PROGRAMMER")
-                .antMatchers("/**/keeper/**").hasAnyAuthority( "ROLE_ADMIN", "ROLE_BOSS", "ROLE_KEEPER")
-                .antMatchers("login*").permitAll()
-                .anyRequest().authenticated()
-            .and()
-            .logout()
-                .logoutSuccessUrl("/login")
-                .deleteCookies("JSESSIONID")
-            .and()
-            .sessionManagement()
-                .sessionFixation().migrateSession()
-                .maximumSessions(2)
-                .expiredUrl("/login")
-                .and()
-                .invalidSessionUrl("/login");
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
-    protected DaoAuthenticationProvider authenticationProvider()
-    {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        daoAuthenticationProvider.setUserDetailsService(this.userPrincipalDetailsService);
-        return daoAuthenticationProvider;
-    }
-
-    @Bean
-    public HttpSessionEventPublisher httpSessionEventPublisher() {
-        return new HttpSessionEventPublisher();
-    }
-
-    @Bean
-    protected PasswordEncoder passwordEncoder()
-    {
+    public PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder(12);
+    }
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 }

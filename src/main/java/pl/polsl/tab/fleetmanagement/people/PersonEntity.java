@@ -29,7 +29,7 @@ public class PersonEntity {
     @Basic
     @JsonIgnore
     @Column(name = "password", nullable = false)
-    @Getter @Setter private String password;
+    @Getter @Setter String password;
 
     @Basic
     @Column(name = "firstname", nullable = false, length = 50)
