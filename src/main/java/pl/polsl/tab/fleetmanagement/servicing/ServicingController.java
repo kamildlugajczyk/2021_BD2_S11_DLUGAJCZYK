@@ -43,15 +43,19 @@ public class ServicingController {
     @GetMapping("{id}")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ServicingEntity getServicingById(@PathVariable Long id) {
-        try {
-            return this.servicingService.getServicingById(id);
-        } catch (IdNotFoundException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
+        return this.servicingService.getServicingById(id);
+    }
+
+    @GetMapping("keeper/{id}")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public List<ServicingEntity> getServicingByKeeperId(@PathVariable Long id) {
+        return this.servicingService.getServicingByKeeperId(id);
+    }
+
+    @GetMapping("vehicle/{id}")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public List<ServicingEntity> getServicingByVehicleId(@PathVariable Long id) {
+        return this.servicingService.getServicingByVehicleId(id);
     }
 
     @PostMapping("/keeper")
@@ -60,39 +64,18 @@ public class ServicingController {
             @RequestBody ServicingDto request,
             @RequestParam(name="keeperId") Long keeperId,
             @RequestParam(name="vehicleId") Long vehicleId) {
-        try {
-            return this.servicingService.addServicing(request, keeperId, vehicleId, null);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
+        return this.servicingService.addServicing(request, keeperId, vehicleId, null);
     }
 
     @PatchMapping("/keeper/{id}/finish")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ServicingEntity finishServicing(@PathVariable Long id) {
-        try {
-            return this.servicingService.finishServicing(id);
-        } catch (IdNotFoundException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
+        return this.servicingService.finishServicing(id);
     }
 
     @DeleteMapping("/keeper/{id}")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public void deleteServicing(@PathVariable Long id) {
-        try {
-            this.servicingService.deleteServicing(id);
-        } catch (IdNotFoundException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-        }
+        this.servicingService.deleteServicing(id);
     }
 }

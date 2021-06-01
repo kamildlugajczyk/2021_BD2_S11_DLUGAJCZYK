@@ -132,6 +132,20 @@ public class ServicingService {
         this.servicingRepository.deleteById(id);
         this.servicingRepository.flush();
 
-        // TODO if not servicing exists delete unavailability
+        // TODO if not servicing exists delete unavailability, now CASCADE
+    }
+
+    public List<ServicingEntity> getServicingByKeeperId(Long id) {
+        return this.getAllServicing()
+                .stream()
+                .filter(n -> n.getVehicleUnavailability().getPeopleId().equals(id))
+                .collect(Collectors.toList());
+    }
+
+    public List<ServicingEntity> getServicingByVehicleId(Long id) {
+        return this.getAllServicing()
+                .stream()
+                .filter(n -> n.getVehicleUnavailability().getVehiclesId().equals(id))
+                .collect(Collectors.toList());
     }
 }
