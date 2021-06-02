@@ -7,6 +7,8 @@ import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class VehicleUnavailabilityService {
@@ -55,5 +57,23 @@ public class VehicleUnavailabilityService {
 
     public void deleteVehicleUnavailability(Long id) {
         this.vehicleUnavailabilityRepository.deleteById(id);
+    }
+
+    public List<VehicleUnavailabilityDto> getVehicleUnavailabilityByPersonId(Long personId) {
+
+        List<VehicleUnavailabilityDto> vehicleUnavailabilityDtos = new ArrayList<>();
+
+        List<VehicleUnavailabilityEntity> vehicleUnavailabilityEntities = new ArrayList<>(vehicleUnavailabilityRepository.findAllByPeopleId(personId));
+
+        for (VehicleUnavailabilityEntity vehicleUnavailabilityEntity : vehicleUnavailabilityEntities) {
+            vehicleUnavailabilityDtos.add(new VehicleUnavailabilityDto(
+                    vehicleUnavailabilityEntity.getStartDate(),
+                    vehicleUnavailabilityEntity.getEndDate(),
+                    vehicleUnavailabilityEntity.getVehiclesId(),
+                    vehicleUnavailabilityEntity.getPeopleId(),
+                    vehicleUnavailabilityEntity.getId()));
+        }
+        return vehicleUnavailabilityDtos;
+
     }
 }

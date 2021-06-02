@@ -3,6 +3,7 @@ package pl.polsl.tab.fleetmanagement.vehicleunavailability;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.sql.Date;
 import java.util.Objects;
 
@@ -12,12 +13,14 @@ public class VehicleUnavailabilityDto {
     @Getter @Setter private Date endDate;
     @Getter @Setter private Long vehiclesId;
     @Getter @Setter private Long peopleId;
+    @Getter private Long id;
 
-    public VehicleUnavailabilityDto(Date startDate, Date endDate, Long vehiclesId, Long peopleId) {
+    public VehicleUnavailabilityDto(Date startDate, Date endDate, Long vehiclesId, Long peopleId, Long id) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.vehiclesId = vehiclesId;
         this.peopleId = peopleId;
+        this.id = id;
     }
 
     @Override
