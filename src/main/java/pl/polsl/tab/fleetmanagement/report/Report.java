@@ -135,6 +135,13 @@ public class Report {
                 "Kiedy wpadają koleżanki zaczynają się hulanki\n" +
                 "Czekam aż znowu będziemy popijać Bacardi w klubie ze szklanki\n" +
                 "Gdy na parkiecie nasze fanki a na głośniku Nicki i Cardi\n" +
+                "W moim mieście chodzi tylko o jedno\n" +
+                "Czekam aż znowu będziemy popijać Bacardi w klubie ze szklanki\n" +
+                "Gdy na parkiecie nasze fanki a na głośniku Nicki i Cardi\n" +
+                "Nie mów nikomu łamiemy zasady bo w domu też bywa funky\n" +
+                "Kiedy wpadają koleżanki zaczynają się hulanki\n" +
+                "Czekam aż znowu będziemy popijać Bacardi w klubie ze szklanki\n" +
+                "Gdy na parkiecie nasze fanki a na głośniku Nicki i Cardi\n" +
                 "Nie mów nikomu łamiemy zasady bo w domu też bywa funky\n" +
                 "Kiedy wpadają koleżanki zaczynają się hulanki", helvetica16));
 
