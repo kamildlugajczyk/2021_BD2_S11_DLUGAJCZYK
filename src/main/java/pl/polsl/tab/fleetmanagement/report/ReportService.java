@@ -36,6 +36,7 @@ public class ReportService {
     private static final Font dateFont = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.BOLD);
     private static BaseFont helvetica;
     private static final String localDateFormat = "d MMMM yyyy HH:mm:ss";
+    private double totalCosts = 0.0;
 
     private final PersonService personService;
     private final VehicleRentingService vehicleRentingService;
@@ -116,96 +117,6 @@ public class ReportService {
         document.add(preface);
     }
 
-    private static void addContent(Document document) throws DocumentException {
-//        Anchor anchor = new Anchor("First Chapter", titleFont);
-//        anchor.setName("First Chapter");
-//
-//        // Second parameter is the number of the chapter
-//        Chapter catPart = new Chapter(new Paragraph(anchor), 1);
-//
-//        Paragraph subPara = new Paragraph("Subcategory 1", subFont);
-//        Section subCatPart = catPart.addSection(subPara);
-//        subCatPart.add(new Paragraph("Gram sety gorące jak Diplo cały kraj się jara moją ksywką\n" +
-//                "Cały kraj jara się moją bibką kiedy za stołem miksuję ten hip hop\n" +
-//                "Miksuję ten hip hop wszystko co zrobiłam to było dopiero intro\n" +
-//                "Z dancehallem miksuję ten hip hop bomboclaat\n" +
-//                "Skaczesz na parkiecie a zrobiło się już widno\n" +
-//                "Kiedyś to codziennie miałam klub teraz mam tu pełny stół\n" +
-//                "Z ziomalami dzielę się na pół każdy ruch to wspólny move\n" +
-//                "Chcę dostać ordery królowej imprezy a potem królowej afterów\n" +
-//                "Bo mi się należy (tak jest)\n" +
-//                "Wie każdy kto ze mną coś przeżył\n" +
-//                "Noce nie bywają spokojne będzie trzeba to pójdę na wojnę\n" +
-//                "Na ulicy w szeleszczącej kurtce Moncler będę walczyć o zwrot moich wspomnień\n" +
-//                "Bo chcecie nam zabrać ten czas i te radosne bankiety\n" +
-//                "Oddajcie lokale i hajs nie cenzurujcie poety\n" +
-//                "Czekam aż znowu będziemy popijać Bacardi w klubie ze szklanki\n" +
-//                "Gdy na parkiecie nasze fanki a na głośniku Nicki i Cardi\n" +
-//                "Nie mów nikomu łamiemy zasady bo w domu też bywa funky\n" +
-//                "Kiedy wpadają koleżanki zaczynają się hulanki\n" +
-//                "Czekam aż znowu będziemy popijać Bacardi w klubie ze szklanki\n" +
-//                "Gdy na parkiecie nasze fanki a na głośniku Nicki i Cardi\n" +
-//                "Nie mów nikomu łamiemy zasady bo w domu też bywa funky\n" +
-//                "Kiedy wpadają koleżanki zaczynają się hulanki\n" +
-//                "Wbijaj do mnie na house party z nami bawią się sąsiadki\n" +
-//                "Najpierw kozackie wieczory potem w radiu Bolesne Poranki\n" +
-//                "Mój typ melanżu to takie tańczone rąk pełna sala przez noc i przez dobę\n" +
-//                "Buja się cały klub z nogi na nogę chcę już wieczory spędzać poza domem\n" +
-//                "Zawsze stać za DJ ką tam gdzie z nieba sypie się bankroll\n" +
-//                "Tam gdzie laski tańczą na pewno błyszczą sukienką\n" +
-//                "Chodzą z torebką gdzie chłopakom chodzi tylko o jedno\n" +
-//                "W moim mieście chodzi tylko o jedno\n" +
-//                "Czekam aż znowu będziemy popijać Bacardi w klubie ze szklanki\n" +
-//                "Gdy na parkiecie nasze fanki a na głośniku Nicki i Cardi\n" +
-//                "Nie mów nikomu łamiemy zasady bo w domu też bywa funky\n" +
-//                "Kiedy wpadają koleżanki zaczynają się hulanki\n" +
-//                "Czekam aż znowu będziemy popijać Bacardi w klubie ze szklanki\n" +
-//                "Gdy na parkiecie nasze fanki a na głośniku Nicki i Cardi\n" +
-//                "W moim mieście chodzi tylko o jedno\n" +
-//                "Czekam aż znowu będziemy popijać Bacardi w klubie ze szklanki\n" +
-//                "Gdy na parkiecie nasze fanki a na głośniku Nicki i Cardi\n" +
-//                "Nie mów nikomu łamiemy zasady bo w domu też bywa funky\n" +
-//                "Kiedy wpadają koleżanki zaczynają się hulanki\n" +
-//                "Czekam aż znowu będziemy popijać Bacardi w klubie ze szklanki\n" +
-//                "Gdy na parkiecie nasze fanki a na głośniku Nicki i Cardi\n" +
-//                "Nie mów nikomu łamiemy zasady bo w domu też bywa funky\n" +
-//                "Kiedy wpadają koleżanki zaczynają się hulanki", helvetica12));
-//
-//        subPara = new Paragraph("Subcategory 2", subFont);
-//        subCatPart = catPart.addSection(subPara);
-//        subCatPart.add(new Paragraph("Paragraph 1"));
-//        subCatPart.add(new Paragraph("Paragraph 2"));
-//        subCatPart.add(new Paragraph("Paragraph 3"));
-//
-//        // add a list
-//        createList(subCatPart);
-//        Paragraph paragraph = new Paragraph();
-//        addEmptyLine(paragraph, 5);
-//        subCatPart.add(paragraph);
-//
-//        // add a table
-//        createTable(subCatPart);
-//
-//        // now add all this to the document
-//        document.add(catPart);
-//
-//        // Next section
-//        anchor = new Anchor("Second Chapter", titleFont);
-//        anchor.setName("Second Chapter");
-//
-//        // Second parameter is the number of the chapter
-//        catPart = new Chapter(new Paragraph(anchor), 1);
-//
-//        subPara = new Paragraph("Subcategory", subFont);
-//        subCatPart = catPart.addSection(subPara);
-//        subCatPart.add(new Paragraph("This is a very important message"));
-//
-//        // now add all this to the document
-//        document.add(catPart);
-
-
-    }
-
     private void addTable(Document document, Long personId) throws DocumentException {
         PersonDTO person = personService.getPerson(personId);
 
@@ -223,19 +134,23 @@ public class ReportService {
             PdfPCell cell = new PdfPCell(new Phrase(columnName));
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setBackgroundColor(BaseColor.CYAN);
+            cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
             table.addCell(cell);
         }
         table.setHeaderRows(1);
         getInfo(table, personId);
         document.add(table);
+
+        Paragraph costs = new Paragraph("Total costs generated by " + person.getFirstname() + " " +
+                person.getLastname() + ": " + String.format("%.2f PLN", totalCosts));
+        document.add(costs);
     }
 
     private void getInfo(PdfPTable table, Long personId) {
 
+
         List<VehicleUnavailabilityDto> vehicleUnavailabilityDtos =
                 vehicleUnavailabilityService.getVehicleUnavailabilityByPersonId(personId);
-
 
         double fuelCostByOneKilometer = 0.45;
 
@@ -264,6 +179,17 @@ public class ReportService {
                     .map(x -> x.getOperationType().getName())
                     .collect(Collectors.toList());
 
+            StringBuilder operations = new StringBuilder();
+            if (operationNames.isEmpty())
+                operations.append(" - ");
+            int i = 0;
+            for (String name : operationNames) {
+                if (i++ == operationNames.size() - 1)
+                    operations.append(name);
+                else
+                    operations.append(name).append(", ");
+            }
+
             table.setWidthPercentage(100);
             table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
             table.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
@@ -271,70 +197,25 @@ public class ReportService {
             table.addCell(vehicleName);
             table.addCell(vehicleUnavailabilityDto.getStartDate().toString());
             table.addCell(vehicleUnavailabilityDto.getEndDate().toString());
-
-            int i = 0;
-            for (String name : operationNames){
-                if (i++ == operationNames.size() - 1)
-                    table.addCell(name);
-                else
-                    table.addCell(name + ", ");
-            }
-
+            table.addCell(operations.toString());
             table.addCell(String.valueOf(mileage));
-            table.addCell(String.valueOf(operationsCostValue) + " PLN");
-            table.addCell(String.valueOf(fuelCostByOneKilometer * mileage) + " PLN");
+            table.addCell(String.format("%.2f PLN", operationsCostValue));
+            table.addCell(String.format("%.2f PLN", fuelCostByOneKilometer * mileage));
+
+            totalCosts += operationsCostValue;
+            totalCosts += fuelCostByOneKilometer * mileage;
         }
 
     }
 
     private void addFooter(Document document) throws DocumentException {
         Paragraph footer = new Paragraph(
-                "------------------------End Of Employee Report------------------------", helvetica12);
+                "\n------------------------End Of Employee Report------------------------", helvetica12);
         addEmptyLine(footer, 3);
         footer.setAlignment(Element.ALIGN_CENTER);
         document.add(footer);
     }
 
-    private static void addTable(Section subCatPart)
-            throws BadElementException {
-        PdfPTable table = new PdfPTable(3);
-
-        // t.setBorderColor(BaseColor.GRAY);
-        // t.setPadding(4);
-        // t.setSpacing(4);
-        // t.setBorderWidth(1);
-
-        PdfPCell c1 = new PdfPCell(new Phrase("Table Header 1"));
-        c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell(c1);
-
-        c1 = new PdfPCell(new Phrase("Table Header 2"));
-        c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell(c1);
-
-        c1 = new PdfPCell(new Phrase("Table Header 3"));
-        c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell(c1);
-        table.setHeaderRows(1);
-
-        table.addCell("1.0");
-        table.addCell("1.1");
-        table.addCell("1.2");
-        table.addCell("2.1");
-        table.addCell("2.2");
-        table.addCell("2.3");
-
-        subCatPart.add(table);
-
-    }
-
-//    private static void createList(Section subCatPart) {
-//        List list = new List(true, false, 10);
-//        list.add(new ListItem("First point"));
-//        list.add(new ListItem("Second point"));
-//        list.add(new ListItem("Third point"));
-//        subCatPart.add(list);
-//    }
 
     private static void addEmptyLine(Paragraph paragraph, int number) {
         for (int i = 0; i < number; i++) {
