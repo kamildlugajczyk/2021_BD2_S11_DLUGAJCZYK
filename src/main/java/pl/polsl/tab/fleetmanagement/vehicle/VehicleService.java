@@ -3,6 +3,7 @@ package pl.polsl.tab.fleetmanagement.vehicle;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import pl.polsl.tab.fleetmanagement.person.function.FunctionDTO;
 import pl.polsl.tab.fleetmanagement.vehicle.brandmodel.BrandModelEntity;
 import pl.polsl.tab.fleetmanagement.vehicle.brandmodel.BrandModelRepository;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
@@ -167,11 +168,16 @@ public class VehicleService {
         for (KeepingEntity keepingEntity : vehicleEntity.getKeepingsById()) {
             if (keepingEntity.getEnddate() == null) {
                 keepingEntity.setEnddate(new Date(System.currentTimeMillis()));
+                if (keepingEntity.getPeopleByPeopleId().getFunctionId().equals(3L))
+                    keepingEntity.getPeopleByPeopleId().setFunctionId(4L);
             }
         }
 
         KeepingEntity keepingEntity = new KeepingEntity(new Date(System.currentTimeMillis()), null, personId,
                 personEntity, id, vehicleEntity);
+
+        if (keepingEntity.getPeopleByPeopleId().getFunctionId().equals(4L))
+            keepingEntity.getPeopleByPeopleId().setFunctionId(3L);
 
         keepingRepository.save(keepingEntity);
     }
