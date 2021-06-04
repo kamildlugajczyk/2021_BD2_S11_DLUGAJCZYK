@@ -212,4 +212,25 @@ public class VehicleEntity {
     public int hashCode() {
         return Objects.hash(id, vin, plates, equipmentLevel, mileage, avgFuelConsumption, brandsModelsId, typesId, purposesId);
     }
+
+    @Override
+    public String toString() {
+        return "VehicleEntity{" +
+                "id=" + id +
+                ", vin='" + vin + '\'' +
+                ", plates='" + plates + '\'' +
+                ", equipmentLevel='" + equipmentLevel + '\'' +
+                ", mileage=" + mileage +
+                ", avgFuelConsumption=" + avgFuelConsumption +
+                ", brandsModelsId=" + brandsModelsId +
+                ", typesId=" + typesId +
+                ", purposesId=" + purposesId +
+                ", keepingsById=" + keepingsById +
+                ", operationCostsById=" + operationCostsById +
+                ", vehicleUnavailabilitiesById=" + vehicleUnavailabilitiesById +
+                ", typesByTypesId=" + typesByTypesId +
+                ", purposesByPurposesId=" + purposesByPurposesId +
+                ", brandsModelsByBrandsModelsId=" + brandsModelsByBrandsModelsId +
+                '}';
+    }
 }

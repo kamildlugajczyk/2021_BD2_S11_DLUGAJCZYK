@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "keeping", schema = "public", catalog = "testdb")
-public class KeepingEntity {
+public class KeepingEntity  {
     private long id;
     private Date startdate;
     private Date enddate;

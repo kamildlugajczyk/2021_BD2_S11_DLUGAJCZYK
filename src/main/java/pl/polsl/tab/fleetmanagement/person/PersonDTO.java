@@ -5,6 +5,8 @@ import lombok.Getter;
 import pl.polsl.tab.fleetmanagement.person.function.FunctionDTO;
 import pl.polsl.tab.fleetmanagement.person.function.FunctionEntity;
 
+import java.util.Objects;
+
 
 public class PersonDTO {
 
@@ -35,5 +37,18 @@ public class PersonDTO {
         this.lastname = personEntity.getLastname();
         this.phoneNumber = personEntity.getPhoneNumber();
         this.function = new FunctionDTO(personEntity.getFunctionsByFunctionsId());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PersonDTO personDTO = (PersonDTO) o;
+        return id == personDTO.id && username.equals(personDTO.username) && firstname.equals(personDTO.firstname) && lastname.equals(personDTO.lastname) && phoneNumber.equals(personDTO.phoneNumber) && function.equals(personDTO.function);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, firstname);
     }
 }
