@@ -76,19 +76,19 @@ public class VehicleUnavailabilityEntity {
         return Objects.hash(id);
     }
 
-    @Override
-    public String toString() {
-        return "VehicleUnavailabilityEntity{" +
-                "id=" + id +
-                ", startDate=" + startDate +
-                ", predictEndDate=" + predictEndDate +
-                ", endDate=" + endDate +
-                ", vehiclesId=" + vehiclesId +
-                ", peopleId=" + peopleId +
-                ", servicings=" + servicings +
-                ", vehicleRentingsById=" + vehicleRentingsById +
-                ", vehiclesByVehiclesId=" + vehiclesByVehiclesId +
-                ", peopleByPeopleId=" + peopleByPeopleId +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "VehicleUnavailabilityEntity{" +
+//                "id=" + id +
+//                ", startDate=" + startDate +
+//                ", predictEndDate=" + predictEndDate +
+//                ", endDate=" + endDate +
+//                ", vehiclesId=" + vehiclesId +
+//                ", peopleId=" + peopleId +
+//                ", servicings=" + servicings +
+//                ", vehicleRentingsById=" + vehicleRentingsById +
+//                ", vehiclesByVehiclesId=" + vehiclesByVehiclesId +
+//                ", peopleByPeopleId=" + peopleByPeopleId +
+//                '}';
+//    }
 }

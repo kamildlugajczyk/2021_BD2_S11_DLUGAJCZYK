@@ -43,7 +43,6 @@ public class EmployeeReportService {
     private final VehicleUnavailabilityService vehicleUnavailabilityService;
     private final VehicleService vehicleService;
     private final OperationCostService operationCostService;
-    private final OperationTypeService operationTypeService;
 
 
     static {
@@ -62,7 +61,6 @@ public class EmployeeReportService {
         this.vehicleUnavailabilityService = vehicleUnavailabilityService;
         this.vehicleService = vehicleService;
         this.operationCostService = operationCostService;
-        this.operationTypeService = operationTypeService;
     }
 
     public void generateReport(HttpServletResponse response) {
