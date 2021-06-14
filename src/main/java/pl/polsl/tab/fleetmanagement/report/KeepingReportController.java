@@ -16,14 +16,14 @@ import java.util.Set;
 
 
 @RestController
-@RequestMapping(path = "/report")
-public class ReportController {
+@RequestMapping(path = "/keeping/report")
+public class KeepingReportController {
 
     private final PersonService personService;
     private final VehicleService vehicleService;
     private final KeepingRepository keepingRepository;
 
-    public ReportController(PersonService personService, VehicleService vehicleService, KeepingRepository keepingRepository) {
+    public KeepingReportController(PersonService personService, VehicleService vehicleService, KeepingRepository keepingRepository) {
         this.personService = personService;
         this.vehicleService = vehicleService;
         this.keepingRepository = keepingRepository;
@@ -33,8 +33,8 @@ public class ReportController {
     @ApiOperation(value = "", authorizations = {@Authorization(value = "jwtToken")})
     public void vehicleKeeperReport(HttpServletResponse response, @RequestParam(value="vehicleId") Set<Long> vehicleIds) {
         try {
-            ReportService reportService = new ReportService(personService, vehicleService, keepingRepository);
-            reportService.generateReport(response, vehicleIds);
+            KeepingReportService keepingReportService = new KeepingReportService(personService, vehicleService, keepingRepository);
+            keepingReportService.generateReport(response, vehicleIds);
         } catch (Exception e) {
             e.printStackTrace();
         }

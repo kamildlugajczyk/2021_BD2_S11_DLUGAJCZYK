@@ -19,14 +19,16 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @Service
-public class ReportService {
+public class KeepingReportService {
 
     private static final String logoImgPath = "src/main/resources/politechnika.jpg";
     private static final Font titleFont = new Font(Font.FontFamily.TIMES_ROMAN, 30, Font.BOLD);
@@ -54,7 +56,7 @@ public class ReportService {
 
     private static final Font helvetica12 = new Font(helvetica, 12);
 
-    public ReportService(PersonService personService, VehicleService vehicleService, KeepingRepository keepingRepository) {
+    public KeepingReportService(PersonService personService, VehicleService vehicleService, KeepingRepository keepingRepository) {
         this.personService = personService;
         this.vehicleService = vehicleService;
         this.keepingRepository = keepingRepository;

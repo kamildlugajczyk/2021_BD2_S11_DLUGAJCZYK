@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
-import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityService;
-import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityDto;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
+import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityDto;
+import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityService;
 
 import java.util.Date;
 import java.util.List;
@@ -82,7 +82,7 @@ public class ServicingService {
                 servicingDto.getStartDate(),
                 servicingDto.getEndDate(),
                 vehiclesId,
-                personId
+                personId, null
             );
 
             Long unavailabilityId = this.vehicleUnavailabilityService.addVehicleUnavailability(vud, archive);

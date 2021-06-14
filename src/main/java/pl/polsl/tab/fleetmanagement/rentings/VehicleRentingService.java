@@ -38,6 +38,14 @@ public class VehicleRentingService {
         return new VehicleRentingDto(vehicleRentingEntity);
     }
 
+    public VehicleRentingDto getVehicleRentingByVehicleUnavailability(Long id) {
+
+        VehicleRentingEntity vehicleRentingEntity = vehicleRentingRepository.findByVehicleUnavailabilityId(Math.toIntExact(id))
+                .orElseThrow(() -> new IdNotFoundException("Vehicle renting", id));
+
+        return new VehicleRentingDto(vehicleRentingEntity);
+    }
+
     // TODO: 19.05.2021 nie wiem jak to robić z tym VehicleUnavailability
     public VehicleRentingDto addVehicleRenting(VehicleRentingDto vehicleRentingDTO) {
 
