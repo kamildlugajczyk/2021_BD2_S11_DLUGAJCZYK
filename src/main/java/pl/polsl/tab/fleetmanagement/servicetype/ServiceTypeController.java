@@ -3,11 +3,8 @@ package pl.polsl.tab.fleetmanagement.servicetype;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
-import pl.polsl.tab.fleetmanagement.exceptions.NotUniqueException;
+
 
 @RestController
 @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })

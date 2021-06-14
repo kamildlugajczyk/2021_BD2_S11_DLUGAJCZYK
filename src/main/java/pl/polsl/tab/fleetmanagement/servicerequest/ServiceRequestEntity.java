@@ -10,7 +10,7 @@ import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
 import pl.polsl.tab.fleetmanagement.vehicle.VehicleEntity;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 

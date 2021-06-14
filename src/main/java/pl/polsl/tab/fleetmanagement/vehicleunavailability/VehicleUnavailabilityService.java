@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
 
-import java.sql.Date;
+import java.util.Date;
 import java.time.LocalDate;
 
 @Component
@@ -46,10 +46,11 @@ public class VehicleUnavailabilityService {
     }
 
     public void unlockVehicleBySetEndDate(Long id) {
-        LocalDate now = LocalDate.now();
-        Date nowSql = java.sql.Date.valueOf(String.valueOf(now));
+//        LocalDate now = LocalDate.now();
+//        Date nowSql = java.sql.Date.valueOf(String.valueOf(now));
+        Date now = new Date();
         VehicleUnavailabilityEntity vue = this.getVehicleUnavailabilityById(id);
-        vue.setEndDate(nowSql);
+        vue.setEndDate(now);
         this.vehicleUnavailabilityRepository.save(vue);
     }
 

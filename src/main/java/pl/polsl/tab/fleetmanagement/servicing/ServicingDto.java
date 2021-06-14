@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
 
 public class ServicingDto {
     @Getter @Setter private BigDecimal price;

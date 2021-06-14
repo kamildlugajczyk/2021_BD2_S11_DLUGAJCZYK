@@ -5,9 +5,10 @@ import pl.polsl.tab.fleetmanagement.person.PersonEntity;
 import pl.polsl.tab.fleetmanagement.vehicle.VehicleEntity;
 
 import javax.persistence.*;
-import java.sql.Date;
+
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Date;
 
 @Entity
 @Table(name = "keeping", schema = "public", catalog = "testdb")

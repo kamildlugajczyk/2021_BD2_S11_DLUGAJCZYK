@@ -70,8 +70,8 @@ create table Vehicles
 create table Keeping
 (
     id          BIGSERIAL NOT NULL PRIMARY KEY,
-    startDate   DATE      NOT NULL,
-    endDate     DATE,
+    startDate   TIMESTAMP NOT NULL,
+    endDate     TIMESTAMP,
     People_id   INT       NOT NULL,
     Vehicles_id INT       NOT NULL,
     CONSTRAINT Keeping_Vehicles_FK FOREIGN KEY (Vehicles_id) REFERENCES Vehicles (id),
@@ -95,9 +95,9 @@ create table Service_types
 create table Vehicle_unavailability
 (
     id             BIGSERIAL NOT NULL PRIMARY KEY,
-    startDate      DATE      NOT NULL,
-    predictEndDate DATE DEFAULT NULL,
-    endDate        DATE DEFAULT NULL,
+    startDate      TIMESTAMP NOT NULL,
+    predictEndDate TIMESTAMP DEFAULT NULL,
+    endDate        TIMESTAMP DEFAULT NULL,
     Vehicles_id    INT       NOT NULL,
     People_id      INT       NOT NULL,
     CONSTRAINT Vehicle_unavailability_People_FK FOREIGN KEY (People_id) REFERENCES People (id),
@@ -107,7 +107,7 @@ create table Vehicle_unavailability
 create table Service_request
 (
     id               BIGSERIAL    NOT NULL PRIMARY KEY,
-    date             DATE         NOT NULL,
+    date             TIMESTAMP    NOT NULL,
     description      VARCHAR(100) NOT NULL,
     Service_types_id BIGINT       NOT NULL,
     Vehicles_id      BIGINT       NOT NULL,
@@ -153,7 +153,7 @@ create table Vehicle_rentings
 create table Operation_costs
 (
     id                  BIGSERIAL     NOT NULL PRIMARY KEY,
-    date                DATE          NOT NULL,
+    date                TIMESTAMP     NOT NULL,
     price               DECIMAL(8, 2) NOT NULL,
     description         VARCHAR(100)  NOT NULL,
     Vehicles_id         INT           NOT NULL,

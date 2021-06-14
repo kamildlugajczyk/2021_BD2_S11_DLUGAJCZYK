@@ -5,7 +5,7 @@ import lombok.Setter;
 import pl.polsl.tab.fleetmanagement.person.PersonEntity;
 import pl.polsl.tab.fleetmanagement.vehicle.VehicleEntity;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Getter
 public class KeepingDTO {

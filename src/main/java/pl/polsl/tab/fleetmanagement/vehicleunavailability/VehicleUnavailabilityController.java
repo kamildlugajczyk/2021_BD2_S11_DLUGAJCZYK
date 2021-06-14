@@ -1,7 +1,5 @@
 package pl.polsl.tab.fleetmanagement.vehicleunavailability;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

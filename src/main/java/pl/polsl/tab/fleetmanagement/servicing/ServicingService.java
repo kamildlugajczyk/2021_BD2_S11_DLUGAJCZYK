@@ -9,7 +9,7 @@ import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityS
 import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityDto;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

@@ -18,7 +18,7 @@ import pl.polsl.tab.fleetmanagement.vehicle.purpose.PurposeRepository;
 import pl.polsl.tab.fleetmanagement.vehicle.type.TypeEntity;
 import pl.polsl.tab.fleetmanagement.vehicle.type.TypeRepository;
 
-import java.sql.Date;
+import java.util.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -167,13 +167,13 @@ public class VehicleService {
 
         for (KeepingEntity keepingEntity : vehicleEntity.getKeepingsById()) {
             if (keepingEntity.getEnddate() == null) {
-                keepingEntity.setEnddate(new Date(System.currentTimeMillis()));
+                keepingEntity.setEnddate(new Date());
                 if (keepingEntity.getPeopleByPeopleId().getFunctionId().equals(3L))
                     keepingEntity.getPeopleByPeopleId().setFunctionId(4L);
             }
         }
 
-        KeepingEntity keepingEntity = new KeepingEntity(new Date(System.currentTimeMillis()), null, personId,
+        KeepingEntity keepingEntity = new KeepingEntity(new Date(), null, personId,
                 personEntity, id, vehicleEntity);
 
         if (keepingEntity.getPeopleByPeopleId().getFunctionId().equals(4L))

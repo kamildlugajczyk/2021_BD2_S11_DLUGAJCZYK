@@ -15,6 +15,8 @@ import pl.polsl.tab.fleetmanagement.vehicle.VehicleService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -33,6 +35,7 @@ public class ReportService {
     private static final Font dateFont = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.BOLD);
     private static BaseFont helvetica;
     private static final String localDateFormat = "d MMMM yyyy HH:mm:ss";
+    private Format formatter = new SimpleDateFormat("yyyy-MM-d HH:mm:ss");
 
     private final PersonService personService;
     private final VehicleService vehicleService;
@@ -184,8 +187,8 @@ public class ReportService {
         for(KeepingEntity keeper: streamKeepers.collect(Collectors.toList())) {
             PersonDTO person = this.personService.getPerson(keeper.getPeopleId());
 
-            table.addCell(keeper.getStartdate().toString());
-            table.addCell(keeper.getEnddate() != null ? keeper.getEnddate().toString() : "-");
+            table.addCell(formatter.format(keeper.getStartdate()));
+            table.addCell(keeper.getEnddate() != null ? formatter.format(keeper.getEnddate()) : "-");
             table.addCell(person.getLastname());
             table.addCell(person.getFirstname());
             table.addCell(Long.toString(keeper.getPeopleId()));
