@@ -131,4 +131,43 @@ public class VehicleUnavailabilityService {
         }
         return unavailabilityListDtos;
     }
+    public List<UnavailabilityListDto> getUnavailabilityListByVehicleId(Long vehicleId) {
+        List<VehicleUnavailabilityEntity> vehicleUnavailabilityEntities =
+                this.getVehicleUnavailabilityEntities();
+        List<UnavailabilityListDto> unavailabilityListDtos = new ArrayList<>();
+
+        for(VehicleUnavailabilityEntity vehicleUnavailabilityEntity : vehicleUnavailabilityEntities){
+            if(vehicleUnavailabilityEntity.getVehiclesId().equals(vehicleId)){
+                Long servicingId = null;
+                Long rentingId = null;
+                Optional<VehicleRentingEntity> vehicleRentingEntity = vehicleUnavailabilityEntity
+                        .getVehicleRentingsById().stream().findFirst();
+
+                Optional<ServicingEntity> servicingEntity = vehicleUnavailabilityEntity
+                        .getServicings().stream().findFirst();
+
+                if (vehicleRentingEntity.isPresent())
+                    rentingId = vehicleRentingEntity.get().getId();
+
+                if (servicingEntity.isPresent())
+                    servicingId = servicingEntity.get().getId();
+
+
+                unavailabilityListDtos.add(new UnavailabilityListDto(
+                        vehicleUnavailabilityEntity.getId(),
+                        vehicleUnavailabilityEntity.getVehiclesId(),
+                        rentingId,
+                        servicingId,
+                        vehicleService.getVehicle(vehicleUnavailabilityEntity
+                                .getVehiclesId()).getBrandmodel().getBrand(),
+                        vehicleService.getVehicle(vehicleUnavailabilityEntity
+                                .getVehiclesId()).getBrandmodel().getModel(),
+                        vehicleUnavailabilityEntity.getStartDate(),
+                        vehicleUnavailabilityEntity.getEndDate()
+                ));
+            }
+
+        }
+        return unavailabilityListDtos;
+    }
 }
