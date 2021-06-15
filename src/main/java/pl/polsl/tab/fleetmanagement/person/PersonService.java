@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import pl.polsl.tab.fleetmanagement.auth.ChangePasswordRequest;
 import pl.polsl.tab.fleetmanagement.auth.UserPrincipal;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
@@ -119,15 +120,15 @@ public class PersonService {
         }
     }
 
-    public void changePassword(String oldPassword, String newPassword) {
+    public void changePassword(ChangePasswordRequest request) {
 
         UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         PersonEntity personEntity = personRepository.findByUsername(userPrincipal.getUsername());
 
-        String oldHash = this.passwordEncoder.encode(oldPassword);
+        String oldHash = this.passwordEncoder.encode(request.getOldPassword());
 
-        if (BCrypt.checkpw(oldPassword, personEntity.getPassword())) {
-            String newHash = this.passwordEncoder.encode(newPassword);
+        if (BCrypt.checkpw(request.getOldPassword(), personEntity.getPassword())) {
+            String newHash = this.passwordEncoder.encode(request.getNewPassword());
             personEntity.setPassword(newHash);
             personRepository.save(personEntity);
         } else throw new WrongPasswordException("Old password does not match!");

@@ -5,6 +5,7 @@ import io.swagger.annotations.Authorization;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import pl.polsl.tab.fleetmanagement.auth.ChangePasswordRequest;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.WrongPasswordException;
@@ -81,9 +82,9 @@ public class PersonController {
 
     @PutMapping("/person/password")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public void changePassword(@RequestParam String oldPassword, @RequestParam String newPassword) {
+    public void changePassword(@RequestBody ChangePasswordRequest request) {
         try {
-            personService.changePassword(oldPassword, newPassword);
+            personService.changePassword(request);
         } catch (WrongPasswordException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
