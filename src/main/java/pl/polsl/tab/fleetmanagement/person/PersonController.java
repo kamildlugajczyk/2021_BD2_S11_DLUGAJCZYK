@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
+import pl.polsl.tab.fleetmanagement.exceptions.WrongPasswordException;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingDTO;
 
 import java.util.List;
@@ -72,6 +73,20 @@ public class PersonController {
         } catch (ItemExistsInDatabaseException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+        }
+    }
+
+    @PutMapping("/person/password")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public void changePassword(@RequestParam String oldPassword, @RequestParam String newPassword) {
+        try {
+            personService.changePassword(oldPassword, newPassword);
+        } catch (WrongPasswordException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);

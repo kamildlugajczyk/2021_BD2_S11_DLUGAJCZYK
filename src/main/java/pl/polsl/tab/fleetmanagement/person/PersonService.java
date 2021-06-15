@@ -2,11 +2,15 @@ package pl.polsl.tab.fleetmanagement.person;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import pl.polsl.tab.fleetmanagement.auth.UserPrincipal;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
+import pl.polsl.tab.fleetmanagement.exceptions.WrongPasswordException;
 import pl.polsl.tab.fleetmanagement.person.function.FunctionEntity;
 import pl.polsl.tab.fleetmanagement.person.function.FunctionRepository;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingDTO;
@@ -98,7 +102,6 @@ public class PersonService {
 
         try {
             personEntity.get().setUsername(personDTO.getPhoneNumber());
-            personEntity.get().setPassword(personDTO.getPassword());
             personEntity.get().setFirstname(personDTO.getFirstname());
             personEntity.get().setLastname(personDTO.getLastname());
             personEntity.get().setPhoneNumber(personDTO.getPhoneNumber());
@@ -109,11 +112,25 @@ public class PersonService {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    throw new ItemExistsInDatabaseException("Email (" + personDTO.getUsername() + ") exists in DB");
+                    throw new ItemExistsInDatabaseException("Username (" + personDTO.getUsername() + ") exists in DB");
                 }
             }
             throw new RuntimeException(e);
         }
+    }
+
+    public void changePassword(String oldPassword, String newPassword) {
+
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        PersonEntity personEntity = personRepository.findByUsername(userPrincipal.getUsername());
+
+        String oldHash = this.passwordEncoder.encode(oldPassword);
+
+        if (BCrypt.checkpw(oldPassword, personEntity.getPassword())) {
+            String newHash = this.passwordEncoder.encode(newPassword);
+            personEntity.setPassword(newHash);
+            personRepository.save(personEntity);
+        } else throw new WrongPasswordException("Old password does not match!");
     }
 
     public void deletePerson(Long id) { ;
