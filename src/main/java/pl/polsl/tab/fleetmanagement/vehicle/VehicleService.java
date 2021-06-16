@@ -3,7 +3,9 @@ package pl.polsl.tab.fleetmanagement.vehicle;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import pl.polsl.tab.fleetmanagement.exceptions.KeeperNotFoundException;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingRequest;
+import pl.polsl.tab.fleetmanagement.person.PersonDTO;
 import pl.polsl.tab.fleetmanagement.person.function.FunctionDTO;
 import pl.polsl.tab.fleetmanagement.vehicle.brandmodel.BrandModelEntity;
 import pl.polsl.tab.fleetmanagement.vehicle.brandmodel.BrandModelRepository;
@@ -157,6 +159,22 @@ public class VehicleService {
         }
 
         return keepingDTOs;
+    }
+
+    public PersonDTO getVehiclesKeeper(Long id) {
+        VehicleEntity vehicleEntity = vehicleRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundInDatabaseException("Vehicle of id " + id + " not found"));
+
+        List<KeepingEntity> keepingEntities = new ArrayList<>();
+        vehicleEntity.getKeepingsById().forEach(keepingEntities::add);
+
+        for (KeepingEntity keepingEntity : keepingEntities) {
+            if (keepingEntity.getEnddate() == null) {
+                return new PersonDTO(keepingEntity.getPeopleByPeopleId());
+            }
+        }
+
+        throw new KeeperNotFoundException("Vehicle of id " + id + " does not have keeper yet!");
     }
 
     public void changeVehiclesKeeper(Long id, KeepingRequest request) {
