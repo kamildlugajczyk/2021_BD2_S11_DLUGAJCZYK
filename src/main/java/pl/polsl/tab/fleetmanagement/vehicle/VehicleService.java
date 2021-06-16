@@ -3,6 +3,7 @@ package pl.polsl.tab.fleetmanagement.vehicle;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import pl.polsl.tab.fleetmanagement.keeping.KeepingRequest;
 import pl.polsl.tab.fleetmanagement.person.function.FunctionDTO;
 import pl.polsl.tab.fleetmanagement.vehicle.brandmodel.BrandModelEntity;
 import pl.polsl.tab.fleetmanagement.vehicle.brandmodel.BrandModelRepository;
@@ -158,9 +159,9 @@ public class VehicleService {
         return keepingDTOs;
     }
 
-    public void changeVehiclesKeeper(Long id, Long personId) {
-        PersonEntity personEntity = personRepository.findById(personId)
-                .orElseThrow(() -> new IdNotFoundInDatabaseException("Person of id " + personId + " not found"));
+    public void changeVehiclesKeeper(Long id, KeepingRequest request) {
+        PersonEntity personEntity = personRepository.findById(request.getPersonId())
+                .orElseThrow(() -> new IdNotFoundInDatabaseException("Person of id " + request.getPersonId() + " not found"));
 
         VehicleEntity vehicleEntity = vehicleRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundInDatabaseException("Vehicle of id " + id + " not found"));
@@ -173,7 +174,7 @@ public class VehicleService {
             }
         }
 
-        KeepingEntity keepingEntity = new KeepingEntity(new Date(), null, personId,
+        KeepingEntity keepingEntity = new KeepingEntity(new Date(), null, request.getPersonId(),
                 personEntity, id, vehicleEntity);
 
         if (keepingEntity.getPeopleByPeopleId().getFunctionId().equals(4L))

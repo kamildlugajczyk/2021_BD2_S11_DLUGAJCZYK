@@ -8,6 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingDTO;
+import pl.polsl.tab.fleetmanagement.keeping.KeepingRequest;
 
 import java.util.List;
 
@@ -102,9 +103,9 @@ public class VehicleController {
 
     @PostMapping("/vehicle/{id}/keeping")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public void changeVehiclesKeeper(@PathVariable Long id, @RequestParam Long personId) {
+    public void changeVehiclesKeeper(@PathVariable Long id, @RequestBody KeepingRequest request) {
         try {
-            vehicleService.changeVehiclesKeeper(id, personId);
+            vehicleService.changeVehiclesKeeper(id, request);
         } catch (ItemExistsInDatabaseException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
