@@ -102,7 +102,7 @@ public class PersonService {
                 .orElseThrow(() -> new IdNotFoundInDatabaseException("Function of id " + personDTO.getFunctionId() + " not found"));
 
         try {
-            personEntity.get().setUsername(personDTO.getPhoneNumber());
+            personEntity.get().setUsername(personDTO.getUsername());
             personEntity.get().setFirstname(personDTO.getFirstname());
             personEntity.get().setLastname(personDTO.getLastname());
             personEntity.get().setPhoneNumber(personDTO.getPhoneNumber());
