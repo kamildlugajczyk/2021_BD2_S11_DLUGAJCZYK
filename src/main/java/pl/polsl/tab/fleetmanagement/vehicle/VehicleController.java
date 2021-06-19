@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
+import pl.polsl.tab.fleetmanagement.exceptions.KeeperNotFoundException;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingDTO;
+import pl.polsl.tab.fleetmanagement.keeping.KeepingRequest;
+import pl.polsl.tab.fleetmanagement.person.PersonDTO;
 
 import java.util.List;
 
@@ -100,11 +103,25 @@ public class VehicleController {
         }
     }
 
+    @GetMapping("/vehicle/{id}/keeper")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public PersonDTO getVehiclesKeeper(@PathVariable Long id) {
+        try {
+            return vehicleService.getVehiclesKeeper(id);
+        } catch (IdNotFoundInDatabaseException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (KeeperNotFoundException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
     @PostMapping("/vehicle/{id}/keeping")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public void changeVehiclesKeeper(@PathVariable Long id, @RequestParam Long personId) {
+    public void changeVehiclesKeeper(@PathVariable Long id, @RequestBody KeepingRequest request) {
         try {
-            vehicleService.changeVehiclesKeeper(id, personId);
+            vehicleService.changeVehiclesKeeper(id, request);
         } catch (ItemExistsInDatabaseException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
