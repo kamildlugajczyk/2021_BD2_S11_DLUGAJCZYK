@@ -34,10 +34,10 @@ public class ServiceRequestController {
         return this.serviceRequestService.getAllUnprocessedServicesRequest();
     }
 
-    @GetMapping("unprocessed/personal/{currentUserId}")
+    @GetMapping("unprocessed/personal/{username}")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public List<ServiceRequestEntity> getUnprocessedServicesRequestPersonal(@PathVariable Long currentUserId) {
-        return this.serviceRequestService.getUnprocessedServicesRequestPersonal(currentUserId);
+    public List<ServiceRequestEntity> getUnprocessedServicesRequestPersonal(@PathVariable String username) {
+        return this.serviceRequestService.getUnprocessedServicesRequestPersonal(username);
     }
 
     @GetMapping("processed")

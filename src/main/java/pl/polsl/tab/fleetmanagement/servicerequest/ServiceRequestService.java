@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 public class ServiceRequestService {
 
     private final ServiceRequestRepository serviceRequestRepository;
+    private final PersonRepository personRepository;
     private final ServicingService servicingService;
     private final ModelMapper modelMapper;
 
@@ -32,9 +33,11 @@ public class ServiceRequestService {
     public ServiceRequestService (
             ServiceRequestRepository serviceRequestRepository,
             ServicingService servicingService,
+            PersonRepository personRepository,
             ModelMapper modelMapper
     ) {
         this.serviceRequestRepository = serviceRequestRepository;
+        this.personRepository = personRepository;
         this.servicingService = servicingService;
         this.modelMapper = modelMapper;
     }
@@ -48,7 +51,9 @@ public class ServiceRequestService {
         return allItems.stream().filter(i -> !i.getProcessed()).collect(Collectors.toList());
     }
 
-    public List<ServiceRequestEntity> getUnprocessedServicesRequestPersonal(Long currentKeeperId) {
+    public List<ServiceRequestEntity> getUnprocessedServicesRequestPersonal(String username) {
+
+        Long currentKeeperId = this.personRepository.findByUsername(username).getId();
 
         List<ServiceRequestEntity> response = new LinkedList<>();
 
