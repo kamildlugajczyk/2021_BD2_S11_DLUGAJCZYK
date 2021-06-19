@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pl.polsl.tab.fleetmanagement.auth.JwtAuthenticationRequest;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingDto;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
 
@@ -31,6 +32,12 @@ public class ServiceRequestController {
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public List<ServiceRequestEntity> getAllUnprocessedServicesRequest() {
         return this.serviceRequestService.getAllUnprocessedServicesRequest();
+    }
+
+    @GetMapping("unprocessed/personal/{currentUserId}")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public List<ServiceRequestEntity> getUnprocessedServicesRequestPersonal(@PathVariable Long currentUserId) {
+        return this.serviceRequestService.getUnprocessedServicesRequestPersonal(currentUserId);
     }
 
     @GetMapping("processed")

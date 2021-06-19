@@ -5,11 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
+import pl.polsl.tab.fleetmanagement.auth.JwtAuthenticationRequest;
+import pl.polsl.tab.fleetmanagement.keeping.KeepingEntity;
+import pl.polsl.tab.fleetmanagement.person.PersonEntity;
+import pl.polsl.tab.fleetmanagement.person.PersonRepository;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingService;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingDto;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +46,35 @@ public class ServiceRequestService {
     public List<ServiceRequestEntity> getAllUnprocessedServicesRequest() {
         List<ServiceRequestEntity> allItems = this.getAllServicesRequest();
         return allItems.stream().filter(i -> !i.getProcessed()).collect(Collectors.toList());
+    }
+
+    public List<ServiceRequestEntity> getUnprocessedServicesRequestPersonal(Long currentKeeperId) {
+
+        List<ServiceRequestEntity> response = new LinkedList<>();
+
+        var allItems = this.getAllServicesRequest();
+
+        var unprocessed = allItems
+                .stream()
+                .filter(i -> !i.getProcessed())
+                .collect(Collectors.toList());
+
+        for (ServiceRequestEntity serviceRequest: unprocessed) {
+            var allKeepingData = serviceRequest.getVehiclesByVehiclesId().getKeepingsById();
+
+            for (KeepingEntity keepingItem: allKeepingData) {
+                if(keepingItem.getEnddate() != null) continue;
+
+                if(keepingItem.getPeopleId() == currentKeeperId) {
+                    response.add(serviceRequest);
+                    break;
+                }
+
+            }
+        }
+
+        return response;
+
     }
 
     public List<ServiceRequestEntity> getAllProcessedServicesRequest() {
