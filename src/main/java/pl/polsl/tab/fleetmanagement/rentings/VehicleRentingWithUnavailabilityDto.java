@@ -20,7 +20,6 @@ public class VehicleRentingWithUnavailabilityDto {
     private Date predictEndDate;
     private Date endDate;
     private Long vehiclesId;
-    private Long peopleId;
 
     public VehicleRentingWithUnavailabilityDto() {
     }
@@ -35,7 +34,6 @@ public class VehicleRentingWithUnavailabilityDto {
         this.predictEndDate = vehicleUnavailabilityEntity.getPredictEndDate();
         this.endDate = vehicleUnavailabilityEntity.getEndDate();
         this.vehiclesId = vehicleUnavailabilityEntity.getVehiclesId();
-        this.peopleId = vehicleUnavailabilityEntity.getPeopleId();
     }
 
     @Override
@@ -43,11 +41,11 @@ public class VehicleRentingWithUnavailabilityDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         VehicleRentingWithUnavailabilityDto that = (VehicleRentingWithUnavailabilityDto) o;
-        return startmileage == that.startmileage && endmileage == that.endmileage && isbusiness == that.isbusiness && Objects.equals(startDate, that.startDate) && Objects.equals(predictEndDate, that.predictEndDate) && Objects.equals(endDate, that.endDate) && Objects.equals(vehiclesId, that.vehiclesId) && Objects.equals(peopleId, that.peopleId);
+        return startmileage == that.startmileage && endmileage == that.endmileage && isbusiness == that.isbusiness && Objects.equals(startDate, that.startDate) && Objects.equals(predictEndDate, that.predictEndDate) && Objects.equals(endDate, that.endDate) && Objects.equals(vehiclesId, that.vehiclesId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(startmileage, endmileage, isbusiness, startDate, predictEndDate, endDate, vehiclesId, peopleId);
+        return Objects.hash(startmileage, endmileage, isbusiness, startDate, predictEndDate, endDate, vehiclesId);
     }
 }

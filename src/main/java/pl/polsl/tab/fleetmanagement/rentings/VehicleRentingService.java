@@ -1,9 +1,13 @@
 package pl.polsl.tab.fleetmanagement.rentings;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import pl.polsl.tab.fleetmanagement.auth.UserPrincipal;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
 import pl.polsl.tab.fleetmanagement.exceptions.NotUniqueException;
+import pl.polsl.tab.fleetmanagement.person.PersonEntity;
+import pl.polsl.tab.fleetmanagement.person.PersonRepository;
 import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityEntity;
 import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityRepository;
 
@@ -19,6 +23,7 @@ public class VehicleRentingService {
 
     private final VehicleRentingRepository vehicleRentingRepository;
     private final VehicleUnavailabilityRepository vehicleUnavailabilityRepository;
+    private final PersonRepository personRepository;
 
     public List<VehicleRentingDto> getVehicleRentings() {
 
@@ -74,6 +79,10 @@ public class VehicleRentingService {
     public VehicleRentingWithUnavailabilityDto addVehicleRentingWithUnavailability(
             VehicleRentingWithUnavailabilityDto vehicleRentingWithUnavailabilityDto) {
 
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        PersonEntity personEntity = personRepository.findByUsername(userPrincipal.getUsername());
+
         try {
             VehicleUnavailabilityEntity vehicleUnavailabilityEntity = vehicleUnavailabilityRepository.save(
                     new VehicleUnavailabilityEntity(
@@ -81,7 +90,7 @@ public class VehicleRentingService {
                         vehicleRentingWithUnavailabilityDto.getPredictEndDate(),
                         vehicleRentingWithUnavailabilityDto.getEndDate(),
                         vehicleRentingWithUnavailabilityDto.getVehiclesId(),
-                        vehicleRentingWithUnavailabilityDto.getPeopleId()
+                        personEntity.getId()
                     )
             );
 
