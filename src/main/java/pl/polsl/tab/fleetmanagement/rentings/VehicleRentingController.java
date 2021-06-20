@@ -34,11 +34,23 @@ public class VehicleRentingController {
         }
     }
 
+//    @PostMapping
+//    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+//    public VehicleRentingDto addVehicleRenting(@RequestBody VehicleRentingDto vehicleRentingDTO) {
+//        try {
+//            return vehicleRentingService.addVehicleRenting(vehicleRentingDTO);
+//        } catch (IllegalArgumentException e) {
+//            System.out.println(e.getMessage());
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+//        }
+//    }
+
     @PostMapping
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public VehicleRentingDto addVehicleRenting(@RequestBody VehicleRentingDto vehicleRentingDTO) {
+    public VehicleRentingWithUnavailabilityDto addVehicleRenting(
+            @RequestBody VehicleRentingWithUnavailabilityDto vehicleRentingWithUnavailabilityDto) {
         try {
-            return vehicleRentingService.addVehicleRenting(vehicleRentingDTO);
+            return vehicleRentingService.addVehicleRentingWithUnavailability(vehicleRentingWithUnavailabilityDto);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
