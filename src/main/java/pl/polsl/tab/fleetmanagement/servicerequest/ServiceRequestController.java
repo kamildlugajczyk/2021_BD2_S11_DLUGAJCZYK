@@ -34,10 +34,10 @@ public class ServiceRequestController {
         return this.serviceRequestService.getAllUnprocessedServicesRequest();
     }
 
-    @GetMapping("unprocessed/personal/{username}")
+    @GetMapping("unprocessed/personal")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public List<ServiceRequestEntity> getUnprocessedServicesRequestPersonal(@PathVariable String username) {
-        return this.serviceRequestService.getUnprocessedServicesRequestPersonal(username);
+    public List<ServiceRequestEntity> getUnprocessedServicesRequestPersonal(@RequestBody JwtAuthenticationRequest jwt) {
+        return this.serviceRequestService.getUnprocessedServicesRequestPersonal(jwt.getUsername());
     }
 
     @GetMapping("processed")
@@ -54,8 +54,11 @@ public class ServiceRequestController {
 
     @PostMapping("")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ServiceRequestEntity addServiceRequest(@RequestBody ServiceRequestDto request) {
-        return this.serviceRequestService.addServiceRequest(request);
+    public ServiceRequestEntity addServiceRequest(
+            @RequestBody ServiceRequestDto request,
+            @RequestBody JwtAuthenticationRequest jwt
+    ) {
+        return this.serviceRequestService.addServiceRequest(request, jwt.getUsername());
     }
 
     /**
@@ -66,8 +69,11 @@ public class ServiceRequestController {
      **/
     @PatchMapping("keeper/execute/{id}")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ServicingEntity executeServiceRequest(@RequestBody ServicingDto servicingDto, @PathVariable Long id) {
-        return this.serviceRequestService.executeServiceRequest(servicingDto, id);
+    public ServicingEntity executeServiceRequest(
+            @RequestBody ServicingDto servicingDto,
+            @RequestBody JwtAuthenticationRequest jwt,
+            @PathVariable Long id) {
+        return this.serviceRequestService.executeServiceRequest(servicingDto, id, jwt.getUsername());
     }
 
     @DeleteMapping("keeper/{id}")

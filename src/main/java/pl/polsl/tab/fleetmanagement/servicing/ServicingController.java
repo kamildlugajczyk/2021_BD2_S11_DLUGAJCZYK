@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pl.polsl.tab.fleetmanagement.auth.JwtAuthenticationRequest;
 
 import java.util.List;
 
@@ -43,16 +44,16 @@ public class ServicingController {
         return this.servicingService.getServicingById(id);
     }
 
-    @GetMapping("keeper/{id}")
+    @GetMapping("keeper/")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public List<ServicingEntity> getServicingByKeeperId(@PathVariable Long id) {
-        return this.servicingService.getServicingByKeeperId(id);
+    public List<ServicingEntity> getServicingByKeeperUsername(@RequestBody JwtAuthenticationRequest jwt) {
+        return this.servicingService.getServicingByKeeperUsername(jwt.getUsername());
     }
 
-    @GetMapping("keeper/{id}/unfinished")
+    @GetMapping("keeper/unfinished")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public List<ServicingEntity> getUnfinishedServicingByKeeperId(@PathVariable Long id) {
-        return this.servicingService.getUnfinishedServicingByKeeperId(id);
+    public List<ServicingEntity> getUnfinishedServicingByKeeperUsername(@RequestBody JwtAuthenticationRequest jwt) {
+        return this.servicingService.getUnfinishedServicingByKeeperUsername(jwt.getUsername());
     }
 
     @GetMapping("vehicle/{id}")
@@ -71,9 +72,9 @@ public class ServicingController {
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ServicingEntity addServicing(
             @RequestBody ServicingDto request,
-            @RequestParam(name="keeperId") Long keeperId,
+            @RequestBody JwtAuthenticationRequest jwt,
             @RequestParam(name="vehicleId") Long vehicleId) {
-        return this.servicingService.addServicing(request, keeperId, vehicleId, null);
+        return this.servicingService.addServicing(request, jwt.getUsername(), vehicleId, null);
     }
 
     @PatchMapping("/keeper/{id}/finish")

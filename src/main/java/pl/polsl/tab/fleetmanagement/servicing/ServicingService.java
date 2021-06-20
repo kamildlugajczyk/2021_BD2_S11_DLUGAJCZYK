@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
+import pl.polsl.tab.fleetmanagement.person.PersonRepository;
 import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityDto;
 import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityService;
 
@@ -21,16 +22,19 @@ import java.util.stream.Collectors;
 public class ServicingService {
 
     private final ServicingRepository servicingRepository;
+    private final PersonRepository personRepository;
     private final VehicleUnavailabilityService vehicleUnavailabilityService;
     private final ModelMapper modelMapper;
 
     @Autowired
     public ServicingService (
             ServicingRepository servicingRepository,
+            PersonRepository personRepository,
             VehicleUnavailabilityService vehicleUnavailabilityService,
             ModelMapper modelMapper
     ) {
         this.servicingRepository = servicingRepository;
+        this.personRepository = personRepository;
         this.vehicleUnavailabilityService = vehicleUnavailabilityService;
         this.modelMapper = modelMapper;
     }
@@ -62,27 +66,26 @@ public class ServicingService {
 
     /**
      * @param servicingDto json source object
-     * @param personId id of keeper
+     * @param username
      * @param vehiclesId id of vehicle
      * @param serviceRequestId if of service request. Can be NULL
      * @warning method work with archive data
      * */
     @Transactional
-    public ServicingEntity addServicing(ServicingDto servicingDto, Long personId, Long vehiclesId, Long serviceRequestId) {
-
-        // TODO add more service by subcontractors
+    public ServicingEntity addServicing(ServicingDto servicingDto, String username, Long vehiclesId, Long serviceRequestId) {
 
         Date now = new Date(System.currentTimeMillis());
         boolean archive = servicingDto.getEndDate().before(now);
         ServicingEntity resp;
+
+        Long userId = this.personRepository.findByUsername(username).getId();
 
         try {
 
             VehicleUnavailabilityDto vud = new VehicleUnavailabilityDto(
                 servicingDto.getStartDate(),
                 servicingDto.getEndDate(),
-                vehiclesId,
-                personId, null
+                vehiclesId, userId, null
             );
 
             Long unavailabilityId = this.vehicleUnavailabilityService.addVehicleUnavailability(vud, archive);
@@ -133,15 +136,17 @@ public class ServicingService {
         this.servicingRepository.flush();
     }
 
-    public List<ServicingEntity> getServicingByKeeperId(Long id) {
+    public List<ServicingEntity> getServicingByKeeperUsername(String username) {
+        Long userId = this.personRepository.findByUsername(username).getId();
+
         return this.getAllServicing()
                 .stream()
-                .filter(n -> n.getVehicleUnavailability().getPeopleId().equals(id))
+                .filter(n -> n.getVehicleUnavailability().getPeopleId().equals(userId))
                 .collect(Collectors.toList());
     }
 
-    public List<ServicingEntity> getUnfinishedServicingByKeeperId(Long id) {
-        var list = this.getServicingByKeeperId(id);
+    public List<ServicingEntity> getUnfinishedServicingByKeeperUsername(String username) {
+        var list = this.getServicingByKeeperUsername(username);
         return list
                 .stream()
                 .filter(n -> !n.getFinished())

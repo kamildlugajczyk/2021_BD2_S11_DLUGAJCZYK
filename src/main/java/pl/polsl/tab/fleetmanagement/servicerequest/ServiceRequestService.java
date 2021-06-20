@@ -18,8 +18,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// TODO permissions
-
 @Component
 @EnableTransactionManagement
 public class ServiceRequestService {
@@ -93,9 +91,13 @@ public class ServiceRequestService {
                 .orElseThrow(() -> new IdNotFoundException("Service Request", id));
     }
 
-    public ServiceRequestEntity addServiceRequest(ServiceRequestDto requestDto) {
+    public ServiceRequestEntity addServiceRequest(ServiceRequestDto requestDto, String username) {
+
+        Long userId = this.personRepository.findByUsername(username).getId();
+
         ServiceRequestEntity sre = this.modelMapper.map(requestDto, ServiceRequestEntity.class);
         sre.setProcessed(false);
+        sre.setPeopleId(userId);
         return this.serviceRequestRepository.save(sre);
     }
 
@@ -104,7 +106,7 @@ public class ServiceRequestService {
      * servicing information is adding to database
      * */
     @Transactional
-    public ServicingEntity executeServiceRequest(ServicingDto servicingDto, Long id) {
+    public ServicingEntity executeServiceRequest(ServicingDto servicingDto, Long id, String username) {
         try {
             ServiceRequestEntity sre = this.getServiceRequestById(id);
 
@@ -112,7 +114,7 @@ public class ServiceRequestService {
                 throw new RuntimeException("Service request already processed");
 
             // Add servicing to database
-            ServicingEntity se = this.servicingService.addServicing(servicingDto, sre.getPeopleId(), sre.getVehiclesId(), id);
+            ServicingEntity se = this.servicingService.addServicing(servicingDto, username, sre.getVehiclesId(), id);
 
             // Set request as processed
             sre.setProcessed(true);
