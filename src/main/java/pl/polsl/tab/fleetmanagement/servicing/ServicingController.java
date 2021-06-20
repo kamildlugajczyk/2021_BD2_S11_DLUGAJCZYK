@@ -49,10 +49,22 @@ public class ServicingController {
         return this.servicingService.getServicingByKeeperId(id);
     }
 
+    @GetMapping("keeper/{id}/unfinished")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public List<ServicingEntity> getUnfinishedServicingByKeeperId(@PathVariable Long id) {
+        return this.servicingService.getUnfinishedServicingByKeeperId(id);
+    }
+
     @GetMapping("vehicle/{id}")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public List<ServicingEntity> getServicingByVehicleId(@PathVariable Long id) {
         return this.servicingService.getServicingByVehicleId(id);
+    }
+
+    @GetMapping("vehicle/{id}/unfinished")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public List<ServicingEntity> getUnfinishedServicingByVehicleId(@PathVariable Long id) {
+        return this.servicingService.getUnfinishedServicingByVehicleId(id);
     }
 
     @PostMapping("/keeper")

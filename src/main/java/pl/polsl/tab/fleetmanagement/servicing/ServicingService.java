@@ -131,8 +131,6 @@ public class ServicingService {
 
         this.servicingRepository.deleteById(id);
         this.servicingRepository.flush();
-
-        // TODO if not servicing exists delete unavailability, now CASCADE
     }
 
     public List<ServicingEntity> getServicingByKeeperId(Long id) {
@@ -142,10 +140,26 @@ public class ServicingService {
                 .collect(Collectors.toList());
     }
 
+    public List<ServicingEntity> getUnfinishedServicingByKeeperId(Long id) {
+        var list = this.getServicingByKeeperId(id);
+        return list
+                .stream()
+                .filter(n -> !n.getFinished())
+                .collect(Collectors.toList());
+    }
+
     public List<ServicingEntity> getServicingByVehicleId(Long id) {
         return this.getAllServicing()
                 .stream()
                 .filter(n -> n.getVehicleUnavailability().getVehiclesId().equals(id))
+                .collect(Collectors.toList());
+    }
+
+    public List<ServicingEntity> getUnfinishedServicingByVehicleId(Long id) {
+        var list = this.getServicingByVehicleId(id);
+        return list
+                .stream()
+                .filter(n -> !n.getFinished())
                 .collect(Collectors.toList());
     }
 }
