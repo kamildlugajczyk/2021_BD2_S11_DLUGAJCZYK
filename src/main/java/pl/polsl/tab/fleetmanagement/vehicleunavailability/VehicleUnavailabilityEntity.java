@@ -63,6 +63,17 @@ public class VehicleUnavailabilityEntity {
     @JsonIgnore
     @Getter @Setter private PersonEntity peopleByPeopleId;
 
+    public VehicleUnavailabilityEntity(Date startDate, Date predictEndDate, Date endDate, Long vehiclesId, Long peopleId) {
+        this.startDate = startDate;
+        this.predictEndDate = predictEndDate;
+        this.endDate = endDate;
+        this.vehiclesId = vehiclesId;
+        this.peopleId = peopleId;
+    }
+
+    public VehicleUnavailabilityEntity() {
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
