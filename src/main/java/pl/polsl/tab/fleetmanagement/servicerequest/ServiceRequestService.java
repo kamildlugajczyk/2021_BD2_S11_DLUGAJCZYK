@@ -9,12 +9,19 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.polsl.tab.fleetmanagement.auth.JwtAuthenticationRequest;
 import pl.polsl.tab.fleetmanagement.auth.UserPrincipal;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingEntity;
+import pl.polsl.tab.fleetmanagement.person.PersonDTO;
 import pl.polsl.tab.fleetmanagement.person.PersonEntity;
 import pl.polsl.tab.fleetmanagement.person.PersonRepository;
+import pl.polsl.tab.fleetmanagement.person.PersonService;
+import pl.polsl.tab.fleetmanagement.servicetype.ServiceTypeEntity;
+import pl.polsl.tab.fleetmanagement.servicetype.ServiceTypeRepository;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingService;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingDto;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
+import pl.polsl.tab.fleetmanagement.vehicle.VehicleDTO;
+import pl.polsl.tab.fleetmanagement.vehicle.VehicleRepository;
+import pl.polsl.tab.fleetmanagement.vehicle.VehicleService;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +33,9 @@ public class ServiceRequestService {
 
     private final ServiceRequestRepository serviceRequestRepository;
     private final PersonRepository personRepository;
+    private final PersonService personService;
+    private final VehicleService vehicleService;
+    private final ServiceTypeRepository serviceTypeRepository;
     private final ServicingService servicingService;
     private final ModelMapper modelMapper;
 
@@ -34,24 +44,50 @@ public class ServiceRequestService {
             ServiceRequestRepository serviceRequestRepository,
             ServicingService servicingService,
             PersonRepository personRepository,
+            VehicleService vehicleService,
+            ServiceTypeRepository serviceTypeRepository,
+            PersonService personService,
             ModelMapper modelMapper
     ) {
         this.serviceRequestRepository = serviceRequestRepository;
+        this.personService = personService;
         this.personRepository = personRepository;
+        this.vehicleService = vehicleService;
+        this.serviceTypeRepository = serviceTypeRepository;
         this.servicingService = servicingService;
         this.modelMapper = modelMapper;
     }
 
-    public List<ServiceRequestEntity> getAllServicesRequest() {
-        return this.serviceRequestRepository.findAll();
+    private GetServiceRequestDto convertToDto(ServiceRequestEntity item) {
+        VehicleDTO vehicleDTO = this.vehicleService.getVehicle(item.getVehiclesId());
+        PersonDTO personDTO = this.personService.getPerson(item.getPeopleId());
+        ServiceTypeEntity serviceTypeEntity = this.serviceTypeRepository.find(item.getId());
+
+        return new GetServiceRequestDto(item, personDTO, vehicleDTO, serviceTypeEntity);
     }
 
-    public List<ServiceRequestEntity> getAllUnprocessedServicesRequest() {
-        List<ServiceRequestEntity> allItems = this.getAllServicesRequest();
+    private List<GetServiceRequestDto> convertToDtoList(List<ServiceRequestEntity> items) {
+        List<GetServiceRequestDto> result = new LinkedList<>();
+
+        for (var el : items) {
+            GetServiceRequestDto item = this.convertToDto(el);
+            result.add(item);
+        }
+
+        return result;
+    }
+
+    public List<GetServiceRequestDto> getAllServicesRequest() {
+        var items = this.serviceRequestRepository.findAll();
+        return convertToDtoList(items);
+    }
+
+    public List<GetServiceRequestDto> getAllUnprocessedServicesRequest() {
+        List<GetServiceRequestDto> allItems = this.getAllServicesRequest();
         return allItems.stream().filter(i -> !i.getProcessed()).collect(Collectors.toList());
     }
 
-    public List<ServiceRequestEntity> getUnprocessedServicesRequestPersonal() {
+    public List<GetServiceRequestDto> getUnprocessedServicesRequestPersonal() {
 
         UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = userPrincipal.getUsername();
@@ -60,7 +96,7 @@ public class ServiceRequestService {
 
         List<ServiceRequestEntity> response = new LinkedList<>();
 
-        var allItems = this.getAllServicesRequest();
+        var allItems = this.serviceRequestRepository.findAll();
 
         var unprocessed = allItems
                 .stream()
@@ -81,22 +117,25 @@ public class ServiceRequestService {
             }
         }
 
-        return response;
+        return this.convertToDtoList(response);
 
     }
 
-    public List<ServiceRequestEntity> getAllProcessedServicesRequest() {
-        List<ServiceRequestEntity> allItems = this.getAllServicesRequest();
-        return allItems.stream().filter(ServiceRequestEntity::getProcessed).collect(Collectors.toList());
+    public List<GetServiceRequestDto> getAllProcessedServicesRequest() {
+        List<GetServiceRequestDto> allItems = this.getAllServicesRequest();
+        return allItems.stream().filter(GetServiceRequestDto::getProcessed).collect(Collectors.toList());
     }
 
-    public ServiceRequestEntity getServiceRequestById(Long id) {
-        return this.serviceRequestRepository
+    public GetServiceRequestDto getServiceRequestById(Long id) {
+
+        ServiceRequestEntity item = this.serviceRequestRepository
                 .findById(id)
                 .orElseThrow(() -> new IdNotFoundException("Service Request", id));
+
+        return this.convertToDto(item);
     }
 
-    public ServiceRequestEntity addServiceRequest(ServiceRequestDto requestDto) {
+    public GetServiceRequestDto addServiceRequest(ServiceRequestDto requestDto) {
 
         UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = userPrincipal.getUsername();
@@ -109,7 +148,9 @@ public class ServiceRequestService {
         sre.setProcessed(false);
         sre.setPeopleId(userId);
 
-        return this.serviceRequestRepository.save(sre);
+        ServiceRequestEntity result = this.serviceRequestRepository.save(sre);
+
+        return this.convertToDto(result);
     }
 
     /**
@@ -119,7 +160,9 @@ public class ServiceRequestService {
     @Transactional
     public ServicingEntity executeServiceRequest(ServicingDto servicingDto, Long id) {
         try {
-            ServiceRequestEntity sre = this.getServiceRequestById(id);
+            ServiceRequestEntity sre = this.serviceRequestRepository
+                    .findById(id)
+                    .orElseThrow(() -> new IdNotFoundException("Service Request", id));
 
             if(sre.getProcessed())
                 throw new RuntimeException("Service request already processed");

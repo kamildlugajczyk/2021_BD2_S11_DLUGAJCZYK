@@ -24,37 +24,37 @@ public class ServiceRequestController {
 
     @GetMapping()
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public List<ServiceRequestEntity> getAllServicesRequest() {
+    public List<GetServiceRequestDto> getAllServicesRequest() {
         return this.serviceRequestService.getAllServicesRequest();
     }
 
     @GetMapping("unprocessed")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public List<ServiceRequestEntity> getAllUnprocessedServicesRequest() {
+    public List<GetServiceRequestDto> getAllUnprocessedServicesRequest() {
         return this.serviceRequestService.getAllUnprocessedServicesRequest();
     }
 
     @GetMapping("unprocessed/personal")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public List<ServiceRequestEntity> getUnprocessedServicesRequestPersonal() {
+    public List<GetServiceRequestDto> getUnprocessedServicesRequestPersonal() {
         return this.serviceRequestService.getUnprocessedServicesRequestPersonal();
     }
 
     @GetMapping("processed")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public List<ServiceRequestEntity> getAllProcessedServicesRequest() {
+    public List<GetServiceRequestDto> getAllProcessedServicesRequest() {
         return this.serviceRequestService.getAllProcessedServicesRequest();
     }
 
     @GetMapping("{id}")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ServiceRequestEntity getServicesRequest(@PathVariable Long id) {
+    public GetServiceRequestDto getServicesRequest(@PathVariable Long id) {
         return this.serviceRequestService.getServiceRequestById(id);
     }
 
     @PostMapping("")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ServiceRequestEntity addServiceRequest(@RequestBody ServiceRequestDto request) {
+    public GetServiceRequestDto addServiceRequest(@RequestBody ServiceRequestDto request) {
         return this.serviceRequestService.addServiceRequest(request);
     }
 

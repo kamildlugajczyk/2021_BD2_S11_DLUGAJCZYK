@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.polsl.tab.fleetmanagement.person.PersonEntity;
+import pl.polsl.tab.fleetmanagement.servicetype.ServiceTypeEntity;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
 import pl.polsl.tab.fleetmanagement.vehicle.VehicleEntity;
 
@@ -34,16 +35,17 @@ public class ServiceRequestEntity {
 
     @Basic
     @Column(name = "service_types_id", nullable = false)
+    @JsonIgnore
     @Getter @Setter private Long serviceTypesId;
 
     @Basic
     @Column(name = "vehicles_id", nullable = false)
-    //TODO @JsonIgnore
+    @JsonIgnore
     @Getter @Setter private Long vehiclesId;
 
     @Basic
     @Column(name = "people_id", nullable = false)
-    //TODO @JsonIgnore
+    @JsonIgnore
     @Getter @Setter private Long peopleId;
 
     @Basic
