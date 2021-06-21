@@ -36,8 +36,8 @@ public class ServiceRequestController {
 
     @GetMapping("unprocessed/personal")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public List<ServiceRequestEntity> getUnprocessedServicesRequestPersonal(@RequestBody JwtAuthenticationRequest jwt) {
-        return this.serviceRequestService.getUnprocessedServicesRequestPersonal(jwt.getUsername());
+    public List<ServiceRequestEntity> getUnprocessedServicesRequestPersonal() {
+        return this.serviceRequestService.getUnprocessedServicesRequestPersonal();
     }
 
     @GetMapping("processed")
@@ -54,11 +54,8 @@ public class ServiceRequestController {
 
     @PostMapping("")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ServiceRequestEntity addServiceRequest(
-            @RequestBody ServiceRequestDto request,
-            @RequestBody JwtAuthenticationRequest jwt
-    ) {
-        return this.serviceRequestService.addServiceRequest(request, jwt.getUsername());
+    public ServiceRequestEntity addServiceRequest(@RequestBody ServiceRequestDto request) {
+        return this.serviceRequestService.addServiceRequest(request);
     }
 
     /**
@@ -71,9 +68,8 @@ public class ServiceRequestController {
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ServicingEntity executeServiceRequest(
             @RequestBody ServicingDto servicingDto,
-            @RequestBody JwtAuthenticationRequest jwt,
             @PathVariable Long id) {
-        return this.serviceRequestService.executeServiceRequest(servicingDto, id, jwt.getUsername());
+        return this.serviceRequestService.executeServiceRequest(servicingDto, id);
     }
 
     @DeleteMapping("keeper/{id}")

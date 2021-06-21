@@ -46,14 +46,14 @@ public class ServicingController {
 
     @GetMapping("keeper/")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public List<ServicingEntity> getServicingByKeeperUsername(@RequestBody JwtAuthenticationRequest jwt) {
-        return this.servicingService.getServicingByKeeperUsername(jwt.getUsername());
+    public List<ServicingEntity> getServicingByKeeperUsername() {
+        return this.servicingService.getServicingByKeeperUsername();
     }
 
     @GetMapping("keeper/unfinished")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public List<ServicingEntity> getUnfinishedServicingByKeeperUsername(@RequestBody JwtAuthenticationRequest jwt) {
-        return this.servicingService.getUnfinishedServicingByKeeperUsername(jwt.getUsername());
+    public List<ServicingEntity> getUnfinishedServicingByKeeperUsername() {
+        return this.servicingService.getUnfinishedServicingByKeeperUsername();
     }
 
     @GetMapping("vehicle/{id}")
@@ -72,9 +72,8 @@ public class ServicingController {
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
     public ServicingEntity addServicing(
             @RequestBody ServicingDto request,
-            @RequestBody JwtAuthenticationRequest jwt,
             @RequestParam(name="vehicleId") Long vehicleId) {
-        return this.servicingService.addServicing(request, jwt.getUsername(), vehicleId, null);
+        return this.servicingService.addServicing(request, vehicleId, null);
     }
 
     @PatchMapping("/keeper/{id}/finish")

@@ -2,9 +2,11 @@ package pl.polsl.tab.fleetmanagement.servicing;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
+import pl.polsl.tab.fleetmanagement.auth.UserPrincipal;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
 import pl.polsl.tab.fleetmanagement.person.PersonRepository;
 import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityDto;
@@ -14,8 +16,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-// TODO permissions
 
 @Component
 @EnableTransactionManagement
@@ -66,13 +66,15 @@ public class ServicingService {
 
     /**
      * @param servicingDto json source object
-     * @param username
      * @param vehiclesId id of vehicle
      * @param serviceRequestId if of service request. Can be NULL
      * @warning method work with archive data
      * */
     @Transactional
-    public ServicingEntity addServicing(ServicingDto servicingDto, String username, Long vehiclesId, Long serviceRequestId) {
+    public ServicingEntity addServicing(ServicingDto servicingDto, Long vehiclesId, Long serviceRequestId) {
+
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userPrincipal.getUsername();
 
         Date now = new Date(System.currentTimeMillis());
         boolean archive = servicingDto.getEndDate().before(now);
@@ -136,7 +138,11 @@ public class ServicingService {
         this.servicingRepository.flush();
     }
 
-    public List<ServicingEntity> getServicingByKeeperUsername(String username) {
+    public List<ServicingEntity> getServicingByKeeperUsername() {
+
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userPrincipal.getUsername();
+
         Long userId = this.personRepository.findByUsername(username).getId();
 
         return this.getAllServicing()
@@ -145,8 +151,8 @@ public class ServicingService {
                 .collect(Collectors.toList());
     }
 
-    public List<ServicingEntity> getUnfinishedServicingByKeeperUsername(String username) {
-        var list = this.getServicingByKeeperUsername(username);
+    public List<ServicingEntity> getUnfinishedServicingByKeeperUsername() {
+        var list = this.getServicingByKeeperUsername();
         return list
                 .stream()
                 .filter(n -> !n.getFinished())

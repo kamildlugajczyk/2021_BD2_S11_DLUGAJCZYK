@@ -2,10 +2,12 @@ package pl.polsl.tab.fleetmanagement.servicerequest;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 import pl.polsl.tab.fleetmanagement.auth.JwtAuthenticationRequest;
+import pl.polsl.tab.fleetmanagement.auth.UserPrincipal;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingEntity;
 import pl.polsl.tab.fleetmanagement.person.PersonEntity;
 import pl.polsl.tab.fleetmanagement.person.PersonRepository;
@@ -49,7 +51,10 @@ public class ServiceRequestService {
         return allItems.stream().filter(i -> !i.getProcessed()).collect(Collectors.toList());
     }
 
-    public List<ServiceRequestEntity> getUnprocessedServicesRequestPersonal(String username) {
+    public List<ServiceRequestEntity> getUnprocessedServicesRequestPersonal() {
+
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userPrincipal.getUsername();
 
         Long currentKeeperId = this.personRepository.findByUsername(username).getId();
 
@@ -91,13 +96,19 @@ public class ServiceRequestService {
                 .orElseThrow(() -> new IdNotFoundException("Service Request", id));
     }
 
-    public ServiceRequestEntity addServiceRequest(ServiceRequestDto requestDto, String username) {
+    public ServiceRequestEntity addServiceRequest(ServiceRequestDto requestDto) {
+
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = userPrincipal.getUsername();
 
         Long userId = this.personRepository.findByUsername(username).getId();
+
+        System.out.println(userId);
 
         ServiceRequestEntity sre = this.modelMapper.map(requestDto, ServiceRequestEntity.class);
         sre.setProcessed(false);
         sre.setPeopleId(userId);
+
         return this.serviceRequestRepository.save(sre);
     }
 
@@ -106,7 +117,7 @@ public class ServiceRequestService {
      * servicing information is adding to database
      * */
     @Transactional
-    public ServicingEntity executeServiceRequest(ServicingDto servicingDto, Long id, String username) {
+    public ServicingEntity executeServiceRequest(ServicingDto servicingDto, Long id) {
         try {
             ServiceRequestEntity sre = this.getServiceRequestById(id);
 
@@ -114,7 +125,7 @@ public class ServiceRequestService {
                 throw new RuntimeException("Service request already processed");
 
             // Add servicing to database
-            ServicingEntity se = this.servicingService.addServicing(servicingDto, username, sre.getVehiclesId(), id);
+            ServicingEntity se = this.servicingService.addServicing(servicingDto, sre.getVehiclesId(), id);
 
             // Set request as processed
             sre.setProcessed(true);
