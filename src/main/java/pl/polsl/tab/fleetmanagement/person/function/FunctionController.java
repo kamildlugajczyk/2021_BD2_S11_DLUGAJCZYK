@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
+import pl.polsl.tab.fleetmanagement.other.PostValue;
 
 
 @RestController
@@ -37,9 +38,9 @@ public class FunctionController {
 
     @PostMapping("person/function")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public FunctionDTO addFunction(@RequestBody FunctionDTO functionDTO) {
+    public FunctionDTO addFunction(@RequestBody PostValue<String> function) {
         try {
-            return functionService.addFunction(functionDTO);
+            return functionService.addFunction(function);
         } catch (ItemExistsInDatabaseException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
@@ -51,9 +52,9 @@ public class FunctionController {
 
     @PutMapping("person/function/{id}")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public FunctionDTO updateFunction(@PathVariable Long id, @RequestBody FunctionDTO functionDTO) {
+    public FunctionDTO updateFunction(@PathVariable Long id, @RequestBody PostValue<String> function) {
         try {
-            return functionService.updateFunction(id, functionDTO);
+            return functionService.updateFunction(id, function);
         } catch (IdNotFoundInDatabaseException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);

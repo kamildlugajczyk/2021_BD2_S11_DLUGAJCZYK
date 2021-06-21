@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
+import pl.polsl.tab.fleetmanagement.other.PostValue;
 
 
 @RestController
@@ -37,9 +38,9 @@ public class PurposeController {
 
     @PostMapping("vehicle/purpose")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public PurposeDTO addPurpose(@RequestBody PurposeDTO purposeDTO) {
+    public PurposeDTO addPurpose(@RequestBody PostValue<String> purpose) {
         try {
-            return purposeService.addPurpose(purposeDTO);
+            return purposeService.addPurpose(purpose);
         } catch (ItemExistsInDatabaseException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
@@ -51,9 +52,9 @@ public class PurposeController {
 
     @PutMapping("vehicle/purpose/{id}")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public PurposeDTO updatePurpose(@PathVariable Long id, @RequestBody PurposeDTO purposeDTO) {
+    public PurposeDTO updatePurpose(@PathVariable Long id, @RequestBody PostValue<String> purpose) {
         try {
-            return purposeService.updatePurpose(id, purposeDTO);
+            return purposeService.updatePurpose(id, purpose);
         } catch (IdNotFoundInDatabaseException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);

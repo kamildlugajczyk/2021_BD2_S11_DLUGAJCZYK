@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
+import pl.polsl.tab.fleetmanagement.other.PostValue;
 
 @RestController
 public class TypeController {
@@ -36,9 +37,9 @@ public class TypeController {
 
     @PostMapping("vehicle/type")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public TypeDTO addType(@RequestBody TypeDTO typeDTO) {
+    public TypeDTO addType(@RequestBody PostValue<String> type) {
         try {
-            return typeService.addType(typeDTO);
+            return typeService.addType(type);
         } catch (ItemExistsInDatabaseException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
@@ -50,9 +51,9 @@ public class TypeController {
 
     @PutMapping("vehicle/type/{id}")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public TypeDTO updateType(@PathVariable Long id, @RequestBody TypeDTO typeDTO) {
+    public TypeDTO updateType(@PathVariable Long id, @RequestBody PostValue<String> type) {
         try {
-            return typeService.updateType(id, typeDTO);
+            return typeService.updateType(id, type);
         } catch (IdNotFoundInDatabaseException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);

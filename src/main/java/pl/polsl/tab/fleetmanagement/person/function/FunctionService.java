@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
+import pl.polsl.tab.fleetmanagement.other.PostValue;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -41,35 +42,35 @@ public class FunctionService {
         return new FunctionDTO(functionEntity);
     }
 
-    public FunctionDTO addFunction(FunctionDTO functionDTO) {
+    public FunctionDTO addFunction(PostValue<String> function) {
         try {
-            FunctionEntity functionEntity = functionRepository.save(new FunctionEntity(functionDTO.getName()));
+            FunctionEntity functionEntity = functionRepository.save(new FunctionEntity(function.getName()));
             return new FunctionDTO(functionEntity);
         } catch (RuntimeException e) {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    throw new ItemExistsInDatabaseException("Person function ( " + functionDTO.getName() + ") exists in DB");
+                    throw new ItemExistsInDatabaseException("Person function ( " + function.getName() + ") exists in DB");
                 }
             }
             throw new RuntimeException(e);
         }
     }
 
-    public FunctionDTO updateFunction(Long id, FunctionDTO functionDTO) {
+    public FunctionDTO updateFunction(Long id, PostValue<String> function) {
         Optional<FunctionEntity> functionEntity = functionRepository.findById(id);
 
         if(functionEntity.isEmpty())
             throw new IdNotFoundInDatabaseException("Person function of " + id + " not found");
 
         try {
-            functionEntity.get().setName(functionDTO.getName());
+            functionEntity.get().setName(function.getName());
             return new FunctionDTO(functionRepository.save(functionEntity.get()));
         } catch (RuntimeException e) {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    throw new ItemExistsInDatabaseException("Person function ( " + functionDTO.getName() + ") exists in DB");
+                    throw new ItemExistsInDatabaseException("Person function ( " + function.getName() + ") exists in DB");
                 }
             }
             throw new RuntimeException(e);

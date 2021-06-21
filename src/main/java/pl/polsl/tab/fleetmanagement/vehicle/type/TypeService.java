@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
+import pl.polsl.tab.fleetmanagement.other.PostValue;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -41,35 +42,35 @@ public class TypeService {
         return new TypeDTO(typeEntity);
     }
 
-    public TypeDTO addType(TypeDTO typeDTO) {
+    public TypeDTO addType(PostValue<String> type) {
         try {
-            TypeEntity typeEntity = typeRepository.save(new TypeEntity(typeDTO.getName()));
+            TypeEntity typeEntity = typeRepository.save(new TypeEntity(type.getName()));
             return new TypeDTO(typeEntity);
         } catch (RuntimeException e) {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    throw new ItemExistsInDatabaseException("Vehicle type ( " + typeDTO.getName() + ") exists in DB");
+                    throw new ItemExistsInDatabaseException("Vehicle type ( " + type.getName() + ") exists in DB");
                 }
             }
             throw new RuntimeException(e);
         }
     }
 
-    public TypeDTO updateType(Long id, TypeDTO typeDTO) {
+    public TypeDTO updateType(Long id, PostValue<String> type) {
         Optional<TypeEntity> typeEntity = typeRepository.findById(id);
 
         if(typeEntity.isEmpty())
             throw new IdNotFoundInDatabaseException("Vehicle type of id " + id + " not found");
 
         try {
-            typeEntity.get().setName(typeDTO.getName());
+            typeEntity.get().setName(type.getName());
             return new TypeDTO(typeRepository.save(typeEntity.get()));
         } catch (RuntimeException e) {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    throw new ItemExistsInDatabaseException("Vehicle type ( " + typeDTO.getName() + ") exists in DB");
+                    throw new ItemExistsInDatabaseException("Vehicle type ( " + type.getName() + ") exists in DB");
                 }
             }
             throw new RuntimeException(e);

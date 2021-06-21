@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
+import pl.polsl.tab.fleetmanagement.other.PostValue;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -41,35 +42,35 @@ public class PurposeService {
         return new PurposeDTO(purposeEntity);
     }
 
-    public PurposeDTO addPurpose(PurposeDTO purposeDTO) {
+    public PurposeDTO addPurpose(PostValue<String> purpose) {
         try {
-            PurposeEntity purposeEntity = purposeRepository.save(new PurposeEntity(purposeDTO.getName()));
+            PurposeEntity purposeEntity = purposeRepository.save(new PurposeEntity(purpose.getName()));
             return new PurposeDTO(purposeEntity);
         } catch (RuntimeException e) {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    throw new ItemExistsInDatabaseException("Vehicle purpose ( " + purposeDTO.getName() + ") exists in DB");
+                    throw new ItemExistsInDatabaseException("Vehicle purpose ( " + purpose.getName() + ") exists in DB");
                 }
             }
             throw new RuntimeException(e);
         }
     }
 
-    public PurposeDTO updatePurpose(Long id, PurposeDTO purposeDTO) {
+    public PurposeDTO updatePurpose(Long id, PostValue<String> purpose) {
         Optional<PurposeEntity> purposeEntity = purposeRepository.findById(id);
 
         if(purposeEntity.isEmpty())
             throw new IdNotFoundInDatabaseException("Vehicle purpose of id " + id + " not found");
 
         try {
-            purposeEntity.get().setName(purposeDTO.getName());
+            purposeEntity.get().setName(purpose.getName());
             return new PurposeDTO(purposeRepository.save(purposeEntity.get()));
         } catch (RuntimeException e) {
             Throwable rootCause = com.google.common.base.Throwables.getRootCause(e);
             if (rootCause instanceof SQLException) {
                 if ("23505".equals(((SQLException) rootCause).getSQLState())) {
-                    throw new ItemExistsInDatabaseException("Vehicle purpose ( " + purposeDTO.getName() + ") exists in DB");
+                    throw new ItemExistsInDatabaseException("Vehicle purpose ( " + purpose.getName() + ") exists in DB");
                 }
             }
             throw new RuntimeException(e);
