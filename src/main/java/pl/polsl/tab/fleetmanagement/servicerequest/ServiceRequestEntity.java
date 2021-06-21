@@ -34,7 +34,6 @@ public class ServiceRequestEntity {
 
     @Basic
     @Column(name = "service_types_id", nullable = false)
-    @JsonIgnore
     @Getter @Setter private Long serviceTypesId;
 
     @Basic
