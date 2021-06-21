@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pl.polsl.tab.fleetmanagement.other.PostValue;
 
 
 @RestController
@@ -31,14 +32,14 @@ public class ServiceTypeController {
 
     @PostMapping("service/type")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ServiceTypeEntity addServiceTypes(@RequestBody String name) {
-        return this.serviceTypeService.addServiceTypes(name);
+    public ServiceTypeEntity addServiceTypes(@RequestBody PostValue<String> service) {
+        return this.serviceTypeService.addServiceTypes(service);
     }
 
     @PutMapping("service/type/{id}")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public ServiceTypeEntity updateServiceType(@PathVariable Long id, @RequestBody String name) {
-        return this.serviceTypeService.updateServiceType(id, name);
+    public ServiceTypeEntity updateServiceType(@PathVariable Long id, @RequestBody PostValue<String> service) {
+        return this.serviceTypeService.updateServiceType(id, service);
     }
 
     @DeleteMapping("service/type/{id}")
