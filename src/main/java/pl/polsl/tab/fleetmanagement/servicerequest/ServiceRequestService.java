@@ -61,7 +61,8 @@ public class ServiceRequestService {
     private GetServiceRequestDto convertToDto(ServiceRequestEntity item) {
         VehicleDTO vehicleDTO = this.vehicleService.getVehicle(item.getVehiclesId());
         PersonDTO personDTO = this.personService.getPerson(item.getPeopleId());
-        ServiceTypeEntity serviceTypeEntity = this.serviceTypeRepository.find(item.getId());
+        ServiceTypeEntity serviceTypeEntity = this.serviceTypeRepository.findById(item.getId())
+                .orElseThrow(() -> new IdNotFoundException("Service Request", item.getId()));
 
         return new GetServiceRequestDto(item, personDTO, vehicleDTO, serviceTypeEntity);
     }
