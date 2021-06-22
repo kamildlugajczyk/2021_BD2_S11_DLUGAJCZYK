@@ -34,6 +34,12 @@ public class VehicleRentingController {
         }
     }
 
+    @GetMapping(path = "/user")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public List<VehicleRentingDto> getVehicleRantingsByUser() {
+        return vehicleRentingService.getVehicleRantingsByUser();
+    }
+
 //    @PostMapping
 //    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
 //    public VehicleRentingDto addVehicleRenting(@RequestBody VehicleRentingDto vehicleRentingDTO) {
