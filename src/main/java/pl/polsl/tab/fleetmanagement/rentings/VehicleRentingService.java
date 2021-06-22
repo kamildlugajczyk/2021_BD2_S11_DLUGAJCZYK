@@ -48,7 +48,7 @@ public class VehicleRentingService {
 
     public VehicleRentingDto getVehicleRentingByVehicleUnavailability(Long id) {
 
-        VehicleRentingEntity vehicleRentingEntity = vehicleRentingRepository.findByVehicleUnavailabilityId(id)
+        VehicleRentingEntity vehicleRentingEntity = vehicleRentingRepository.findByVehicleUnavailabilityId(Math.toIntExact(id))
                 .orElseThrow(() -> new IdNotFoundException("Vehicle renting", id));
 
         return new VehicleRentingDto(vehicleRentingEntity);
@@ -141,4 +141,31 @@ public class VehicleRentingService {
 
     }
 
+    public List<VehicleRentingDto> getVehicleRantingsByUser() {
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Long personId = personRepository.findByUsername(userPrincipal.getUsername()).getId();
+
+        List<VehicleUnavailabilityEntity> vehicleUnavailabilityEntities = new ArrayList<>(
+                vehicleUnavailabilityRepository.findAllByPeopleId(personId));
+        List<VehicleRentingDto> vehicleRentingDtos = new ArrayList<>();
+
+
+        for(VehicleUnavailabilityEntity vehicleUnavailabilityEntity: vehicleUnavailabilityEntities){
+
+            try {
+                Long id = vehicleUnavailabilityEntity.getId();
+
+                VehicleRentingEntity vehicleRentingEntity = vehicleRentingRepository.findByVehicleUnavailabilityId(Math.toIntExact(id))
+                        .orElseThrow(() -> new IdNotFoundException("Vehicle renting", id));
+
+                vehicleRentingDtos.add(new VehicleRentingDto(vehicleRentingEntity));
+            }
+            catch (RuntimeException ignored){
+
+            }
+        }
+
+        return vehicleRentingDtos;
+    }
 }

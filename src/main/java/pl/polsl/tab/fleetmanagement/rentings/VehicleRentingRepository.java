@@ -7,5 +7,7 @@ import java.util.Optional;
 
 @Repository
 public interface VehicleRentingRepository extends JpaRepository<VehicleRentingEntity, Long> {
-    Optional<VehicleRentingEntity> findByVehicleUnavailabilityId(Long id);
+    Optional<VehicleRentingEntity> findByVehicleUnavailabilityId(Integer id);
+
+
 }
