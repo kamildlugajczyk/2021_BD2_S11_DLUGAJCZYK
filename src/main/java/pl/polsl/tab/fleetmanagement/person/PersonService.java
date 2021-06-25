@@ -16,6 +16,8 @@ import pl.polsl.tab.fleetmanagement.person.function.FunctionEntity;
 import pl.polsl.tab.fleetmanagement.person.function.FunctionRepository;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingDTO;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingEntity;
+import pl.polsl.tab.fleetmanagement.vehicle.VehicleDTO;
+import pl.polsl.tab.fleetmanagement.vehicle.VehicleEntity;
 import pl.polsl.tab.fleetmanagement.vehicle.VehicleRepository;
 
 import java.sql.SQLException;
@@ -156,6 +158,20 @@ public class PersonService {
         }
 
         return keepingDTOs;
+    }
+
+    public Iterable<VehicleDTO> getKeepersVehicle() {
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        PersonEntity personEntity = personRepository.findByUsername(userPrincipal.getUsername());
+
+        List<VehicleDTO> vehicles = new ArrayList<>();
+
+        for (KeepingEntity keepingEntity : personEntity.getKeepingsById()) {
+            if (keepingEntity.getEnddate() == null) {
+                vehicles.add(new VehicleDTO(keepingEntity.getVehiclesByVehiclesId()));
+            }
+        }
+        return vehicles;
     }
 
     private boolean validatePhoneNumber(String phoneNumber) {

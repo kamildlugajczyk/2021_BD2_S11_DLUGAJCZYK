@@ -10,6 +10,7 @@ import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.ItemExistsInDatabaseException;
 import pl.polsl.tab.fleetmanagement.exceptions.WrongPasswordException;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingDTO;
+import pl.polsl.tab.fleetmanagement.vehicle.VehicleDTO;
 
 import java.util.List;
 
@@ -110,6 +111,17 @@ public class PersonController {
     public Iterable<KeepingDTO> getPersonsKeepings(@PathVariable Long id) {
         try {
             return personService.getPersonsKeepings(id);
+        } catch (IdNotFoundInDatabaseException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
+    @GetMapping("/keeper/vehicle")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public Iterable<VehicleDTO> getKeepersVehicle() {
+        try {
+            return personService.getKeepersVehicle();
         } catch (IdNotFoundInDatabaseException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
