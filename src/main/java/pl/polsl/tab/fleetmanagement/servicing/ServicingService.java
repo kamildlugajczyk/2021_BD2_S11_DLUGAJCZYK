@@ -87,6 +87,7 @@ public class ServicingService {
             VehicleUnavailabilityDto vud = new VehicleUnavailabilityDto(
                 servicingDto.getStartDate(),
                 servicingDto.getEndDate(),
+                null,
                 vehiclesId, userId, null
             );
 

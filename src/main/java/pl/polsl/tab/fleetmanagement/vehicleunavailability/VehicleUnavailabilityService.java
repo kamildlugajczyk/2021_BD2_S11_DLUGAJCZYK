@@ -45,17 +45,17 @@ public class VehicleUnavailabilityService {
 
     public Long addVehicleUnavailability(VehicleUnavailabilityDto dto, boolean archive) {
 
-        if(dto.getEndDate().before(dto.getStartDate()))
+        if(dto.getPredictEndDate().before(dto.getStartDate()))
             throw new RuntimeException("Start Date is after Predict End Day");
 
         VehicleUnavailabilityEntity vue = this.modelMapper.map(dto, VehicleUnavailabilityEntity.class);
 
         if (!archive) {
-            vue.setPredictEndDate(dto.getEndDate());
+            vue.setPredictEndDate(dto.getPredictEndDate());
             vue.setEndDate(null);
         } else {
             vue.setPredictEndDate(null);
-            vue.setEndDate(dto.getEndDate());
+            vue.setEndDate(dto.getPredictEndDate());
         }
 
         vue = this.vehicleUnavailabilityRepository.save(vue);
@@ -84,6 +84,7 @@ public class VehicleUnavailabilityService {
         for (VehicleUnavailabilityEntity vehicleUnavailabilityEntity : vehicleUnavailabilityEntities) {
             vehicleUnavailabilityDtos.add(new VehicleUnavailabilityDto(
                     vehicleUnavailabilityEntity.getStartDate(),
+                    vehicleUnavailabilityEntity.getPredictEndDate(),
                     vehicleUnavailabilityEntity.getEndDate(),
                     vehicleUnavailabilityEntity.getVehiclesId(),
                     vehicleUnavailabilityEntity.getPeopleId(),

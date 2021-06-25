@@ -4,19 +4,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
 import java.util.Date;
 import java.util.Objects;
 
 @NoArgsConstructor
 public class VehicleUnavailabilityDto {
     @Getter @Setter private Date startDate;
-    @Getter @Setter private Date endDate;
+    @Getter @Setter private Date endDate  = null;
     @Getter @Setter private Long vehiclesId;
     @Getter @Setter private Long peopleId;
+    @Getter @Setter private Date predictEndDate;
     @Getter private Long id;
 
-    public VehicleUnavailabilityDto(Date startDate, Date endDate, Long vehiclesId, Long peopleId, Long id) {
+    public VehicleUnavailabilityDto(Date startDate, Date predictEndDate, Date endDate, Long vehiclesId, Long peopleId, Long id) {
         this.startDate = startDate;
+        this.predictEndDate = predictEndDate;
         this.endDate = endDate;
         this.vehiclesId = vehiclesId;
         this.peopleId = peopleId;
