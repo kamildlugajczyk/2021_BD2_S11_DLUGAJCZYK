@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.polsl.tab.fleetmanagement.exploitation.OperationCostService;
@@ -38,13 +39,13 @@ public class EmployeeReportController {
         this.operationTypeService = operationTypeService;
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_PDF_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_PDF_VALUE, path = "/{id}")
     @ApiOperation(value = "", authorizations = {@Authorization(value = "jwtToken")})
-    public void getPdf(HttpServletResponse response) {
+    public void getPdf(@PathVariable Long id, HttpServletResponse response) {
         try {
             EmployeeReportService employeeReportService = new EmployeeReportService(personService, vehicleRentingService,
                     vehicleUnavailabilityService, vehicleService, operationCostService, operationTypeService);
-            employeeReportService.generateReport(response);
+            employeeReportService.generateReport(response, id);
         } catch (Exception e) {
             e.printStackTrace();
         }

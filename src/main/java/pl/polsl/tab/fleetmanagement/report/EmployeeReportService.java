@@ -31,7 +31,6 @@ public class EmployeeReportService {
 
     private static final String logoImgPath = "src/main/resources/politechnika.jpg";
     private static final Font titleFont = new Font(Font.FontFamily.TIMES_ROMAN, 30, Font.BOLD);
-    private static final Font redFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL, BaseColor.RED);
     private static final Font employeeFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
     private static final Font dateFont = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.BOLD);
     private static BaseFont helvetica;
@@ -63,7 +62,7 @@ public class EmployeeReportService {
         this.operationCostService = operationCostService;
     }
 
-    public void generateReport(HttpServletResponse response) {
+    public void generateReport(HttpServletResponse response, Long id) {
         response.setContentType("application/pdf");
 
         try {
@@ -73,7 +72,7 @@ public class EmployeeReportService {
             addMetaData(document);
             addLogo(document);
             addTitle(document);
-            addTable(document, 1L);
+            addTable(document, id);
             addFooter(document);
             document.close();
         } catch (Exception e) {
