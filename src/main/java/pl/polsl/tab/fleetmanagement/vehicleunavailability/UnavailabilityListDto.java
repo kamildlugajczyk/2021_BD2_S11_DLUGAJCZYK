@@ -17,8 +17,7 @@ public class UnavailabilityListDto {
     private final String brand;
     private final String model;
     private Date startDate;
+    private Date endPredictDate;
     private Date endDate;
-
-
 }
 

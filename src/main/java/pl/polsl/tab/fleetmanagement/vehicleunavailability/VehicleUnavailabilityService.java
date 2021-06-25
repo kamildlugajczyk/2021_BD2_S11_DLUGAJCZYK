@@ -126,6 +126,7 @@ public class VehicleUnavailabilityService {
                     vehicleService.getVehicle(vehicleUnavailabilityEntity
                             .getVehiclesId()).getBrandmodel().getModel(),
                     vehicleUnavailabilityEntity.getStartDate(),
+                    vehicleUnavailabilityEntity.getPredictEndDate(),
                     vehicleUnavailabilityEntity.getEndDate()
             ));
 
@@ -164,6 +165,7 @@ public class VehicleUnavailabilityService {
                         vehicleService.getVehicle(vehicleUnavailabilityEntity
                                 .getVehiclesId()).getBrandmodel().getModel(),
                         vehicleUnavailabilityEntity.getStartDate(),
+                        vehicleUnavailabilityEntity.getPredictEndDate(),
                         vehicleUnavailabilityEntity.getEndDate()
                 ));
             }
