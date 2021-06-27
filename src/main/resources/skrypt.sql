@@ -159,7 +159,7 @@ create table Operation_costs
     Vehicles_id         INT           NOT NULL,
     Operation_type_id   INT           NOT NULL,
     Vehicle_rentings_id INT,
-    Keeping_id          INT           NOT NULL,
+    Keeping_id          INT,
     CONSTRAINT Operation_costs_Vehicles_FK FOREIGN KEY (Vehicles_id) REFERENCES Vehicles (id),
     CONSTRAINT Operation_costs_Keeping_FK FOREIGN KEY (Keeping_id) REFERENCES Keeping (id),
     CONSTRAINT Operation_costs_Operation_type_FK FOREIGN KEY (Operation_type_id) REFERENCES Operation_type (id),

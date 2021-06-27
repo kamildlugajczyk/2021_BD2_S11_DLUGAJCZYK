@@ -106,15 +106,6 @@ public class KeepingEntity  {
         this.vehiclesByVehiclesId = vehiclesByVehiclesId;
     }
 
-    @OneToMany(mappedBy = "keepingByKeepingId")
-    public Collection<OperationCostEntity> getOperationCostsById() {
-        return operationCostsById;
-    }
-
-    public void setOperationCostsById(Collection<OperationCostEntity> operationCostsById) {
-        this.operationCostsById = operationCostsById;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
