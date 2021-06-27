@@ -191,7 +191,11 @@ public class EmployeeReportService {
             table.addCell(vehicleUnavailabilityDto.getVehiclesId().toString());
             table.addCell(vehicleName);
             table.addCell(vehicleUnavailabilityDto.getStartDate().toString());
-            table.addCell(vehicleUnavailabilityDto.getEndDate().toString());
+            if (vehicleUnavailabilityDto.getEndDate() == null) {
+                table.addCell("---");
+            } else {
+                table.addCell(vehicleUnavailabilityDto.getEndDate().toString());
+            }
             table.addCell(operations.toString());
             table.addCell(String.valueOf(mileage));
             table.addCell(String.format("%.2f PLN", operationsCostValue));
