@@ -214,4 +214,26 @@ public class VehicleUnavailabilityService {
         return unfinishedRentingsDtos;
 
     }
+
+    public void cancelVehicleRenting(Long id) {
+        Date now = Date.from(LocalDate.now().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+
+        VehicleRentingEntity vehicleRentingEntity = vehicleRentingRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException("Renting", id));
+        VehicleUnavailabilityEntity vehicleUnavailabilityEntity = vehicleUnavailabilityRepository
+                .findById((long) vehicleRentingEntity.getVehicleUnavailabilityId())
+                .orElseThrow(() -> new IdNotFoundException("Unavailability", id));
+        try {
+            if(now.before(vehicleUnavailabilityEntity.getStartDate())){
+                this.vehicleRentingRepository.deleteById(id);
+                this.vehicleUnavailabilityRepository.deleteById(vehicleUnavailabilityEntity.getId());
+            }
+            else
+                throw new RuntimeException();
+
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Cannot cancel this renting");
+        }
+
+    }
 }

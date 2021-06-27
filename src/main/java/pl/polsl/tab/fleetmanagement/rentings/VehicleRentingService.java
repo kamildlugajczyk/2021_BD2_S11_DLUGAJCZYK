@@ -131,15 +131,7 @@ public class VehicleRentingService {
         }
     }
 
-    public void deleteVehicleRenting(Long id) {
 
-        try {
-            this.vehicleRentingRepository.deleteById(id);
-        } catch (RuntimeException e) {
-            throw new IdNotFoundException("Vehicle", id);
-        }
-
-    }
 
     public List<VehicleRentingDto> getVehicleRantingsByUser() {
         UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

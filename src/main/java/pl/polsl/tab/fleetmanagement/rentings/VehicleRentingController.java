@@ -63,11 +63,6 @@ public class VehicleRentingController {
         }
     }
 
-    @DeleteMapping(path = "/{id}")
-    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public void deleteVehicleRenting(@PathVariable Long id) {
-        vehicleRentingService.deleteVehicleRenting(id);
-    }
 
     @PutMapping(path = "/{id}")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
