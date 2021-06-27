@@ -41,4 +41,9 @@ public class VehicleUnavailabilityController {
     public void cancelVehicleRenting(@PathVariable Long id) {
         vehicleUnavailabilityService.cancelVehicleRenting(id);
     }
+    @PutMapping(path = "/{id}")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public void finishVehicleRenting(@PathVariable Long id) {
+        vehicleUnavailabilityService.finishVehicleRenting(id);
+    }
 }

@@ -236,4 +236,21 @@ public class VehicleUnavailabilityService {
         }
 
     }
+
+    public void finishVehicleRenting(Long id) {
+        Date now = Date.from(LocalDate.now().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+
+        VehicleRentingEntity vehicleRentingEntity = vehicleRentingRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException("Renting", id));
+        VehicleUnavailabilityEntity vehicleUnavailabilityEntity = vehicleUnavailabilityRepository
+                .findById((long) vehicleRentingEntity.getVehicleUnavailabilityId())
+                .orElseThrow(() -> new IdNotFoundException("Unavailability", id));
+
+        try {
+            vehicleUnavailabilityEntity.setEndDate(now);
+            vehicleUnavailabilityRepository.save(vehicleUnavailabilityEntity);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Cannot finish this renting");
+        }
+    }
 }
