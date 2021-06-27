@@ -19,6 +19,8 @@ import pl.polsl.tab.fleetmanagement.vehicleunavailability.VehicleUnavailabilityS
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -35,6 +37,7 @@ public class EmployeeReportService {
     private static final Font dateFont = new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.BOLD);
     private static BaseFont helvetica;
     private static final String localDateFormat = "d MMMM yyyy HH:mm:ss";
+    private Format formatter = new SimpleDateFormat("yyyy-MM-d HH:mm:ss");
     private double totalCosts = 0.0;
 
     private final PersonService personService;
@@ -190,12 +193,8 @@ public class EmployeeReportService {
             table.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
             table.addCell(vehicleUnavailabilityDto.getVehiclesId().toString());
             table.addCell(vehicleName);
-            table.addCell(vehicleUnavailabilityDto.getStartDate().toString());
-            if (vehicleUnavailabilityDto.getEndDate() == null) {
-                table.addCell("---");
-            } else {
-                table.addCell(vehicleUnavailabilityDto.getEndDate().toString());
-            }
+            table.addCell(formatter.format(vehicleUnavailabilityDto.getStartDate()));
+            table.addCell(vehicleUnavailabilityDto.getEndDate() != null ? formatter.format(vehicleUnavailabilityDto.getEndDate()) : "-");
             table.addCell(operations.toString());
             table.addCell(String.valueOf(mileage));
             table.addCell(String.format("%.2f PLN", operationsCostValue));
