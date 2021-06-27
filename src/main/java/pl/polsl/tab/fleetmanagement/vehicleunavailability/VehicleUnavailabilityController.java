@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import pl.polsl.tab.fleetmanagement.other.PostValue;
+import pl.polsl.tab.fleetmanagement.rentings.FinishVehicleRentingRequest;
 import pl.polsl.tab.fleetmanagement.rentings.RentVehicleDto;
 
 import java.util.List;
@@ -44,10 +46,11 @@ public class VehicleUnavailabilityController {
     public void cancelVehicleRenting(@PathVariable Long id) {
         vehicleUnavailabilityService.cancelVehicleRenting(id);
     }
+
     @PutMapping(path = "/{id}")
     @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
-    public void finishVehicleRenting(@PathVariable Long id) {
-        vehicleUnavailabilityService.finishVehicleRenting(id);
+    public void finishVehicleRenting(@PathVariable Long id, @RequestBody FinishVehicleRentingRequest request) {
+        vehicleUnavailabilityService.finishVehicleRenting(id, request);
     }
 
     @PostMapping(path = "/{id}")

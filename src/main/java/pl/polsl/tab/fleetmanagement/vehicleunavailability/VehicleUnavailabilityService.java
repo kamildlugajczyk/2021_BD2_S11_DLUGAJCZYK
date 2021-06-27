@@ -7,13 +7,12 @@ import org.springframework.stereotype.Component;
 import pl.polsl.tab.fleetmanagement.auth.UserPrincipal;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
 import pl.polsl.tab.fleetmanagement.person.PersonRepository;
-import pl.polsl.tab.fleetmanagement.rentings.RentVehicleDto;
-import pl.polsl.tab.fleetmanagement.rentings.VehicleRentingEntity;
-import pl.polsl.tab.fleetmanagement.rentings.VehicleRentingRepository;
-import pl.polsl.tab.fleetmanagement.rentings.VehicleRentingService;
+import pl.polsl.tab.fleetmanagement.rentings.*;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingRepository;
 import pl.polsl.tab.fleetmanagement.vehicle.VehicleDTO;
+import pl.polsl.tab.fleetmanagement.vehicle.VehicleEntity;
+import pl.polsl.tab.fleetmanagement.vehicle.VehicleRepository;
 import pl.polsl.tab.fleetmanagement.vehicle.VehicleService;
 
 import java.time.LocalDate;
@@ -31,6 +30,7 @@ public class VehicleUnavailabilityService {
     private final VehicleService vehicleService;
     private final PersonRepository personRepository;
     private final VehicleRentingRepository vehicleRentingRepository;
+    private final VehicleRepository vehicleRepository;
 
 
     @Autowired
@@ -38,12 +38,15 @@ public class VehicleUnavailabilityService {
                                         ModelMapper modelMapper,
                                         VehicleRentingService vehicleRentingService,
                                         ServicingRepository servicingRepository,
-                                        VehicleService vehicleService, PersonRepository personRepository, VehicleRentingRepository vehicleRentingRepository) {
+                                        VehicleService vehicleService, PersonRepository personRepository,
+                                        VehicleRentingRepository vehicleRentingRepository,
+                                        VehicleRepository vehicleRepository) {
         this.vehicleUnavailabilityRepository = vehicleUnavailabilityRepository;
         this.modelMapper = modelMapper;
         this.vehicleService = vehicleService;
         this.personRepository = personRepository;
         this.vehicleRentingRepository = vehicleRentingRepository;
+        this.vehicleRepository = vehicleRepository;
     }
 
     public List<VehicleUnavailabilityEntity> getVehicleUnavailabilityEntities(){
@@ -239,18 +242,25 @@ public class VehicleUnavailabilityService {
 
     }
 
-    public void finishVehicleRenting(Long id) {
+    public void finishVehicleRenting(Long id, FinishVehicleRentingRequest request) {
         Date now = Date.from(LocalDate.now().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
 
         VehicleRentingEntity vehicleRentingEntity = vehicleRentingRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException("Renting", id));
         VehicleUnavailabilityEntity vehicleUnavailabilityEntity = vehicleUnavailabilityRepository
                 .findById((long) vehicleRentingEntity.getVehicleUnavailabilityId())
-                .orElseThrow(() -> new IdNotFoundException("Unavailability", id));
-
+                .orElseThrow(() -> new IdNotFoundException("Unavailability", (long) vehicleRentingEntity.getVehicleUnavailabilityId()));
+        VehicleEntity vehicleEntity = vehicleRepository.findById(vehicleUnavailabilityEntity.getVehiclesId())
+                .orElseThrow(() -> new IdNotFoundException("Vehicle", id));
         try {
             vehicleUnavailabilityEntity.setEndDate(now);
             vehicleUnavailabilityRepository.save(vehicleUnavailabilityEntity);
+
+            vehicleRentingEntity.setEndmileage(request.getEndMileage());
+            vehicleRentingRepository.save(vehicleRentingEntity);
+
+            vehicleEntity.setMileage(request.getEndMileage());
+            vehicleRepository.save(vehicleEntity);
         } catch (RuntimeException e) {
             throw new RuntimeException("Cannot finish this renting");
         }
