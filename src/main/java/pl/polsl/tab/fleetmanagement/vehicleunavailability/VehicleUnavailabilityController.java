@@ -3,7 +3,10 @@ package pl.polsl.tab.fleetmanagement.vehicleunavailability;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import pl.polsl.tab.fleetmanagement.rentings.RentVehicleDto;
 
 import java.util.List;
 
@@ -46,4 +49,17 @@ public class VehicleUnavailabilityController {
     public void finishVehicleRenting(@PathVariable Long id) {
         vehicleUnavailabilityService.finishVehicleRenting(id);
     }
+
+    @PostMapping(path = "/{id}")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public void rentVehicle(@PathVariable Long id, @RequestBody RentVehicleDto rentVehicleDto) {
+        try {
+            vehicleUnavailabilityService.rentVehicle(id, rentVehicleDto);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        }
+    }
+
+
 }

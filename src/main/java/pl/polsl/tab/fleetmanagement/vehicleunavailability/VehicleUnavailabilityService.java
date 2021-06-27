@@ -7,11 +7,13 @@ import org.springframework.stereotype.Component;
 import pl.polsl.tab.fleetmanagement.auth.UserPrincipal;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
 import pl.polsl.tab.fleetmanagement.person.PersonRepository;
+import pl.polsl.tab.fleetmanagement.rentings.RentVehicleDto;
 import pl.polsl.tab.fleetmanagement.rentings.VehicleRentingEntity;
 import pl.polsl.tab.fleetmanagement.rentings.VehicleRentingRepository;
 import pl.polsl.tab.fleetmanagement.rentings.VehicleRentingService;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingRepository;
+import pl.polsl.tab.fleetmanagement.vehicle.VehicleDTO;
 import pl.polsl.tab.fleetmanagement.vehicle.VehicleService;
 
 import java.time.LocalDate;
@@ -251,6 +253,35 @@ public class VehicleUnavailabilityService {
             vehicleUnavailabilityRepository.save(vehicleUnavailabilityEntity);
         } catch (RuntimeException e) {
             throw new RuntimeException("Cannot finish this renting");
+        }
+    }
+
+    public void rentVehicle(Long vehicleId, RentVehicleDto rentVehicleDto) {
+
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long personId = personRepository.findByUsername(userPrincipal.getUsername()).getId();
+        VehicleDTO vehicleEntity = vehicleService.getVehicle(vehicleId);
+
+        try {
+            VehicleUnavailabilityEntity vehicleUnavailabilityEntity = vehicleUnavailabilityRepository.save(
+                    new VehicleUnavailabilityEntity(
+                            rentVehicleDto.getStartDate(),
+                            rentVehicleDto.getPredictEndDate(),
+                            null,
+                            vehicleId,
+                            personId
+                    )
+            );
+
+            VehicleRentingEntity vehicleRentingEntity = vehicleRentingRepository.save(
+                    new VehicleRentingEntity(
+                            vehicleEntity.getMileage(),
+                            vehicleEntity.getMileage(),
+                            rentVehicleDto.isBusiness(),
+                            Math.toIntExact(vehicleUnavailabilityEntity.getId())));
+
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
         }
     }
 }
