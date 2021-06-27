@@ -2,14 +2,20 @@ package pl.polsl.tab.fleetmanagement.vehicleunavailability;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import pl.polsl.tab.fleetmanagement.auth.UserPrincipal;
 import pl.polsl.tab.fleetmanagement.exceptions.IdNotFoundException;
+import pl.polsl.tab.fleetmanagement.person.PersonRepository;
 import pl.polsl.tab.fleetmanagement.rentings.VehicleRentingEntity;
+import pl.polsl.tab.fleetmanagement.rentings.VehicleRentingRepository;
 import pl.polsl.tab.fleetmanagement.rentings.VehicleRentingService;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingEntity;
 import pl.polsl.tab.fleetmanagement.servicing.ServicingRepository;
 import pl.polsl.tab.fleetmanagement.vehicle.VehicleService;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,16 +27,21 @@ public class VehicleUnavailabilityService {
     private final VehicleUnavailabilityRepository vehicleUnavailabilityRepository;
     private final ModelMapper modelMapper;
     private final VehicleService vehicleService;
+    private final PersonRepository personRepository;
+    private final VehicleRentingRepository vehicleRentingRepository;
+
 
     @Autowired
     public VehicleUnavailabilityService(VehicleUnavailabilityRepository vehicleUnavailabilityRepository,
                                         ModelMapper modelMapper,
                                         VehicleRentingService vehicleRentingService,
                                         ServicingRepository servicingRepository,
-                                        VehicleService vehicleService) {
+                                        VehicleService vehicleService, PersonRepository personRepository, VehicleRentingRepository vehicleRentingRepository) {
         this.vehicleUnavailabilityRepository = vehicleUnavailabilityRepository;
         this.modelMapper = modelMapper;
         this.vehicleService = vehicleService;
+        this.personRepository = personRepository;
+        this.vehicleRentingRepository = vehicleRentingRepository;
     }
 
     public List<VehicleUnavailabilityEntity> getVehicleUnavailabilityEntities(){
@@ -172,5 +183,35 @@ public class VehicleUnavailabilityService {
 
         }
         return unavailabilityListDtos;
+    }
+
+    public List<UnfinishedRentingsDto> getUnfinishedVehicleRentingsByUser() {
+
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long personId = personRepository.findByUsername(userPrincipal.getUsername()).getId();
+
+        List<UnfinishedRentingsDto> unfinishedRentingsDtos = new ArrayList<>();
+        List<VehicleUnavailabilityEntity> vehicleUnavailabilityEntities = new ArrayList<>(
+                vehicleUnavailabilityRepository.findAllByPeopleId(personId));
+
+
+        for (VehicleUnavailabilityEntity vehicleUnavailabilityEntity : vehicleUnavailabilityEntities) {
+
+            Date now = Date.from(LocalDate.now().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+
+            if(now.before(vehicleUnavailabilityEntity.getPredictEndDate())){
+
+                Integer id = Math.toIntExact(vehicleUnavailabilityEntity.getId());
+
+                unfinishedRentingsDtos.add(new UnfinishedRentingsDto(
+                        vehicleService.getVehicle(vehicleUnavailabilityEntity.getVehiclesId()),
+                        vehicleRentingRepository.findByVehicleUnavailabilityId(id).get().getId(),
+                        vehicleUnavailabilityEntity.getStartDate(),
+                        vehicleUnavailabilityEntity.getPredictEndDate()));
+            }
+
+        }
+        return unfinishedRentingsDtos;
+
     }
 }

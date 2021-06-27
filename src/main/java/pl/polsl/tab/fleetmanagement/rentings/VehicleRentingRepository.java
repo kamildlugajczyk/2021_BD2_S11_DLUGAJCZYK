@@ -10,4 +10,5 @@ public interface VehicleRentingRepository extends JpaRepository<VehicleRentingEn
     Optional<VehicleRentingEntity> findByVehicleUnavailabilityId(Integer id);
 
 
+
 }

@@ -32,4 +32,10 @@ public class VehicleUnavailabilityController {
     public List<UnavailabilityListDto> getUnavailabilityListByVehicleId(@PathVariable Long vehicleId) {
         return this.vehicleUnavailabilityService.getUnavailabilityListByVehicleId(vehicleId);
     }
+
+    @GetMapping(path = "/unfinished")
+    @ApiOperation(value = "", authorizations = { @Authorization(value="jwtToken") })
+    public List<UnfinishedRentingsDto> getUnfinishedVehicleRentingsByUser() {
+        return vehicleUnavailabilityService.getUnfinishedVehicleRentingsByUser();
+    }
 }

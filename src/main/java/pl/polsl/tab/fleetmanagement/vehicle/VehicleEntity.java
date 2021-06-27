@@ -1,5 +1,6 @@
 package pl.polsl.tab.fleetmanagement.vehicle;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import pl.polsl.tab.fleetmanagement.exploitation.OperationCostEntity;
 import pl.polsl.tab.fleetmanagement.keeping.KeepingEntity;
 import pl.polsl.tab.fleetmanagement.vehicle.brandmodel.BrandModelEntity;
@@ -168,6 +169,7 @@ public class VehicleEntity {
     }
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "brands_models_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     public BrandModelEntity getBrandsModelsByBrandsModelsId() {
         return brandsModelsByBrandsModelsId;
@@ -178,6 +180,7 @@ public class VehicleEntity {
     }
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "types_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     public TypeEntity getTypesByTypesId() {
         return typesByTypesId;
@@ -188,6 +191,7 @@ public class VehicleEntity {
     }
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "purposes_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     public PurposeEntity getPurposesByPurposesId() {
         return purposesByPurposesId;
