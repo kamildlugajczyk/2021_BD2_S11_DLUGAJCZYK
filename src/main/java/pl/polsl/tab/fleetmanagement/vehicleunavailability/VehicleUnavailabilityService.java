@@ -203,17 +203,22 @@ public class VehicleUnavailabilityService {
         for (VehicleUnavailabilityEntity vehicleUnavailabilityEntity : vehicleUnavailabilityEntities) {
 
             Date now = Date.from(LocalDate.now().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+            Optional<VehicleRentingEntity> byVehicleUnavailabilityId = vehicleRentingRepository
+                    .findByVehicleUnavailabilityId(Math.toIntExact(vehicleUnavailabilityEntity.getId()));
 
-            if(now.before(vehicleUnavailabilityEntity.getPredictEndDate())){
+            if(byVehicleUnavailabilityId.isPresent()){
+                if(now.before(vehicleUnavailabilityEntity.getPredictEndDate())){
 
-                Integer id = Math.toIntExact(vehicleUnavailabilityEntity.getId());
+                    Integer id = Math.toIntExact(vehicleUnavailabilityEntity.getId());
 
-                unfinishedRentingsDtos.add(new UnfinishedRentingsDto(
-                        vehicleService.getVehicle(vehicleUnavailabilityEntity.getVehiclesId()),
-                        vehicleRentingRepository.findByVehicleUnavailabilityId(id).get().getId(),
-                        vehicleUnavailabilityEntity.getStartDate(),
-                        vehicleUnavailabilityEntity.getPredictEndDate()));
+                    unfinishedRentingsDtos.add(new UnfinishedRentingsDto(
+                            vehicleService.getVehicle(vehicleUnavailabilityEntity.getVehiclesId()),
+                            vehicleRentingRepository.findByVehicleUnavailabilityId(id).get().getId(),
+                            vehicleUnavailabilityEntity.getStartDate(),
+                            vehicleUnavailabilityEntity.getPredictEndDate()));
+                }
             }
+
 
         }
         return unfinishedRentingsDtos;
